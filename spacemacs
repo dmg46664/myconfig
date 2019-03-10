@@ -320,6 +320,10 @@ you should place your code here."
   (global-set-key (kbd "C-s") 'helm-swoop)
   ;; Default binding for Avy as per website, with a tweak not to interfere with org mode
   (global-set-key (kbd "C-;") 'avy-goto-char-2)
+  ;; Set priority colours in org mode
+  (setq org-priority-faces '((?A . (:foreground "red" :weight 'bold))
+                             (?B . (:foreground "yellow"))
+                             (?C . (:foreground "green"))))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
