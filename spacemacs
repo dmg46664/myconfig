@@ -315,8 +315,6 @@ you should place your code here."
 
   ;; My overridden configuration
   (spacemacs/toggle-transparency)
-  ;; Remove the right-alt-key-binding
-  (setq ns-right-alternate-modifier (quote none))
   ;; key binds - override I-search
   (global-set-key (kbd "C-s") 'helm-swoop)
   ;; Default binding for Avy as per website, with a tweak not to interfere with org mode
@@ -326,13 +324,36 @@ you should place your code here."
                              (?B . (:foreground "yellow"))
                              (?C . (:foreground "green"))))
 
-  ;; key bindings
-  (when (eq system-type 'darwin) ;; mac specific settings
-    ;;(setq mac-option-modifier 'alt)
-    (setq mac-command-modifier 'control)
-    ;;(global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+
+  (defun my-cheatsheet ()
+    (interactive)
+    (helm :sources (helm-build-in-file-source
+                       "My cheatsheet" "~/myconfig/emacs/mycheatsheet.org"
+                       :action (lambda (candidate)
+                                 (let ((linum (with-helm-buffer
+                                                (get-text-property
+                                                 1 'helm-linum
+                                                 (helm-get-selection nil 'withprop)))))
+                                   (find-file (with-helm-buffer
+                                                (helm-attr 'candidates-file)))
+                                   (goto-line linum))))
+          :buffer "*My cheatsheet*")
     )
 
+  ;; key bindings
+  (when (eq system-type 'darwin) ;; mac specific settings
+
+    ;; Make Mac key closest to spacebar behave like linux and windows
+    ;; https://emacs.stackexchange.com/questions/14325/how-do-i-use-the-same-keybindings-on-windows-and-mac
+    (setq mac-command-modifier 'meta)
+    (setq mac-option-modifier 'control)
+
+    ;; Remove the right-alt-key-binding, so you can hit # on mac
+    (setq ns-right-alternate-modifier (quote none))
+
+
+    ;;(global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+    )
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -345,7 +366,7 @@ you should place your code here."
  '(menu-bar-mode t)
  '(package-selected-packages
    (quote
-    (emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (cheatsheet emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -1,0 +1,23 @@
+| *Movement*    |                                       |
+| C-v           | page down                             |
+| M-v           | page down                             |
+| C-n / C-p     | Move cursor up and down               |
+| C-f / C-b     | Move cursor back and forward one char |
+|---------------+---------------------------------------|
+| *Edits*       |                                       |
+| M-d           | Delete forward one word               |
+|---------------+---------------------------------------|
+| *Lisp*        |                                       |
+| C-x C-e       | Evaluate highlighted point            |
+| M-:           | Evaluate single command               |
+|---------------+---------------------------------------|
+| *Application* |                                       |
+| C-x C-        | leave Emacs                           |
+|---------------+---------------------------------------|
+
+
+* TODO Find out how to highlight helm actions 
+The following has ben useful
+https://github.com/emacs-helm/helm/wiki/Developing
+
+helm-org-headings-fontify at https://github.com/emacs-helm/helm/blob/master/helm-org.el
