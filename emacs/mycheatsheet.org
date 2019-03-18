@@ -1,23 +1,39 @@
-| *Movement*    |                                       |
-| C-v           | page down                             |
-| M-v           | page down                             |
-| C-n / C-p     | Move cursor up and down               |
-| C-f / C-b     | Move cursor back and forward one char |
-|---------------+---------------------------------------|
-| *Edits*       |                                       |
-| M-d           | Delete forward one word               |
-|---------------+---------------------------------------|
-| *Lisp*        |                                       |
-| C-x C-e       | Evaluate highlighted point            |
-| M-:           | Evaluate single command               |
-|---------------+---------------------------------------|
-| *Application* |                                       |
-| C-x C-        | leave Emacs                           |
-|---------------+---------------------------------------|
+| *Movement*            |                                                                                            |
+| C-v                   | page down                                                                                  |
+| M-v                   | page down                                                                                  |
+| C-n / C-p             | Move cursor up and down                                                                    |
+| C-f / C-b             | Move cursor back and forward one char                                                      |
+|-----------------------+--------------------------------------------------------------------------------------------|
+| *Edits*               |                                                                                            |
+| M-d                   | Delete forward one word                                                                    |
+| C-SPC select C-x r k  | Block edit (unverified)                                                                    |
+|-----------------------+--------------------------------------------------------------------------------------------|
+| *Org*                 |                                                                                            |
+| ?                     | Agenda                                                                                     |
+| C-c C-o               | Open link in browser                                                                       |
+| C-c C-x C-w           | org-cut-subtree for cutting sub tree or table regsion                                      |
+| C-c C-x w             | org-insert-structure-template = <q TAB  https://github.com/syl20bnr/spacemacs/issues/11798 |
+|-----------------------+--------------------------------------------------------------------------------------------|
+| *Lisp*                |                                                                                            |
+| C-x C-e               | Evaluate highlighted point                                                                 |
+| M-:                   | Evaluate single command                                                                    |
+|-----------------------+--------------------------------------------------------------------------------------------|
+| *Application*         |                                                                                            |
+| C-x C-                | leave Emacs                                                                                |
+|-----------------------+--------------------------------------------------------------------------------------------|
+| toggle-truncate-lines | Word wrap                                                                                  |
+|                       |                                                                                            |
 
+Spacemacs cheat sheet:
+https://gist.github.com/robphoenix/9e4db767ab5c912fb558
+
+Autocomplete orgmode templates:
+https://orgmode.org/manual/Easy-templates.html
 
 * TODO Find out how to highlight helm actions 
 The following has ben useful
 https://github.com/emacs-helm/helm/wiki/Developing
+
+
 
 helm-org-headings-fontify at https://github.com/emacs-helm/helm/blob/master/helm-org.el
