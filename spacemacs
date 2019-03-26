@@ -317,6 +317,8 @@ you should place your code here."
   (spacemacs/toggle-transparency)
   ;; key binds - override I-search
   (global-set-key (kbd "C-s") 'helm-swoop)
+  ;; Vim's evil command lines
+  (global-set-key (kbd "C-:") 'evil-ex)
   ;; Default binding for Avy as per website, with a tweak not to interfere with org mode
   (global-set-key (kbd "C-;") 'avy-goto-char-2)
   ;; Set priority colours in org mode

@@ -1,41 +1,47 @@
-| *Movement*            |                                                                                                                                     |   |
-| C-v                   | page down                                                                                                                           |   |
-| M-v                   | page down                                                                                                                           |   |
-| C-n / C-p             | Move cursor up and down                                                                                                             |   |
-| C-f / C-b             | Move cursor back and forward one char                                                                                               |   |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------+---|
-| *Edits*               |                                                                                                                                     |   |
-| M-d                   | Delete forward one word                                                                                                             |   |
-| M-backspace           | Delete back one word                                                                                                                |   |
-| C-SPC select C-x r k  | Block edit (unverified)                                                                                                             |   |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------+---|
-| *Org*                 |                                                                                                                                     |   |
-| C-c C-j               | org-goto in order to jump                                                                                                           |   |
-| C-c C-o               | Open link in browser                                                                                                                |   |
-| C-c C-x C-w           | org-cut-subtree for cutting sub tree or table regsion                                                                               |   |
-| C-c C-,               | org-insert-structure-template = <q TAB  https://github.com/syl20bnr/spacemacs/issues/11798                                          |   |
-| C-x n s / b           | Narrow buffer to only current subtree or block  (hiding everything else)                                                            |   |
-| C-x n w               | Widen buffer removing previous narrowing                                                                                            |   |
-| C-c [     / ]         | Add current file to the list of agenda files. The file is added to the front of the list.                                           |   |
-| C-,                   | Cycle through agenda file list, visiting one file after the other.                                                                  |   |
-| C-c a a               | Agenda for the week. More commands in this view https://orgmode.org/guide/Agenda-commands.html                                                                                    |   |
-| C-c .                 | org-time-stamp which lets you input a date.                                                                                         |   |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------+---|
-| M-m r y               | helm-show-killring                                                                                                                  |   |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------+---|
-| *Lisp*                |                                                                                                                                     |   |
-| C-x C-e               | Evaluate highlighted point                                                                                                          |   |
-| M-:                   | Evaluate single command                                                                                                             |   |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------+---|
-| *Emacs*               |                                                                                                                                     |   |
-| C-x C-                | leave Emacs                                                                                                                         |   |
-| C-h f                 | To go to documentation of function you want, then has link to source OR You can get to the source with M-x find-library org-agenda. |   |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------+---|
-| * Magit               |                                                                                                                                     |   |
-| k                     | Drop stash                                                                                                                          |   |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------+---|
-| toggle-truncate-lines | Word wrap                                                                                                                           |   |
-|                       |                                                                                                                                     |   |
+| *Movement*            |                                                                                                                                     |
+| C-v                   | page down                                                                                                                           |
+| M-v                   | page down                                                                                                                           |
+| C-n / C-p             | Move cursor up and down                                                                                                             |
+| C-f / C-b             | Move cursor back and forward one char                                                                                               |
+|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
+| *Window*              |                                                                                                                                     |
+| C-x }                 | Increase expand window horizontally                                                                                                 |
+|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
+| *Edits*               |                                                                                                                                     |
+| M-d                   | Delete forward one word                                                                                                             |
+| M-backspace           | Delete back one word                                                                                                                |
+| C-SPC select C-x r k  | Block edit (unverified)                                                                                                             |
+| C-x z                 | Repeat previous command again. After doing it once, just type z.                                                                    |
+| C-: /evil-ex          | Evil command line. Try :%s/regex/replacement/options where options = g(all on line),c(confirm). Use \1 extract.                     |
+|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
+| *Org*                 |                                                                                                                                     |
+| C-c C-j               | org-goto in order to jump                                                                                                           |
+| C-c C-o               | Open link in browser                                                                                                                |
+| C-c C-x C-w           | org-cut-subtree for cutting sub tree or table regsion                                                                               |
+| C-c C-,               | org-insert-structure-template = <q TAB  https://github.com/syl20bnr/spacemacs/issues/11798                                          |
+| C-x n s / b           | Narrow buffer to only current subtree or block  (hiding everything else)                                                            |
+| C-x n w               | Widen buffer removing previous narrowing                                                                                            |
+| C-c [     / ]         | Add current file to the list of agenda files. The file is added to the front of the list.                                           |
+| C-,                   | Cycle through agenda file list, visiting one file after the other.                                                                  |
+| C-c a a               | Agenda for the week. More commands in this view https://orgmode.org/guide/Agenda-commands.html                                      |
+| C-c .                 | org-time-stamp which lets you input a date.                                                                                         |
+|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
+| M-m r y               | helm-show-killring                                                                                                                  |
+|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
+| *Other*               |                                                                                                                                     |
+| C-x C-e               | Evaluate highlighted point                                                                                                          |
+| M-:                   | Evaluate single command                                                                                                             |
+| M-x calc u v          | Enter calc mode and show all units. Remember tha ' allows writing an algebraic expression.                                          |
+|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
+| *Emacs*               |                                                                                                                                     |
+| C-x C-                | leave Emacs                                                                                                                         |
+| C-h f                 | To go to documentation of function you want, then has link to source OR You can get to the source with M-x find-library org-agenda. |
+|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
+| * Magit               |                                                                                                                                     |
+| k                     | Drop stash                                                                                                                          |
+|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
+| toggle-truncate-lines | Word wrap                                                                                                                           |
+|                       |                                                                                                                                     |
 
 - Useful: org-export-insert-default-template
 
