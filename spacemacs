@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -46,7 +47,7 @@ values."
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
-     spell-checking
+     ;; spell-checking
      syntax-checking
      ;; version-control
      emoji
@@ -55,7 +56,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(jira-markup-mode)
+   dotspacemacs-additional-packages '()
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -327,6 +328,23 @@ you should place your code here."
                              (?C . (:foreground "green"))))
 
 
+  ;; As per https://github.com/syl20bnr/spacemacs/issues/7641
+  ;; May need to run (spacemacs/recompile-elpa) after first installing emacs 
+  (with-eval-after-load 'org
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '(
+       (shell . t)
+       (python . t)
+       ;; https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-js.html
+       ;; Helpful http://rwx.io/posts/org-with-babel-node-updated/
+       (js . t) ;; Make sure to write '#+begin_src js' and not '... javascript'
+       )
+     )
+;;TODO   (add-to-list 'org-babel-tangle-lang-exts '("js" . "js"))
+    )
+
+  ;; Add a cheatsheet function over a file
   (defun my-cheatsheet ()
     (interactive)
     (helm :sources (helm-build-in-file-source
