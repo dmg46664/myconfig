@@ -27,6 +27,7 @@
 | C-c .                 | org-time-stamp which lets you input a date.                                                                                         |
 |-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
 | M-m r y               | helm-show-killring                                                                                                                  |
+| M-x recover-session   | Recover session after crash and work hasn't been saved. Use C-c C-c on the session you want to recover (by date)                    |
 |-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
 | *Other*               |                                                                                                                                     |
 | C-x C-e               | Evaluate highlighted point                                                                                                          |
@@ -74,3 +75,5 @@ https://github.com/emacs-helm/helm/wiki/Developing
 
 
 helm-org-headings-fontify at https://github.com/emacs-helm/helm/blob/master/helm-org.el
+* How to investigate emacs problems
+https://emacs.stackexchange.com/questions/28429/how-do-i-troubleshoot-emacs-problems
