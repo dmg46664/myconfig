@@ -56,7 +56,12 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(log4j-mode logview
+                                                 ;; How to install packages not in melp https://github.com/syl20bnr/spacemacs/issues/2278
+                                                 (periodic-commit-minor-mode :location (recipe
+                                                                        :fetcher github
+                                                                        :repo "aaronbieber/periodic-commit-minor-mode"))
+                                                 )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -317,7 +322,7 @@ you should place your code here."
   ;; My overridden configuration
   (spacemacs/toggle-transparency)
   ;; key binds - override I-search
-  (global-set-key (kbd "C-s") 'helm-swoop)
+  (global-set-key (kbd "C-s") 'helm-occur)
   ;; Vim's evil command lines
   (global-set-key (kbd "C-:") 'evil-ex)
   ;; Default binding for Avy as per website, with a tweak not to interfere with org mode
@@ -326,6 +331,38 @@ you should place your code here."
   (setq org-priority-faces '((?A . (:foreground "red" :weight 'bold))
                              (?B . (:foreground "yellow"))
                              (?C . (:foreground "green"))))
+
+
+  ;; More info on the format https://github.com/doublep/logview/blob/master/logview.el#L179
+  (setq logview-additional-submodes
+        ;;INFO  [com.chpconsulting.alfa.endofday.jmx.EndOfDay] (pool-2-thread-6) [SYSTEM] [] Setting up parameters for EoD
+    '(("ALFANOTIME" . ((format  . "LEVEL  [NAME] (THREAD) [IGNORED] []")
+                  (levels  . "SLF4J")
+                  (aliases . ("AlfaNoTime"))))
+      ;;INFO, com.chpconsulting.alfa.endofday.jmx.EndOfDay, "2019.03.29 04:39:10.416", pool-2-thread-4, "[SYSTEM] [] Setting up parameters for EoD"
+      ("ALLYTIME" . ((format  . "LEVEL, NAME, \"TIMESTAMP\",")
+                         (levels  . "SLF4J")
+                         (aliases . ("AllyEmbedded"))
+                         (time-stamp-format . "ISO 8601 datetime + millis")
+                         )
+      ;; We misuse thread as a field for hostname.
+        ;;("UNIX"  . ((format  . "TIMESTAMP THREAD NAME:")
+       )))
+
+
+  (setq logview-additional-timestamp-formats
+  '(("ISO 8601 datetime + millis"             "yyyy-MM-dd HH:mm:ss.SSS")
+    ("ISO 8601 datetime + micros"             "yyyy-MM-dd HH:mm:ss.SSSSSS")
+    ("ISO 8601 datetime"                      "yyyy-MM-dd HH:mm:ss")
+    ("ISO 8601 datetime (with 'T') + millis"  "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    ("ISO 8601 datetime (with 'T') + micros"  "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+    ("ISO 8601 datetime (with 'T')"           "yyyy-MM-dd'T'HH:mm:ss")
+    ("ISO 8601 time only + millis"            "HH:mm:ss.SSS")
+    ("ISO 8601 time only + micros"            "HH:mm:ss.SSSSSS")
+    ("ISO 8601 time only"                     "HH:mm:ss")
+    (nil                                      "MMM d HH:mm:ss")
+    (nil                                      "MMM d h:mm:ss a")
+    (nil                                      "h:mm:ss a")))
 
 
   ;; As per https://github.com/syl20bnr/spacemacs/issues/7641
@@ -343,6 +380,17 @@ you should place your code here."
      )
 ;;TODO   (add-to-list 'org-babel-tangle-lang-exts '("js" . "js"))
     )
+
+  ;; Hook to enable this minor mode if the following org property exists
+  ;; Got idea https://github.com/kametoku/orgmine
+  ;; #+PROPERTY: periodic_commit_minor_mode enable
+  (add-hook 'org-mode-hook
+            (lambda () (if (assoc "periodic_commit_minor_mode" org-file-properties)
+                           (periodic-commit-minor-mode))))
+  ;; Only periodically commit tracked files (not all)
+  (setq pcmm-commit-all nil)
+  ;; Save every 2 hours (interval in seconds)
+  (setq pcmm-commit-frequency 7200)
 
   ;; Add a cheatsheet function over a file
   (defun my-cheatsheet ()
@@ -374,6 +422,7 @@ you should place your code here."
 
     ;;(global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
     )
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -387,7 +436,7 @@ you should place your code here."
  '(org-agenda-files (quote ("~/Google Drive/todolist.org")))
  '(package-selected-packages
    (quote
-    (cheatsheet emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (periodic-commit-minor-mode datetime extmap logview log4j-mode sass-mode company-web web-mode tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data cheatsheet emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
