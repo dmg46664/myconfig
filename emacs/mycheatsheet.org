@@ -7,6 +7,13 @@
 | *Window*              |                                                                                                                                     |
 | C-x }                 | Increase expand window horizontally                                                                                                 |
 |-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
+| *Macro*               |                                                                                                                                     |
+| C-x (                 | Start macro                                                                                                                         |
+| C-x )                 | End macro (but this doesn't make it available)                                                                                      |
+| Name macro            | M-x name-last-kbd-macro , which should be called after end macro                                                                    |
+| Insert macro          | M-x insert-kbd-macro (requires the a named keyboard macro first.                                                                    |
+| C-x e                 | Run last keyboard macro                                                                                                             |
+| Macro doc             | https://www.emacswiki.org/emacs/KeyboardMacros                                                                                      |
 | *Edits*               |                                                                                                                                     |
 | M-d                   | Delete forward one word                                                                                                             |
 | M-backspace           | Delete back one word                                                                                                                |
@@ -15,6 +22,7 @@
 | C-: /evil-ex          | Evil command line. Try :%s/regex/replacement/options where options = g(all on line),c(confirm). Use \1 extract.                     |
 |-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
 | *Org*                 |                                                                                                                                     |
+| M-m a o l             | M-x org-store-link to store a link to a file, then C-c C-l to paste link                                                            |
 | C-c C-j               | org-goto in order to jump                                                                                                           |
 | C-c C-o               | Open link in browser                                                                                                                |
 | C-c C-x C-w           | org-cut-subtree for cutting sub tree or table regsion                                                                               |
@@ -25,18 +33,24 @@
 | C-,                   | Cycle through agenda file list, visiting one file after the other.                                                                  |
 | C-c a a               | Agenda for the week. More commands in this view https://orgmode.org/guide/Agenda-commands.html                                      |
 | C-c .                 | org-time-stamp which lets you input a date.                                                                                         |
+| C-c C-v C-r           | (org-babel-goto-named-result)                                                                                                       |
+| C-c *                 | (org-toggle-heading) Turn a normal line or plain list item into a headline                                                          |
 |-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
 | M-m r y               | helm-show-killring                                                                                                                  |
 | M-x recover-session   | Recover session after crash and work hasn't been saved. Use C-c C-c on the session you want to recover (by date)                    |
 |-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
 | *Other*               |                                                                                                                                     |
+| C-c C-c               | Babel execute code inside a code block                                                                                              |
 | C-x C-e               | Evaluate highlighted point                                                                                                          |
 | M-:                   | Evaluate single command                                                                                                             |
 | M-x calc u v          | Enter calc mode and show all units. Remember tha ' allows writing an algebraic expression.                                          |
+| C-x z                 | Repeat last command                                                                                                                 |
 |-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
 | *Emacs*               |                                                                                                                                     |
 | C-x C-                | leave Emacs                                                                                                                         |
 | C-h f                 | To go to documentation of function you want, then has link to source OR You can get to the source with M-x find-library org-agenda. |
+| Go to source          | M-x find-library                                                                                                                    |
+| C-h b                 | Or (helm-decsbinds) to describe all key bindings                                                                                    |
 |-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
 | * Magit               |                                                                                                                                     |
 | k                     | Drop stash                                                                                                                          |
@@ -55,6 +69,62 @@ https://gist.github.com/robphoenix/9e4db767ab5c912fb558
 
 Autocomplete orgmode templates:
 https://orgmode.org/manual/Easy-templates.html
+
+
+* Org mode table stuff
+
+https://orgmode.org/worg/org-tutorials/org-spreadsheet-intro.html
+
+In a cell, do C-c ? for a reference of table functions.
+
+Reference visualization grid with C-c }:
+
+
+#+begin_src 
+But what we really want is to compute the formulas for all fields in the column named "Mean". 
+In other words, we really want a column formula, not a field formula.
+
+To replace the formula with a column formula, go back to the field where it has been defined and type =vmean($2..$3). 
+Note that the only difference with what you've inserted previously is that the formula is prefixed by = instead of :=. 
+When you're done, do a C-c C-c in the field: you should be prompted whether you want to 
+replace the formula with a column formula, which is precisely what we want.
+
+Once you agree with this, the value in the field should be the same than before (namely 11) and you can now update 
+all the fields in this column by reapplying all formulas with C-u C-c * (or C-c C-c if you're on the #+TBLFM line.)
+#+end_src
+
+#+begin_quote
+Interactively edit formulas
+------------------------------------------------
+For now we have been defining formulas by inserting them directly in the table cells: typing = in a field 
+starts the definition for a column formula and typing := starts a definition for a field formula.
+
+If you prefer, you can edit formulas in the minibuffer: use C-c = for 
+editing column formulas or C-u C-c = for field formulas.
+
+But you can also edit formulas more interactively in a dedicated buffer by typing C-c '. 
+This new buffer lists all the formulas for the table at point and provides facilities to edit the references.
+
+When the cursor is above a reference, the corresponding field in the table get highlighted. Nice! 
+But you can do more than that: you can actually select the reference by using the S-<left/right/up/down> keys.
+#+end_quote
+
+
+* Eslip Coding
+
+
+Check the basic example programs
+http://ergoemacs.org/emacs/elisp_examples.html
+Remember to hover over commands to get highlighting about them.
+
+Some basics
+https://www.gnu.org/software/emacs/manual/html_node/eintr/car-cdr-_0026-cons.html
+
+
+
+
+* Using Magit diff
+https://coderwall.com/p/mcrwag/use-magit-ediff-to-resolve-merge-conflicts
 
 * Notes
 ** helm-occur is the default edit window that comes with helm.

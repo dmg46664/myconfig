@@ -51,12 +51,15 @@ values."
      syntax-checking
      ;; version-control
      emoji
+     ;; only load scala on Mac for now (not on windows)
+     scala
      )
+
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(log4j-mode logview
+   dotspacemacs-additional-packages '(log4j-mode logview ztree
                                                  ;; How to install packages not in melp https://github.com/syl20bnr/spacemacs/issues/2278
                                                  (periodic-commit-minor-mode :location (recipe
                                                                         :fetcher github
@@ -335,14 +338,14 @@ you should place your code here."
 
   ;; More info on the format https://github.com/doublep/logview/blob/master/logview.el#L179
   (setq logview-additional-submodes
-        ;;INFO  [com.chpconsulting.alfa.endofday.jmx.EndOfDay] (pool-2-thread-6) [SYSTEM] [] Setting up parameters for EoD
-    '(("ALFANOTIME" . ((format  . "LEVEL  [NAME] (THREAD) [IGNORED] []")
+        ;;INFO  [com..endofday.jmx.EndOfDay] (pool-2-thread-6) [SYSTEM] [] Setting up parameters for EoD
+    '(("NOTIME" . ((format  . "LEVEL  [NAME] (THREAD) [IGNORED] []")
                   (levels  . "SLF4J")
-                  (aliases . ("AlfaNoTime"))))
+                  (aliases . ("NoTime"))))
       ;;INFO, com.chpconsulting.alfa.endofday.jmx.EndOfDay, "2019.03.29 04:39:10.416", pool-2-thread-4, "[SYSTEM] [] Setting up parameters for EoD"
-      ("ALLYTIME" . ((format  . "LEVEL, NAME, \"TIMESTAMP\",")
+      ("AL-TIME" . ((format  . "LEVEL, NAME, \"TIMESTAMP\",")
                          (levels  . "SLF4J")
-                         (aliases . ("AllyEmbedded"))
+                         (aliases . ("AL-Embedded"))
                          (time-stamp-format . "ISO 8601 datetime + millis")
                          )
       ;; We misuse thread as a field for hostname.
@@ -372,6 +375,7 @@ you should place your code here."
      'org-babel-load-languages
      '(
        (shell . t)
+       (scala . t)
        (python . t)
        ;; https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-js.html
        ;; Helpful http://rwx.io/posts/org-with-babel-node-updated/
@@ -408,6 +412,25 @@ you should place your code here."
           :buffer "*My cheatsheet*")
     )
 
+  ;; Doesn't work...
+  ;; https://www.reddit.com/r/emacs/comments/415imd/prettier_orgmode_source_code_blocks/
+  ;; In org mode, add a space after headings
+  (setq org-src-block-faces '(("emacs-lisp" (:background "#000000"))
+                              ("elisp" (:background "#000000"))
+                              ("bash" (:background "#000000"))
+                              ("sh" (:background "#000000"))
+                              ("shell" (:background "#000000"))
+                              ("python" (:background "#000000"))))
+
+
+  (setq org-cycle-separator-lines 1)
+
+
+  ;; Add the improved org tags functionality to emacs.
+  (with-eval-after-load 'org 
+    (load "~/myconfig/emacs/air-org-set-tags-hook.el")
+  )
+
   ;; key bindings
   (when (eq system-type 'darwin) ;; mac specific settings
 
@@ -418,7 +441,6 @@ you should place your code here."
 
     ;; Remove the right-alt-key-binding, so you can hit # on mac
     (setq ns-right-alternate-modifier (quote none))
-
 
     ;;(global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
     )
@@ -436,7 +458,7 @@ you should place your code here."
  '(org-agenda-files (quote ("~/mytrackedfiles/todolist.org")))
  '(package-selected-packages
    (quote
-    (periodic-commit-minor-mode datetime extmap logview log4j-mode sass-mode company-web web-mode tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data cheatsheet emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (ztree noflet ensime sbt-mode scala-mode periodic-commit-minor-mode datetime extmap logview log4j-mode sass-mode company-web web-mode tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data cheatsheet emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
