@@ -49,8 +49,6 @@ Helm https://tuhdo.github.io/helm-intro.html
 | M-x calc u v          | Enter calc mode and show all units. Remember tha ' allows writing an algebraic expression.                                          |
 | C-x z                 | Repeat last command                                                                                                                 |
 | C-x d / D / R / C     | Dired delete, move, copy, can also use m to mark files                                                                              |
-* Magit
-| k                     | Drop stash                                                                                                                          |
 * Dired
 ** C-x d      Run Dired from the location of the current buffer.
 ** a          Switch locations but reuse buffer
@@ -170,10 +168,16 @@ https://www.gnu.org/software/emacs/manual/html_node/eintr/car-cdr-_0026-cons.htm
 ** M-;                  Add or remove comments  :coding:
 https://www.gnu.org/software/emacs/manual/html_node/emacs/Comment-Commands.html
 ** M-m s j              helm-jump-in-buffer or show functions in file.
+* Magit
+| k                     | Drop stash                                                                                                                          |
 * Using Magit to solve conflicts
+
+** RET on conflict opens in smerge editor
 
 Three way diff:
 https://coderwall.com/p/mcrwag/use-magit-ediff-to-resolve-merge-conflicts
+
+** 'e' on conflict opens in ediff
 
 Note that if you navigate to a conflict with RET and this is an orgmode file,
 It may look like there is no way to edit the differences because << == >> is missing.
