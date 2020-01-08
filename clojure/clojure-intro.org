@@ -1,0 +1,483 @@
+* How to set up Cider
+
+If you're having the following problem
+
+#+begin_src 
+nrepl-send-sync-request: Wrong type argument
+#+end_src
+
+https://gitter.im/syl20bnr/spacemacs/archives/2018/12/16
+
+#+begin_quote
+kouvas @kouvas Dec 16 2018 15:23
+anyone knows why i get error "Wrong type argument: strings, nil" when I try to evaluate a Clojure code block in org-mode? I have loaded clojure and python org-label support in userconfig but only python works fine
+^"... stringp, nil"
+
+yuhan0 @yuhan0 Dec 16 2018 15:28
+Unless I'm mistaken, the org file has to be inside a clojure project with cider already jacked in
+Is that the case for you? The error message could definitely be more informative in that regard
+
+kouvas @kouvas Dec 16 2018 15:39
+executing Clojure code block...
+nrepl-send-sync-request: Wrong type argument: stringp, nil
+you are right :) forgot to check the message buffer
+so there is not other way? I would like to use a general clojure org file for note taking and examples
+
+Compro Prasad @Compro-Prasad Dec 16 2018 15:40
+you can check where the error is coming from
+use M-x toggle-debug-on-error
+#+end_quote
+
+https://cider.readthedocs.io/en/latest/up_and_running/
+
+https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md
+
+brew install leiningen
+
+* DONE Adding Clojure to your App
+  CLOSED: [2019-10-24 Thu 17:26]
+** DONE Understanding Clojure & the REPL
+   CLOSED: [2019-10-20 Sun 10:58]
+
+(First technically add the clojure jars to your project)
+
+Clojure in most cases is always the REPL.
+Although it's possible to compile out clojure code to Java classes as seen here https://www.innoq.com/en/blog/native-clojure-and-graalvm/
+this is not generally how code is run.
+Therefore you always start a REPL on the JVM and then load clojure code.
+This can _also_ be done in a server/client way using something like nRepl.
+
+This is a good introduction to both repls and nrepl
+https://lambdaisland.com/guides/clojure-repls/clojure-repls
+
+
+Further nRepl links
+https://github.com/clojure/tools.nrepl
+https://nrepl.org/nrepl/0.6.0/index.html
+
+The following is interesting tools
+https://stackoverflow.com/questions/26743958/why-cant-i-print-from-background-threads-in-clojure-cider-repl-in-emacs
+
+Starting with Clojure for a Java programmer: https://youtu.be/P76Vbsk_3J0?t=2936
+** DONE Set up a repl in your program
+   CLOSED: [2019-09-25 Wed 23:07]
+
+NOTE The following is out of date:
+  https://gist.github.com/mbobesic/bbdea9a1fae1927057b8
+
+See https://github.com/nrepl/nrepl
+https://mvnrepository.com/artifact/nrepl/nrepl/0.6.0
+
+Remember to add clojars as the repository.
+#+begin_src 
+repositories {
+  maven { url "https://clojars.org/repo" }
+}
+#+end_src
+
+
+Also pay attention to 
+https://clojure.org/reference/java_interop#_calling_clojure_from_java
+
+and the rest of the page in general for tips on interop.
+** DONE Connect to an existing repl
+   CLOSED: [2019-09-25 Wed 23:06]
+ https://practicalli.github.io/spacemacs/clojure-repl/connect-to-running-repl.html
+
+ As the guide above states:
+ #+begin_src 
+ M-x cider-connect ;; Then type in host and port number
+ [nREPL] Establishing direct connection to localhost:8083 ...
+ [nREPL] Direct connection to localhost:8083 established
+ #+end_src
+** DONE Accessing the buffer
+   CLOSED: [2019-09-25 Wed 23:05]
+
+Now see the following, but ignore the Vim bindings and look for the emacs ones lower on the page.
+https://practicalli.github.io/spacemacs/clojure-repl/switching-to-repl.html
+
+Note that if you connect from a .clj file that is linked to another buffer or more stringent
+still, is a clojure project, then you won't be able to immediately go to the buffer with the 
+command M-x cider-switch-to-repl-buffer.
+
+Switch to the nRepl with [C-x b] as appropriate.
+
+Note that with Spacemacs the [C-x b] may cut off the buffer name.
+#+begin_src 
+;; The default of 20 cuts off clojure repl buffer information helpful to locate it.
+  (setq helm-buffer-max-length 30)
+#+end_src
+
+The above isn't a complete fix because the file name is too long still!
+However you can filter the list by port number with [C-x b] by typing the port number even if you cannot see it!
+** DONE Cannot print to stdout of original executing program
+   CLOSED: [2019-10-20 Sun 16:50]
+ But when we try and print to system out of our running programming where-in the REPL is launched from
+
+ #+begin_src 
+ user> (println "Hello world")
+ Hello world
+ nil
+ user>
+ #+end_src
+
+NOTE The standard out comes out via Cider and not the originating program.
+
+Make sure you read the nrepl help link listed in the first section.
+
+However the following will use the applications System.out
+
+#+begin_src 
+(.println (System/out) "hi")
+#+end_src
+
+However once the cider-nrepl is plugged in it might stop working again
+https://github.com/clojure-emacs/cider-nrepl/blob/master/src/cider/nrepl/middleware/out.clj
+
+This is by design. Instead try the following if logging is on the classpath.
+
+#+begin_src 
+(. (. org.slf4j.LoggerFactory getLogger "Test logger") info "Test Message")
+#+end_src
+
+
+** DONE Getting your project up to scratch with Gradle
+   CLOSED: [2019-10-24 Thu 00:34]
+Given we're starting with a Gradle project we could look to include something like this
+https://github.com/clojurephant/clojurephant
+
+
+#+begin_comment
+What happens if you try to add compilation directories manually:
+Or https://discuss.gradle.org/t/add-to-dependencies-classpath/7281/10
+Not a good idea because this appears not to be a source set, 
+and IntelliJ is confused about file paths something like
+https://stackoverflow.com/questions/30577665/disable-intellij-source-root-inspection
+#+end_comment
+
+However clojurephant may rely on latest version of gradle or you'll get the following:
+ #+begin_src 
+ org.gradle.internal.exceptions.LocationAwareException: Build file '/Users/dmg46664/IdeaProjects/precollate/build.gradle' line: 19
+ An exception occurred applying plugin request [id: 'dev.clojurephant.clojure', version: '0.5.0-alpha.5']
+	 at org.gradle.plugin.use.internal.DefaultPluginRequestApplicator.applyPlugin(DefaultPluginRequestApplicator.java:232)
+	 at java.lang.Thread.run(Thread.java:748)
+ Caused by: org.gradle.api.plugins.InvalidPluginException: An exception occurred applying plugin request [id: 'dev.clojurephant.clojure', version: '0.5.0-alpha.5']
+	 at org.gradle.plugin.use.internal.DefaultPluginRequestApplicator.exceptionOccurred(DefaultPluginRequestApplicator.java:247)
+	 at org.gradle.plugin.use.internal.DefaultPluginRequestApplicator.applyPlugin(DefaultPluginRequestApplicator.java:229)
+	 ... 105 more
+ Caused by: org.gradle.api.internal.plugins.PluginApplicationException: Failed to apply plugin [class 'dev.clojurephant.plugin.clojure.ClojureBasePlugin']
+	 at org.gradle.api.internal.plugins.DefaultPluginManager.doApply(DefaultPluginManager.java:160)
+	 at org.gradle.api.internal.plugins.DefaultPluginManager.addImperativePlugin(DefaultPluginManager.java:85)
+
+	 at org.gradle.api.internal.plugins.DefaultPluginManager.apply(DefaultPluginManager.java:130)
+	 at org.gradle.plugin.use.internal.DefaultPluginRequestApplicator$3.run(DefaultPluginRequestApplicator.java:151)
+	 at org.gradle.plugin.use.internal.DefaultPluginRequestApplicator.applyPlugin(DefaultPluginRequestApplicator.java:225)
+	 ... 105 more
+ Caused by: java.lang.NoSuchMethodError: org.gradle.api.model.ObjectFactory.directoryProperty()Lorg/gradle/api/file/DirectoryProperty;
+	 at dev.clojurephant.plugin.clojure.ClojureExtension.<init>(ClojureExtension.java:13)
+	 at dev.clojurephant.plugin.clojure.ClojureExtension_Decorated.<init>(Unknown Source)
+	 at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	 at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	 at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	 at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	 at org.gradle.internal.reflect.DirectInstantiator.newInstance(DirectInstantiator.java:51)
+	 ... 146 more
+
+
+ #+end_src
+
+For Mac, be aware of upgrading bash for sdkman, and then sdkman updgrade gradle.
+https://merikan.com/2019/04/upgrade-to-bash-5-in-macos/
+
+You may still have problems connecting from Emacs Cider, to a separate application.
+(It should work if jack'ing in from Leiningen or build systems that support passing dependencies)
+https://github.com/clojurephant/clojurephant/issues/78
+
+In order to get around this use a cider nrepl handler
+https://docs.cider.mx/cider-nrepl/usage.html#_via_embedding_nrepl_in_your_app
+https://clojars.org/cider/cider-nrepl
+
+** DONE Hotloading your own files
+   CLOSED: [2019-10-24 Thu 00:36]
+
+The first problem is to make sure when you invoke Clojure that it can see local script files.
+If you've got clojure onto the classpath AND your local files onto the classpath (See clojurephant in the previous sections), then you should be able to do the following:
+
+#+begin_src 
+      require.invoke(Clojure.read("accounts.localscript"));
+      IFn localscript = Clojure.var("accounts.localscript", "hello-world");
+      localscript.invoke();
+#+end_src
+
+src/main/clojure/accounts/localscript.clj
+#+begin_src 
+(ns accounts.localscript)
+
+(defn hello-world []
+  (println "Hello world"))
+#+end_src
+
+
+** TODO Refactoring not working via NREPL & clojurephant
+
+See everything written up here:
+https://github.com/clojurephant/clojurephant/issues/131
+
+https://github.com/clojure-emacs/clj-refactor.el#setup
+#+begin_src 
+On the other hand if a standalone REPL or an embedded nREPL server is used you will need to manually add this dependency (see below).
+
+Either in your project's project.clj or in the :user profile found at ~/.lein/profiles.clj:
+
+:plugins [[refactor-nrepl "2.4.0"]
+          [Cider/cider-nrepl "0.18.0"]]
+#+end_src
+
+So added to clojurephant
+
+#+begin_src 
+implementation 'refactor-nrepl:refactor-nrepl:2.4.0'
+#+end_src
+
+But still getting the following error
+#+begin_src 
+WARNING: clj-refactor and refactor-nrepl are out of sync.
+Their versions are 2.5.0-SNAPSHOT (package: 20190618.716) and n/a, respectively.
+You can mute this warning by changing cljr-suppress-middleware-warnings.
+#+end_src
+
+Interesting:
+https://github.com/clojure-emacs/cider/issues/2511#issuecomment-435767772
+
+Some background on the warning https://github.com/clojure-emacs/clj-refactor.el/pull/392
+https://github.com/clojure-emacs/cider/pull/2238
+
+Trying to find out more about instantiating middleware:
+https://cljdoc.org/d/nrepl/nrepl/0.5.3/doc/design/middleware
+
+Strategy might be to look at how boot manually instantiates middleware and try and do the same
+- https://clojuredocs.org/clojure.core/swap!
+
+Need to add understanding about nrepl and piggie backing.
+https://github.com/nrepl/piggieback#embedded
+
+
+
+See this stack of advice:
+https://docs.cider.mx/cider-nrepl/usage.html#_via_embedding_nrepl_in_your_app
+which links to 
+https://github.com/clojure-emacs/cider-nrepl/issues/447
+which references:
+https://github.com/clojure-emacs/cider-nrepl/issues/464
+
+
+** TODO Why does autocompletion not work?
+
+https://github.com/clojure-emacs/cider/issues/2528
+
+** DONE Getting started with Deps.edn
+   CLOSED: [2020-01-05 Sun 13:42]
+Tutorial:
+https://www.youtube.com/watch?v=SPSn02RxpxM
+
+which tracks this larger blog tutorial:
+https://practicalli.github.io/blog/posts/clojure-web-server-cli-tools-deps-edn/
+
+Starting a new project:
+https://github.com/seancorfield/clj-new#getting-started
+
+Starting repl in cider https://youtu.be/SPSn02RxpxM?t=3848
+
+* Clojure assistance
+
+** Refactoring
+*** C-c C-m rs     To call rs functions.
+All functions in clj-refactor have a two-letter mnemonic shortcut. E.g. rs for cljr-rename-symbol. 
+Given the prefix choice in the example setup you'd call this function by hitting 
+https://github.com/clojure-emacs/clj-refactor.el/wiki
+** Importing libraries
+https://8thlight.com/blog/colin-jones/2010/12/05/clojure-libs-and-namespaces-require-use-import-and-ns.html
+&
+https://stackoverflow.com/questions/10358149/in-clojure-1-4-what-is-the-use-of-refer-within-require/10370672
+** Quoting and unbound function errors
+https://8thlight.com/blog/colin-jones/2012/05/22/quoting-without-confusion.html
+** Destructuring
+http://blog.brunobonacci.com/2014/11/16/clojure-complete-guide-to-destructuring/
+
+https://stackoverflow.com/questions/3337888/clojure-named-arguments
+
+** Tutorials
+Great tutorial in coverage, but a little tedious is mode and development.
+https://www.youtube.com/watch?v=ciGyHkDuPAE
+
+** Useful clojure titbits
+*** Apply vs Map https://stackoverflow.com/questions/2311528/clojure-apply-vs-map
+*** Incrementing i https://stackoverflow.com/questions/4513078/i-equivalent-in-clojure
+  also note the atom and swap example?
+
+See map-indexed for a solution
+ https://stackoverflow.com/questions/24798831/clojure-increment-a-counter
+https://clojuredocs.org/clojure.core/map-indexed
+https://clojuredocs.org/clojure.core/dissoc
+*** Odd examples https://stackoverflow.com/questions/44052252/what-does-clojure-function-jerry-means
+*** Two dots https://clojure.org/reference/java_interop#_the_dot_special_form
+*** doseq vs for (lazy)  https://stackoverflow.com/questions/4725417/difference-between-doseq-and-for-in-clojure
+https://blog.jeaye.com/2016/07/27/clojure-for/
+
+Tip. See the combination of doseq and map-index  https://github.com/mjul/docjure/blob/master/src/dk/ative/docjure/spreadsheet.clj#L267
+*** Reading wierd clojure characters https://clojure.org/guides/weird_characters
+*** Add index to a vector of maps (assoc & map-index) https://stackoverflow.com/questions/34490944/clojure-add-index-to-vector-of-maps
+*** Converting non lazy sequences (2nd answer)  https://stackoverflow.com/a/1645224/93074
+*** Prototyping https://grishaev.me/en/clj-args/
+*** How to download clojuredocs documentation offline
+#+begin_src 
+wget -k -m http://clojuredocs.org/
+#+end_src
+
+- In the css and cljs direcories, rename all the .js and .css files to end in precisely this suffix.
+
+
+#+begin_src python
+import SimpleHTTPServer
+import SocketServer
+
+PORT = 1234
+
+class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+    pass
+
+Handler.extensions_map[''] = 'text/html'
+
+httpd = SocketServer.TCPServer(("", PORT), Handler)
+
+print "serving at port", PORT
+httpd.serve_forever()
+#+end_src
+
+#+begin_src 
+python server.py
+#+end_src
+
+https://docs.python.org/3/library/http.server.html
+**** TODO Find a way so that the server shows pages without the .html in html format. This could be either with python or 
+https://github.com/ring-clojure/ring/wiki/Getting-Started
+*** TODO How do Clojure return types work?
+https://clojuredocs.org/clojure.core/doall
+
+#+begin_src clojure
+(def t (map inc [1 2 3]))
+(type t) ; => clojure.lang.LazySeq
+
+(type (seq '(1 2 3)))
+(type '(1 2 3))
+
+(doall t) ; => (2 3 4)
+(str (doall t)) ; => clojure.lang.LazySeq
+(str (vector t)) ; => [(2 3 4)]
+(str (first (vector (doall t)))) ; => clojure.lang.LazySeq
+
+(def x (str (vector t)))
+(println x)
+
+
+
+
+(str "test")
+(println t)
+
+(do
+  (map inc [1 2 3])
+  )
+
+#+end_src
+*** Testing in clojure
+Need an intro guide to testing your app with the repl?
+Say you're Repl'ing your app and you want to run a test on a function change. How do you do this?
+
+Some background.
+https://stackoverflow.com/questions/21294294/run-tests-from-clojure-repl-and-leiningen
+*** Last repl exception  https://clojuredocs.org/clojure.core/*e
+*** Exercise to visualize functional: 
+Have the user write code that takes records and tranforms it to legacy api.
+I.e. takes a map, and has to take a dynamic list of excel columns
+and put that data into a record in those columns, perhaps accommodating for different types:
+i.e. formulas dates and values.
+This should help the student understand the difference between creating data vs. walking over
+the data tree maintaining state.
+*** TODO Another exercise
+
+; figure out how get the following to return a simple list.
+
+; Excercise
+(genSummaryHeaders ["BTC" "EUR" "ETH" "GBP"] ["EUR"])
+; Should return ("Date" "Summary" "BTC" "BTC Balance" ... same for other currencies "EUR fee")
+; Or a vector
+** Code snippets
+*** Query and filter classpath
+#+begin_src 
+(filter #(.contains % "clojure") (clojure.string/split (System/getProperty "java.class.path") #"\:"))
+#+end_src
+
+** Interesting reads
+*** Transient data structures https://clojure.org/reference/transients
+*** Missing elegant API for manipulating immutable data structures http://nathanmarz.com/blog/clojures-missing-piece.html
+*** Clojure workflow tips https://clojureverse.org/t/share-the-nitty-gritty-details-of-your-clojure-workflow/1208/23
+*** Reloading woes https://lambdaisland.com/blog/2018-02-09-reloading-woes
+*** Nested hash map anti patern? (Only required in rare circumstances) https://hackernoon.com/nested-maps-considered-harmful-143add482247
+*** Nil punning https://lispcast.com/nil-punning/
+*** Interesting threading https://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/
+*** Maps vs records  http://discuss.purelyfunctional.tv/t/when-to-use-map-vs-defrecord/933
+*** Keywords vs Symbols https://blog.robphoenix.com/clojure/notes-on-clojure-keywords-symbols/
+** Cider
+*** cider hook http://root42.blogspot.com/2014/08/how-to-automatically-refresh-cider-when.html
+** Videos
+*** TODO Task : Make a doubly nested for loop, calling on a Java API (XLS) spreadsheet, to take a data structure and save it to tables.
+https://github.com/mjul/docjure
+
+The naive way that a java programmer would code:
+- Assuming the need for for counters.
+- There is a need for counters. Docjure got around it by querying the underlying data!
+- Made a mistake for vs deseq
+- Made a mistake or at least didn't realize that I'd reached the point to start breaking functions up. This is good!
+- At least we figured out map-indexed!
+
+#+begin_src clojure
+(defn save-excel! []
+  (println "saving excel spreadsheet")
+  (let [workbook (XSSFWorkbook.)
+        sheet (.createSheet workbook "Datatypes in Java")
+        datatypes [["Datatypes", "Type", "Size(in bytes)"]
+                   ["int", "Primitive", 2]
+                   ["float", "Primitive", 4]
+                   ["double", "Primitive", 8]
+                   ["char", "Primitive", 1]
+                   ["String", "Non-Primitive", "No fixed size"]]
+        rowNum 0
+
+        ]
+    (for [row_data datatypes
+          :let [row (. sheet createRow rowNum)
+                ]]
+      ;; The following causes a side effect
+      (dorun (map-indexed  #(let [cell (. row createCell (inc %1))] (.setCellValue cell %2)
+                          )
+                    row_data))
+      )
+    (try (doto workbook (.write (FileOutputStream. "myfile.xls")) (.close))
+         (catch Exception e (.printStackTrace e)))
+    )
+  )
+
+
+(save-excel!)
+#+end_src
+*** Scope capture https://vimeo.com/237220354
+** Improvements
+*** Ensure that stacktrace window is colour coded obvious to communicate whether it's a runtime error or compile time error.
+*** Thread about how to compensate for the lack of dot https://www.reddit.com/r/Clojure/comments/6f6cq2/how_to_compensate_for_clojures_lack_of_dot/
+*** The stacktrace window should allow one ot preview items without go
+*** To clojurephant
+; (in [1 2] 1) ; like .contains
+; (expand-case) to expand out case test-contants.
+
+

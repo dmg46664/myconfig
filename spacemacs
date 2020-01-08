@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     python
      html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -53,6 +54,12 @@ values."
      emoji
      ;; only load scala on Mac for now (not on windows)
      scala
+     (clojure :variables
+              clojure-enable-fancify-symbols t
+              ;; https://github.com/syl20bnr/spacemacs/blob/develop/layers/+lang/clojure/README.org#enabling-sayid-or-clj-refactor
+              clojure-enable-clj-refactor t
+              )
+
      )
 
    ;; List of additional packages that will be installed without being
@@ -312,6 +319,13 @@ executes.
  This function is mostly useful for ariables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+  (setq-default
+
+   ;; Allow hash # to be entered on a UK keyboard.
+   ;; Note there is a second part to this fix lower down in the file.
+   ;; Discussion on spacemacs forum
+   ;; https://github.com/syl20bnr/spacemacs/issues/1435
+   mac-right-option-modifier nil)
   )
 
 (defun dotspacemacs/user-config ()
@@ -322,14 +336,35 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  ;; My overridden configuration
-  (spacemacs/toggle-transparency)
+  ;; My overridden configuration to enable transparency at startup
+  ;; https://github.com/syl20bnr/spacemacs/issues/4435
+  (add-hook 'after-make-frame-functions 'spacemacs/enable-transparency)
+  (spacemacs/enable-transparency)
+
   ;; key binds - override I-search
   (global-set-key (kbd "C-s") 'helm-occur)
   ;; Vim's evil command lines
   (global-set-key (kbd "C-:") 'evil-ex)
   ;; Default binding for Avy as per website, with a tweak not to interfere with org mode
   (global-set-key (kbd "C-;") 'avy-goto-char-2)
+
+  ;; maps could be cider-mode-map or global-map
+  (defhydra hydra-clojure (global-map "C-1")
+    ("{" sp-wrap-curly)
+    ("(" sp-wrap-round)
+    ("[" sp-wrap-square)
+    ("+" enlarge-window)
+    ("<up>" (lambda ()
+              (interactive)
+              (setq this-command 'previous-line)
+              (previous-line 5)))
+    ("<down>" (lambda ()
+                (interactive)
+                (setq this-command 'next-line)
+                (next-line 5)))
+    )
+
+
   ;; Set priority colours in org mode
   (setq org-priority-faces '((?A . (:foreground "red" :weight 'bold))
                              (?B . (:foreground "yellow"))
@@ -380,6 +415,7 @@ you should place your code here."
        ;; https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-js.html
        ;; Helpful http://rwx.io/posts/org-with-babel-node-updated/
        (js . t) ;; Make sure to write '#+begin_src js' and not '... javascript'
+       (clojure . t)
        )
      )
 ;;TODO   (add-to-list 'org-babel-tangle-lang-exts '("js" . "js"))
@@ -396,11 +432,19 @@ you should place your code here."
   ;; Save every 2 hours (interval in seconds)
   (setq pcmm-commit-frequency 7200)
 
+
   ;; Add a cheatsheet function over a file
+  ;;
+  ;; See https://github.com/emacs-helm/helm/blob/master/helm-source.el
+  ;; Searching inspired by  https://github.com/emacs-helm/helm/blob/master/helm-occur.el#L199
+  ;; TODO Ensure not a fuzzy match.
+  (defvar my-cheatsheet-regex "\\s-\\{1\\}\\(.*\\)\\'"
+    "Copied")
   (defun my-cheatsheet ()
     (interactive)
     (helm :sources (helm-build-in-file-source
                        "My cheatsheet" "~/myconfig/emacs/mycheatsheet.org"
+                       
                        :action (lambda (candidate)
                                  (let ((linum (with-helm-buffer
                                                 (get-text-property
@@ -408,9 +452,27 @@ you should place your code here."
                                                  (helm-get-selection nil 'withprop)))))
                                    (find-file (with-helm-buffer
                                                 (helm-attr 'candidates-file)))
-                                   (goto-line linum))))
+                                   (goto-line linum)))
+                       ;; :match-part
+                       ;; (lambda (candidate)
+                       ;;   ;; The regexp should match what is in candidate buffer,
+                       ;;   ;; not what is displayed in helm-buffer e.g. "12 foo"
+                       ;;   ;; and not "12:foo".
+                       ;;   (when (string-match my-cheatsheet-regex 
+                       ;;                       candidate)
+                       ;;     (match-string 2 candidate)))
+                       ;; :search (lambda (pattern)
+                       ;;           (when (string-match "\\`\\^\\([^ ]*\\)" pattern)
+                       ;;             (setq pattern (concat "^[0-9]* \\{1\\}" (match-string 1 pattern))))
+                       ;;           (condition-case _err
+                       ;;               (re-search-forward pattern nil t)
+                       ;;             (invalid-regexp nil)))
+                       ;; :nomark t
+                       ;; :migemo t
+                       )
           :buffer "*My cheatsheet*")
     )
+
 
   ;; Doesn't work...
   ;; https://www.reddit.com/r/emacs/comments/415imd/prettier_orgmode_source_code_blocks/
@@ -420,11 +482,13 @@ you should place your code here."
                               ("bash" (:background "#000000"))
                               ("sh" (:background "#000000"))
                               ("shell" (:background "#000000"))
-                              ("python" (:background "#000000"))))
-
+                              ("python" (:background "#000000"))
+                              ("clojure" (:background "#000000"))))
 
   (setq org-cycle-separator-lines 1)
 
+  ;; The default of 20 cuts off clojure repl buffer information helpful to locate it.
+  (setq helm-buffer-max-length 30)
 
   ;; Add the improved org tags functionality to emacs.
   (with-eval-after-load 'org 
@@ -442,7 +506,6 @@ you should place your code here."
     ;; Remove the right-alt-key-binding, so you can hit # on mac
     (setq ns-right-alternate-modifier (quote none))
 
-    ;;(global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
     )
 
   )
@@ -455,10 +518,11 @@ you should place your code here."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(menu-bar-mode t)
- '(org-agenda-files (quote ("~/mytrackedfiles/todolist.org")))
+ '(org-agenda-files
+   (list "~/mytrackedfiles/todolist.org" "~/mytrackedfiles/stock_research.org"))
  '(package-selected-packages
    (quote
-    (ztree noflet ensime sbt-mode scala-mode periodic-commit-minor-mode datetime extmap logview log4j-mode sass-mode company-web web-mode tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data cheatsheet emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (pyenv-mode hy-mode company-anaconda anaconda-mode yapfify pyvenv pytest py-isort pip-requirements live-py-mode dash-functional helm-pydoc cython-mode pythonic clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg lv cider-eval-sexp-fu cider sesman queue parseedn clojure-mode parseclj a ztree noflet ensime sbt-mode scala-mode periodic-commit-minor-mode datetime extmap logview log4j-mode sass-mode company-web web-mode tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data cheatsheet emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

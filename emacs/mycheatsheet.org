@@ -1,85 +1,129 @@
-| *Movement*            |                                                                                                                                     |
-| C-v                   | page down                                                                                                                           |
-| M-v                   | page down                                                                                                                           |
-| C-n / C-p             | Move cursor up and down                                                                                                             |
-| C-f / C-b             | Move cursor back and forward one char                                                                                               |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
-| *Window*              |                                                                                                                                     |
-| C-x }                 | Increase expand window horizontally                                                                                                 |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
-| *Macro*               |                                                                                                                                     |
+* Cursor movement
+** C-v                    | page down  :movement:
+** M-v                    | page down  :movement:
+** C-n / C-p              | Move cursor up and down  :movement:
+** C-f / C-b              | Move cursor back and forward one char  :movement:
+** C-x <left>             | Jump to position in previous buffer, never showing the same buffer twice.  :movement:
+** and C-x <right>        | Same but forward...  :movement:
+* Navigation
+** C-x →                  | Switch to next buffer.  :navigation:
+** C-x ←                  | Switch to previous buffer.  :navigation:
+** end-of-buffer-other-window    Really great feature to jump to the end of the buffer in the other window.
+* Selection
+** M-h                  Gradually select expanded line
+* Window
+** C-x }                | Increase expand window horizontally  :window:
+** C-x ^                  (enlarge-window)  :window:
+* Macro
 | C-x (                 | Start macro                                                                                                                         |
 | C-x )                 | End macro (but this doesn't make it available)                                                                                      |
 | Name macro            | M-x name-last-kbd-macro , which should be called after end macro                                                                    |
 | Insert macro          | M-x insert-kbd-macro (requires the a named keyboard macro first.                                                                    |
 | C-x e                 | Run last keyboard macro                                                                                                             |
 | Macro doc             | https://www.emacswiki.org/emacs/KeyboardMacros                                                                                      |
-| *Edits*               |                                                                                                                                     |
+* Edits
 | M-d                   | Delete forward one word                                                                                                             |
 | M-backspace           | Delete back one word                                                                                                                |
 | C-SPC select C-x r k  | Block edit (unverified)                                                                                                             |
 | C-x z                 | Repeat previous command again. After doing it once, just type z.                                                                    |
 | C-: /evil-ex          | Evil command line. Try :%s/regex/replacement/options where options = g(all on line),c(confirm). Use \1 extract.                     |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
-| *Org*                 |                                                                                                                                     |
-| M-m a o l             | M-x org-store-link to store a link to a file, then C-c C-l to paste link                                                            |
-| C-c C-j               | org-goto in order to jump                                                                                                           |
-| C-c C-o               | Open link in browser                                                                                                                |
-| C-c C-x C-w           | org-cut-subtree for cutting sub tree or table regsion                                                                               |
-| C-c C-,               | org-insert-structure-template = <q TAB  https://github.com/syl20bnr/spacemacs/issues/11798                                          |
-| C-x n s / b           | Narrow buffer to only current subtree or block  (hiding everything else)                                                            |
-| C-x n w               | Widen buffer removing previous narrowing                                                                                            |
-| C-c [     / ]         | Add current file to the list of agenda files. The file is added to the front of the list.                                           |
-| C-,                   | Cycle through agenda file list, visiting one file after the other.                                                                  |
-| C-c a a               | Agenda for the week. More commands in this view https://orgmode.org/guide/Agenda-commands.html                                      |
-| C-c .                 | org-time-stamp which lets you input a date.                                                                                         |
-| C-c C-v C-r           | (org-babel-goto-named-result)                                                                                                       |
-| C-c *                 | (org-toggle-heading) Turn a normal line or plain list item into a headline                                                          |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
+* Configuration
+** M-m ?         helm-descbinds Helm buffer for describing bindings. Useful for mapping keys.
+** defhydra      Command in order to set hydra functions
+https://youtu.be/ONHEDj3kWrE?t=198
+* Emacs
 | M-m r y               | helm-show-killring                                                                                                                  |
 | M-x recover-session   | Recover session after crash and work hasn't been saved. Use C-c C-c on the session you want to recover (by date)                    |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
-| *Other*               |                                                                                                                                     |
+| C-x C-                | leave Emacs                                                                                                                         |
+| C-h f                 | To go to documentation of function you want, then has link to source OR You can get to the source with M-x find-library org-agenda. |
+| Go to source          | M-x find-library                                                                                                                    |
+| C-h b                 | Or (helm-decsbinds) to describe all key bindings                                                                                    |
+| toggle-truncate-lines | Word wrap                                                                                                                           |
+** 
+* Spacemacs
+Helm https://tuhdo.github.io/helm-intro.html
+* Other
 | C-c C-c               | Babel execute code inside a code block                                                                                              |
 | C-x C-e               | Evaluate highlighted point                                                                                                          |
 | M-:                   | Evaluate single command                                                                                                             |
 | M-x calc u v          | Enter calc mode and show all units. Remember tha ' allows writing an algebraic expression.                                          |
 | C-x z                 | Repeat last command                                                                                                                 |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
-| *Emacs*               |                                                                                                                                     |
-| C-x C-                | leave Emacs                                                                                                                         |
-| C-h f                 | To go to documentation of function you want, then has link to source OR You can get to the source with M-x find-library org-agenda. |
-| Go to source          | M-x find-library                                                                                                                    |
-| C-h b                 | Or (helm-decsbinds) to describe all key bindings                                                                                    |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
-| * Magit               |                                                                                                                                     |
+| C-x d / D / R / C     | Dired delete, move, copy, can also use m to mark files                                                                              |
+* Magit
 | k                     | Drop stash                                                                                                                          |
-|-----------------------+-------------------------------------------------------------------------------------------------------------------------------------|
-| toggle-truncate-lines | Word wrap                                                                                                                           |
-|                       |                                                                                                                                     |
+* Dired
+** C-x d      Run Dired from the location of the current buffer.
+** a          Switch locations but reuse buffer
+* File manipulation
+** M-m f y    Copy file path                                      :spacemacs:
+* Helm
+** C-u C-c C-k / C-c TAB  | From the helm file chooser buffer (M-m f f) this will select the full file path to the kill ring  :navigation:
+https://emacs.stackexchange.com/questions/19819/how-can-i-use-helm-file-finder-to-copy-a-file-path-to-a-buffer
+** helm find file contents
+You can use helm-ff-do-grep inside helm-find-files session.
 
+Inside helm-find-files session. 
+You can invoke helm-ff-run-grep with C-s and C-u as prefix argument. 
+Then choose where/what to search then it prompt you a pattern to search.
+https://emacs.stackexchange.com/questions/19875/how-to-find-files-by-content-across-lines-with-helm
+* Unorganized
 - Useful: org-export-insert-default-template
-
-
-
-
 
 Spacemacs cheat sheet:
 https://gist.github.com/robphoenix/9e4db767ab5c912fb558
 
 Autocomplete orgmode templates:
 https://orgmode.org/manual/Easy-templates.html
+* Org
+| M-m a o l     | M-x org-store-link to store a link to a file, then C-c C-l to paste link                       |
+| C-c C-j       | org-goto in order to jump                                                                      |
+| C-c C-o       | Open link in browser                                                                           |
+| C-c C-x C-w   | org-cut-subtree for cutting sub tree or table regsion                                          |
+| C-c C-,       | org-insert-structure-template = <q TAB  https://github.com/syl20bnr/spacemacs/issues/11798     |
+| C-x n s / b   | Narrow buffer to only current subtree or block  (hiding everything else)                       |
+| C-x n w       | Widen buffer removing previous narrowing                                                       |
+| C-c [     / ] | Add current file to the list of agenda files. The file is added to the front of the list.      |
+| C-,           | Cycle through agenda file list, visiting one file after the other.                             |
+| C-c a a       | Agenda for the week. More commands in this view https://orgmode.org/guide/Agenda-commands.html |
+| C-c .         | org-time-stamp which lets you input a date.                                                    |
+| C-c C-v C-r   | (org-babel-goto-named-result)                                                                  |
+|               |                                                                                                |
+| C-c *         | (org-toggle-heading) Turn a normal line or plain list item into a headline                     |
+* OrgMode
+** TODO How to rebind a key in org agenda to shift 7 days 
+First see the code in OrgMode how it binds keys.
+https://github.com/bzg/org-mode/blob/master/lisp/org-agenda.el#L2327
 
+Then see these instructions for simple keyboard bindings.
+https://emacs.stackexchange.com/questions/19403/how-do-i-change-key-bindings-for-org-mode-agenda-view
 
+Or you can use the orgmode functions for remapping keys
+https://github.com/bzg/org-mode/blob/300f15bcbbaf7a49c94e2cfca4f4335f0dc55fc8/lisp/org-keys.el#L312
+https://lists.gnu.org/archive/html/emacs-orgmode/2011-02/msg00260.html
+
+Still not sure how to postpone using org-schedule or org-agenda-schedule without bringing up dialog.
+* OrgAgenda https://www.gnu.org/software/emacs/manual/html_node/org/Agenda-commands.html
+** C-c C-s +4        Postpone the task out the 'TODO' item by 4 days  :orgagenda:
+https://lists.gnu.org/archive/html/emacs-orgmode/2007-08/msg00059.html
+** C-c C-c           Set tag for the current task  :orgagenda:
+https://orgmode.org/guide/Setting-tags.html#Setting-tags
+** m, B, s           In agenda view, mark, bulk, reschedule  :orgagenda:
+** f, b              Go forward or back the current day span :orgagenda:
+** j                 Go to date  :orgagenda:
 * Org mode table stuff
 
 https://orgmode.org/worg/org-tutorials/org-spreadsheet-intro.html
 
-In a cell, do C-c ? for a reference of table functions.
-
-Reference visualization grid with C-c }:
-
-
+** In a cell, do C-c ? for a reference of table functions.
+** Reference visualization grid with C-c }:
+** DEDICATED BUFFER  C-c '
+**  C-c *        Recalculate a line or entire table (org-table-recalculate )
+ Recalculate the current row by first applying the stored column formulas from left to right, 
+and all field/range formulas in the current row.
+*** TODO or C-c C-c if you're on the #+TBLFM line. (Not working!)
+** C-c C-c Recalculate table
+https://lists.gnu.org/archive/html/emacs-orgmode/2018-06/msg00243.html
+** TODO Clean the following up.
 #+begin_src 
 But what we really want is to compute the formulas for all fields in the column named "Mean". 
 In other words, we really want a column formula, not a field formula.
@@ -89,8 +133,6 @@ Note that the only difference with what you've inserted previously is that the f
 When you're done, do a C-c C-c in the field: you should be prompted whether you want to 
 replace the formula with a column formula, which is precisely what we want.
 
-Once you agree with this, the value in the field should be the same than before (namely 11) and you can now update 
-all the fields in this column by reapplying all formulas with C-u C-c * (or C-c C-c if you're on the #+TBLFM line.)
 #+end_src
 
 #+begin_quote
@@ -102,15 +144,17 @@ starts the definition for a column formula and typing := starts a definition for
 If you prefer, you can edit formulas in the minibuffer: use C-c = for 
 editing column formulas or C-u C-c = for field formulas.
 
-But you can also edit formulas more interactively in a dedicated buffer by typing C-c '. 
+
 This new buffer lists all the formulas for the table at point and provides facilities to edit the references.
 
 When the cursor is above a reference, the corresponding field in the table get highlighted. Nice! 
 But you can do more than that: you can actually select the reference by using the S-<left/right/up/down> keys.
 #+end_quote
 
+General advise about editing and debugging fields
+https://orgmode.org/org.html#Editing-and-debugging-formulas
 
-* Eslip Coding
+* Elisp Coding
 
 
 Check the basic example programs
@@ -122,10 +166,22 @@ https://www.gnu.org/software/emacs/manual/html_node/eintr/car-cdr-_0026-cons.htm
 
 
 
+* Clojure Coding
+** M-;                  Add or remove comments  :coding:
+https://www.gnu.org/software/emacs/manual/html_node/emacs/Comment-Commands.html
+** M-m s j              helm-jump-in-buffer or show functions in file.
+* Using Magit to solve conflicts
 
-* Using Magit diff
+Three way diff:
 https://coderwall.com/p/mcrwag/use-magit-ediff-to-resolve-merge-conflicts
 
+Note that if you navigate to a conflict with RET and this is an orgmode file,
+It may look like there is no way to edit the differences because << == >> is missing.
+This can be because orgmode hides this text and only displays the headings!
+Remember to expand out the subtree to fix the problems.
+
+Useful reading
+https://magit.vc/manual/magit/Resolving-Conflicts.html
 * Notes
 ** helm-occur is the default edit window that comes with helm.
 ** TODO helm-swoop is an advanced mode version that hasn't been committed to in a while.
