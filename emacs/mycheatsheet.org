@@ -11,6 +11,8 @@
 ** end-of-buffer-other-window    Really great feature to jump to the end of the buffer in the other window.
 * Selection
 ** M-h                  Gradually select expanded line
+** M-m v                Expand region
+** C-x h                mark-whole-buffer or select the whole buffer
 * Window
 ** C-x }                | Increase expand window horizontally  :window:
 ** C-x ^                  (enlarge-window)  :window:

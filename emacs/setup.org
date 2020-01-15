@@ -1,0 +1,76 @@
+* Setting up Spacemacs
+** Setting up the .spacemacs file  :windows:
+https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/
+
+You should use a hard link!
+
+
+TODO At some point move spacemacs to the emacs directory
+#+begin_src 
+mklink C:\Users\PC\AppData\Roaming\.spacemacs C:\Users\PC\AppData\Roaming\myconfig\spacemacs
+#+end_src
+
+Soft links are as follows but we don't want that:
+#+begin_src 
+mklink /D Link Target
+#+end_src
+** Fixing a bug in projectile
+If you get the following
+
+
+ org-projectile/:config: Symbol’s function definition is void: org-projectile:per-repo
+
+https://github.com/syl20bnr/spacemacs/issues/9374
+
+#+begin_src 
+find ~/.emacs.d/elpa -name "*elc" -delete
+#+end_src
+** SDKMAN on windows is more complicated.  :windows:
+You need git bash which is probably already installed (to install spacemacs).
+** Git auto pushing for mytracked files.
+
+You need to register your email address in the git config if you haven't done so before.
+
+#+begin_src 
+PC@LAPTOP-74MHHK0F MINGW64 ~/mytrackedfiles (master)
+$ git config --global user.name "dmg46664"
+
+PC@LAPTOP-74MHHK0F MINGW64 ~/mytrackedfiles (master)
+$ git config --global user.email "dmg46664@noreply.github.com"
+#+end_src
+** Clojure tools
+
+https://clojure.org/guides/getting_started
+
+Installed with the -bypass (see lower down in the windows guide) option and chose
+location 1.
+
+Maybe try scoop
+https://scoop.sh/
+
+(Didn't have to install powershell or ndk
+
+#+begin_src 
+PS C:\Users\PC> scoop bucket add java
+Checking repo... ok
+The java bucket was added successfully.
+PS C:\Users\PC> scoop bucket add scoop-clojure https://github.com/littleli/scoop-clojure
+Checking repo... ok
+The scoop-clojure bucket was added successfully.
+PS C:\Users\PC> scoop bucket add java
+Checking repo... ok
+The java bucket was added successfully.
+PS C:\Users\PC> scoop bucket add scoop-clojure https://github.com/littleli/scoop-clojure
+Checking repo... ok
+The scoop-clojure bucket was added successfully.
+PS C:\Users\PC> scoop install zulu13
+Installing 'zulu13' (13.28.11) [64bit]
+#+end_src
+
+Got stuck on the last line and had to press enter
+#+begin_src 
+PS C:\Users\PC> scoop install zulu13
+Installing 'zulu13' (13.28.11) [64bit]
+...
+Checking hash of zulu13.28.11-ca-jdk13.0.1-win_x64.zip ... ok.
+#+end_src

@@ -417,6 +417,8 @@ the data tree maintaining state.
 #+begin_src 
 (filter #(.contains % "clojure") (clojure.string/split (System/getProperty "java.class.path") #"\:"))
 #+end_src
+** Tools + libs
+*** https://github.com/dgrnbrg/spyscope
 
 ** Interesting reads
 *** Transient data structures https://clojure.org/reference/transients
