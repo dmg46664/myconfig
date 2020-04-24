@@ -66,7 +66,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(log4j-mode logview ztree
+   dotspacemacs-additional-packages '(alarm-clock log4j-mode logview ztree zprint-mode
                                                  ;; How to install packages not in melp https://github.com/syl20bnr/spacemacs/issues/2278
                                                  (periodic-commit-minor-mode :location (recipe
                                                                         :fetcher github
@@ -326,6 +326,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
    ;; Discussion on spacemacs forum
    ;; https://github.com/syl20bnr/spacemacs/issues/1435
    mac-right-option-modifier nil)
+
+  ;; More reading https://www.masteringemacs.org/article/mastering-key-bindings-emacs
+  ;; Problems with more than one keyboard: https://apple.stackexchange.com/questions/277510/osx-different-keyboards-with-different-input-methods-possible
+  ;; In order to switch between # and £ on Mac, I've decided to simply change between keyboard sources, given two keyboard (Ctrl-SPC)
   )
 
 (defun dotspacemacs/user-config ()
@@ -348,6 +352,14 @@ you should place your code here."
   ;; Default binding for Avy as per website, with a tweak not to interfere with org mode
   (global-set-key (kbd "C-;") 'avy-goto-char-2)
 
+  ;; Pretty printing for Clojure https://github.com/pesterhazy/zprint-mode.el
+  (global-set-key (kbd "C-c p") 'zprint)
+
+  ;; Give a warning when you are actively working on a particular clock
+  (setq org-clock-idle-time 15)
+  (setq org-log-note-clock-out t)
+
+
   ;; maps could be cider-mode-map or global-map
   (defhydra hydra-clojure (global-map "C-1")
     ("{" sp-wrap-curly)
@@ -362,7 +374,21 @@ you should place your code here."
                 (interactive)
                 (setq this-command 'next-line)
                 (next-line 5)))
+    ("<left>" previous-buffer)
+    ("<right>" next-buffer)
+    ("k" kill-buffer)
     )
+
+  ;; Use mdfind on osx for helm locate
+  ;; https://github.com/syl20bnr/spacemacs/issues/3280
+  (setq helm-locate-command
+        (case system-type
+          ('gnu/linux "locate -i -r %s")
+          ('berkeley-unix "locate -i %s")
+          ('windows-nt "es %s")
+          ('darwin "mdfind -name %s %s")
+          (t "locate %s")))
+  (if (eq system-type 'darwin) (setq helm-locate-fuzzy-match nil))
 
 
   ;; Set priority colours in org mode
@@ -493,7 +519,23 @@ you should place your code here."
   ;; Add the improved org tags functionality to emacs.
   (with-eval-after-load 'org 
     (load "~/myconfig/emacs/air-org-set-tags-hook.el")
-  )
+    )
+
+  ;; using heaven-and-hell to switch between themes
+  (use-package heaven-and-hell
+    :ensure t
+    :init
+    (setq heaven-and-hell-theme-type 'dark) ;; Omit to use light by default
+    ;;(setq heaven-and-hell-theme-type 'light) ;;
+    (setq heaven-and-hell-themes
+          '((light . (default adwaita)) ;; 
+            (dark . (deeper-blue )))) ;; Themes can be the list: (dark . (tsdh-dark wombat)) but this will apply characteristics of all of them
+    ;; wombat was okay dark, except it would white out the line being edited.
+    ;; adwaita is an okay light theme
+    :hook (after-init . heaven-and-hell-init-hook) ;;
+    ;;  :hook (emacs-startup . heaven-and-hell-init-hook) ;; if above does not work
+    :bind (("C-<f6>" . heaven-and-hell-load-default-theme)
+           ("<f6>" . heaven-and-hell-toggle-theme)))
 
   ;; key bindings
   (when (eq system-type 'darwin) ;; mac specific settings
@@ -517,12 +559,20 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
+ '(custom-enabled-themes (quote (default adwaita)))
+ '(custom-safe-themes
+   (quote
+    ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+ '(evil-want-Y-yank-to-eol nil)
+ '(helm-completion-style (quote helm))
  '(menu-bar-mode t)
  '(org-agenda-files
    (list "~/mytrackedfiles/todolist.org" "~/mytrackedfiles/stock_research.org"))
  '(package-selected-packages
    (quote
-    (pyenv-mode hy-mode company-anaconda anaconda-mode yapfify pyvenv pytest py-isort pip-requirements live-py-mode dash-functional helm-pydoc cython-mode pythonic clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg lv cider-eval-sexp-fu cider sesman queue parseedn clojure-mode parseclj a ztree noflet ensime sbt-mode scala-mode periodic-commit-minor-mode datetime extmap logview log4j-mode sass-mode company-web web-mode tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data cheatsheet emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (alarm-clock zprint-mode heaven-and-hell pyenv-mode hy-mode company-anaconda anaconda-mode yapfify pyvenv pytest py-isort pip-requirements live-py-mode dash-functional helm-pydoc cython-mode pythonic clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg lv cider-eval-sexp-fu cider sesman queue parseedn clojure-mode parseclj a ztree noflet ensime sbt-mode scala-mode periodic-commit-minor-mode datetime extmap logview log4j-mode sass-mode company-web web-mode tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data cheatsheet emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
