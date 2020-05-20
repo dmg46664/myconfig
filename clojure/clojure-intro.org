@@ -286,7 +286,49 @@ https://practicalli.github.io/blog/posts/clojure-web-server-cli-tools-deps-edn/
 Starting a new project:
 https://github.com/seancorfield/clj-new#getting-started
 
+Create a basic application:
+#+begin_src 
+    clj -A:new app myname/myapp
+    cd myapp
+    clj -m myname.myapp
+#+end_src
+
 Starting repl in cider https://youtu.be/SPSn02RxpxM?t=3848
+
+** TODO Adding REBL to lein and cider
+
+#+begin_src
+Execution error (FileNotFoundException) at cognitect.rebl.impl.monaco/loading (monaco.clj:3).
+Could not locate cljfmt/core__init.class, cljfmt/core.clj or cljfmt/core.cljc on classpath.
+ERROR: Unhandled REPL handler exception processing message {:nrepl.middleware.print/stream? 1, :nrepl.middleware.print/print cider.nrepl.pprint/pprint, :nrepl.middleware.print/quota 1048576, :nrepl.middleware.print/options {:right-margin 80}, :op stacktrace, :session 33d17ac2-413a-48d7-a8b4-37425257220f, :id 23}
+java.lang.NoClassDefFoundError: Could not initialize class cognitect.rebl.ui__init
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:416)
+	at clojure.lang.RT.classForName(RT.java:2207)
+	at clojure.lang.RT.classForName(RT.java:2216)
+	at clojure.lang.Compiler.maybeResolveIn(Compiler.java:7437)
+	at clojure.core$ns_resolve.invokeStatic(core.clj:4370)
+	at clojure.core$ns_resolve.invokeStatic(core.clj:4359)
+	at clojure.core$ns_resolve.invoke(core.clj:4359)
+	at cider.nrepl.inlined_deps.orchard.v0v5v5.orchard.java$resolve_class$fn__8010.invoke(java.clj:310)
+	at cider.nrepl.inlined_deps.orchard.v0v5v5.orchard.java$resolve_class.invokeStatic(java.clj:310)
+#+end_src
+
+Or from the terminal after upgrading lein to 2.9.3
+
+#+begin_src 
+lein repl
+dmg46664.etl=> (require '[cognitect.rebl :as rebl])
+nil
+dmg46664.etl=> (rebl/ui)
+Execution error (FileNotFoundException) at cognitect.rebl.impl.monaco/loading (monaco.clj:3).
+Could not locate cljfmt/core__init.class, cljfmt/core.clj or cljfmt/core.cljc on classpath.
+#+end_src
+
+Might want to try https://github.com/RickMoynihan/nrebl.middleware
+
+Perhaps it doesn't work with symlinks of the jar?
+Adding the dependency as per comment here fixes this https://github.com/cognitect-labs/REBL-distro/issues/34
 
 * Clojure assistance
 
@@ -299,17 +341,29 @@ https://github.com/clojure-emacs/clj-refactor.el/wiki
 https://8thlight.com/blog/colin-jones/2010/12/05/clojure-libs-and-namespaces-require-use-import-and-ns.html
 &
 https://stackoverflow.com/questions/10358149/in-clojure-1-4-what-is-the-use-of-refer-within-require/10370672
+
+How to import and require gen-classes
+https://groups.google.com/forum/#!topic/clojure/9_xkNUEsgIc
+
+Also
+https://github.com/yogthos/clojure-error-message-catalog/blob/master/clj/class-not-found-exception.md
+
+More on class loaders
+https://www.baeldung.com/java-classloaders
+
 ** Quoting and unbound function errors
 https://8thlight.com/blog/colin-jones/2012/05/22/quoting-without-confusion.html
 ** Destructuring
 http://blog.brunobonacci.com/2014/11/16/clojure-complete-guide-to-destructuring/
 
 https://stackoverflow.com/questions/3337888/clojure-named-arguments
-
+** Forum topics
+*** Clojure spec greedy operators https://clojurians-log.clojureverse.org/clojure-spec/2018-01-04
 ** Tutorials
 Great tutorial in coverage, but a little tedious is mode and development.
 https://www.youtube.com/watch?v=ciGyHkDuPAE
-
+*** Protocols! Must watch https://www.youtube.com/watch?v=kQhOlWXXl2I
+*** Clojure script on react with figwheel https://medium.com/mindorks/building-mobile-apps-ios-and-android-with-clojurescript-4600235f826c
 ** Useful clojure titbits
 *** Apply vs Map https://stackoverflow.com/questions/2311528/clojure-apply-vs-map
 *** Incrementing i https://stackoverflow.com/questions/4513078/i-equivalent-in-clojure
@@ -412,26 +466,272 @@ the data tree maintaining state.
 (genSummaryHeaders ["BTC" "EUR" "ETH" "GBP"] ["EUR"])
 ; Should return ("Date" "Summary" "BTC" "BTC Balance" ... same for other currencies "EUR fee")
 ; Or a vector
+** Spec & generative testing
+*** Spec and test.check guides
+
+https://clojure.org/guides/spec
+https://clojure.org/guides/test_check_beginner
+
+The spec guide introduces testing check fns for testing fn defs.
+Hint: Rather first test functions with property tests and see where those simply port over to the simpler variety.
+
+See the following for generators
+https://github.com/clojure/test.check/blob/master/doc/generator-examples.md
+*** Difference between gen/fmap & gen/bind
+
+
+gen/fmap. 
+
+Every time this generator is asked to generate it: 
+- generates a new value from the generator argument.
+- Uses the value to prepare a new non-generator value to return.
+- This generator is therefore a new fmap which produces these values.
+- You can see below that it still alls the generator argument each time to fill out this vector
+
+#+begin_src clojure
+(gen/generate
+ (gen/vector (gen/fmap (fn [x] (list x)) (gen/choose 1 5)))
+ )
+[(2) (4) (3) (4) (5) (4) (1) (3) (5) (1) (1) (2) (2) (3)]
+#+end_src
+
+gen/bind also:
+- Uses the generator argument to generate values each time it is called. I.e. below is not equal.
+
+#+begin_src clojure
+(gen/generate (gen/bind (gen/vector gen/large-integer 3)
+                        (fn [xs] (gen/vector (gen/shuffle xs) 2))))
+
+;; The vector of large ints will not be exploded, and still be a generator
+;; that shuffle will work on.
+(gen/generate (gen/vector (gen/shuffle (gen/vector gen/large-integer 3)) 2))
+#+end_src
+
+- However, these values are used merely as arguments to a new generators (or a composition of generators) and the user of gen/bind must return this generator.
+
+*** A vector of something as a fn argument https://stackoverflow.com/questions/43230546/a-clojure-spec-that-matches-and-generates-an-ordered-vector-of-variable-length
+
+Example of Lack of expessivity out the box.
+
+In order to understand Alex's answer, you'll need to understand gen/fmap.
+Read the following as mandatory first https://clojure.org/guides/test_check_beginner
+NOTE Some of the examples here are incorrect if using
+[clojure.spec.gen.alpha :as gen]
+
+(fmap as a name is a little misleading as it doesn't map the function to each item provided,
+but runs the function with the result of the generator as an argument, bundling the result in 
+another generator)
+
+Then the example from comment in question, highlights further nuances
+#+begin_src clojure
+(s/def ::pattern (s/cat :sym symbol? :str string? :kws (s/* keyword?))) 
+(s/def ::pattern-2 (s/cat :s string? :p ::pattern)) 
+(s/valid? ::pattern ['af "5" :key]) 
+;; true 
+(s/valid? ::pattern-2 ["string" 'af "5" :key]) 
+;; true 
+(s/def ::pattern-3 (s/cat :s string? :p ::solution)) 
+(s/valid? ::pattern-3 ["string" 'af "5" :key]) 
+;; false !!! <- we are losing flatness 
+(s/valid? ::pattern-3 ["string" ['af "5" :key]]) 
+;; true !!! <- we are losing flatness 
+#+end_src
+*** Common problem with spec. Cryptic error messages
+**** Spec : nil
+Check the REPL for more information
+
+#+begin_src clojure
+ [clojure.spec.alpha :as s]
+ [clojure.spec.gen.alpha :as gen]
+
+gen/generate (s/gen ::coinbase-trade)) ;; should get only the generator in question as nothing has been added, even though it's already defined with-gen
+
+
+1. Unhandled clojure.lang.ExceptionInfo
+   Spec assertion failed.
+
+         Spec: nil
+        Value: nil
+
+     Problems: 
+
+                 alpha.clj:  282  clojure.spec.alpha/gensub
+                 alpha.clj:  272  clojure.spec.alpha/gensub
+                 alpha.clj:  877  clojure.spec.alpha/map-spec-impl/reify/rgen
+                  core.clj: 2760  clojure.core/map/fn
+              LazySeq.java:   42  clojure.lang.LazySeq/sval
+              LazySeq.java:   51  clojure.lang.LazySeq/seq
+                   RT.java:  531  clojure.lang.RT/seq
+                  core.clj:  137  clojure.core/seq
+                  core.clj: 2746  clojure.core/map/fn
+              LazySeq.java:   42  clojure.lang.LazySeq/sval
+              LazySeq.java:   51  clojure.lang.LazySeq/seq
+#+end_src
+
+You'll then see
+#+begin_src 
+Execution error (ExceptionInfo) at dmg46664.etl/eval16178 (form-init16923224181612635633.clj:413).
+Unable to construct gen at: [:dmg46664.etl/date] for: :dmg46664.etl/date
+#+end_src
+**** class clojure.test.check.generators.Generator cannot be cast to class
+Using (s/with-gen) with (gen/fmap) and not wrapping fmap in no-args function?
+
+#+begin_src 
+1. Unhandled java.lang.ClassCastException
+   class clojure.test.check.generators.Generator cannot be cast to class
+   clojure.lang.IFn (clojure.test.check.generators.Generator is in unnamed
+   module of loader clojure.lang.DynamicClassLoader @218a78f6; clojure.lang.IFn
+   is in unnamed module of loader 'app')
+
+                 alpha.clj:  936  clojure.spec.alpha/spec-impl/reify
+                 alpha.clj:  279  clojure.spec.alpha/gensub
+                 alpha.clj:  272  clojure.spec.alpha/gensub
+                 alpha.clj:  296  clojure.spec.alpha/gen
+#+end_src
+**** Wrong number of args (1) passed to: clojure.spec.alpha/def
+Problem starting the REPL, 
+None of my own code in the stacktrace
+
+It turned out to be one of the standard defs. Wierd!? Why didn't it give me a line number?
+It had nothing to do with test.check.generator/gen vs spec.gen.alpha/gen
+*** Niggles
+- In order to do generative testing, the generators will often need to be at the level of the
+container and not at the record level. Testing date aggregation code isn't so useful, if you
+never generate records that share the same date. 
+- This is mis-sold when learning about spec
+as if defining structures let's 
+*** Test check api issues overriding generators
+https://stackoverflow.com/questions/55436961/clojure-spec-override-check-generator-for-predicate
+*** Clojure spec for parsing https://juxt.pro/blog/posts/parsing-with-clojure-spec.html
+Doesn't scale because no tokenization.
+*** Look at plugin project to see another limitation of spec.
+*** What is rose-tree in test.check?
+http://blog.guillermowinkler.com/blog/2015/04/12/verifying-state-machine-behavior-using-test-dot-check/
+*** Exercise. Write a generator that selects 2 values from a list (and then use it).
+
+A wasteful implementation
+
+#+begin_src clojure
+;; TODO It would be nice to remove the such-that as it's wasteful
+(defn choose2 [g] (gen/such-that (fn [[x y]] (not= x y))
+                                 (gen/let [x g
+                                           y g]
+                                   [x y])))
+#+end_src
+
+But you can't use it in gen/let
+
+#+begin_src clojure
+(gen/let [currencies (choose2 (gen/elements ["BTC" "EUR" "GBP"]))
+           buy (first currencies) ;;NOTE fails here. Currencies is a generator, not a vector
+           sell (second currencies)
+           trade (s/gen ::trade
+                        {
+                         [::buyCurrency] #(buy)
+                         [::sellCurrency] #(sell)
+                         })]
+   trade)
+#+end_src
+
+
 ** Code snippets
+*** Be careful of macros
+#+begin_src clojure
+;; works
+(let [f #(inc %)]
+  (some-> 1 f))
+;; doesn't work
+(some-> 1 #(inc %))
+#+end_src
 *** Query and filter classpath
 #+begin_src 
 (filter #(.contains % "clojure") (clojure.string/split (System/getProperty "java.class.path") #"\:"))
 #+end_src
+*** Get methods out of instance
+#+begin_src clojure
+
+; useful fucntion
+(use 'clojure.reflect)
+(defn methods [obj]
+  (->> (reflect obj)
+      :members
+      (map #(select-keys % [:name]))))
+
+#+end_src
+*** Get methods out of class
+https://clojuredocs.org/clojure.reflect/type-reflect
+#+begin_src clojure
+(use 'clojure.reflect)
+
+(->> java.lang.Integer 
+     clojure.reflect/type-reflect
+     :members 
+     (filter #(instance? clojure.reflect.Field %)) 
+     (filter #(:public (:flags %)))
+     (filter #(:static (:flags %)))
+     (map #(vector (:name %) (:type %)))
+     (sort)
+     (pprint))
+
+;;=> ([BYTES int]
+;;    [MAX_VALUE int]
+;;    [MIN_VALUE int]
+;;    [SIZE int]
+;;    [TYPE java.lang.Class])
+#+end_src
+*** Print stacktrace
+(clojure.stacktrace/print-stack-trace (Exception. "foo"))
 ** Tools + libs
 *** https://github.com/dgrnbrg/spyscope
-
+*** Scala interop lib https://t6.github.io/from-scala/
+** Don'ts (as recommended by Stuart)
+*** Threading of as-> https://stuartsierra.com/2018/07/15/clojure-donts-thread-as
 ** Interesting reads
 *** Transient data structures https://clojure.org/reference/transients
 *** Missing elegant API for manipulating immutable data structures http://nathanmarz.com/blog/clojures-missing-piece.html
 *** Clojure workflow tips https://clojureverse.org/t/share-the-nitty-gritty-details-of-your-clojure-workflow/1208/23
 *** Reloading woes https://lambdaisland.com/blog/2018-02-09-reloading-woes
-*** Nested hash map anti patern? (Only required in rare circumstances) https://hackernoon.com/nested-maps-considered-harmful-143add482247
+*** Nested hash map anti pattern? (Only required in rare circumstances) https://hackernoon.com/nested-maps-considered-harmful-143add482247
 *** Nil punning https://lispcast.com/nil-punning/
 *** Interesting threading https://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/
 *** Maps vs records  http://discuss.purelyfunctional.tv/t/when-to-use-map-vs-defrecord/933
 *** Keywords vs Symbols https://blog.robphoenix.com/clojure/notes-on-clojure-keywords-symbols/
+*** gen-class
+Overview
+https://kotka.de/blog/2010/02/gen-class_how_it_works_and_how_to_use_it.html
+More on gen-class
+https://stackoverflow.com/questions/42617678/gen-class-in-clojure-and-use-it-immediately
+
+Official documentation with examples!
+https://clojure.org/reference/compilation
+
+See class loading issues
+*** Class loading issues with generated classes
+https://medium.com/@minfuyang/about-java-classloader-dynamic-class-generation-in-apache-spark-case-43a6d492c78f
+*** Subclassing https://puredanger.github.io/tech.puredanger.com/2011/08/12/subclassing-in-clojure/
+*** Proxying abstract classes https://stackoverflow.com/questions/53090419/clojure-proxy-implementing-abstract-class-with-protected-constructor
+*** Logging https://juxt.pro/blog/posts/logging.html
+*** Clojure safety information in the following comments http://clojuredocs.org/clojure.core/read
+*** No lazy vectors in clojure https://stackoverflow.com/questions/3083535/clojure-lazy-sequences-that-are-vectors
+*** Macro expansion warning https://ask.clojure.org/index.php/9015/spec-error-on-simple-threading-in-clj-cljs
+*** Datafy & Nav http://corfield.org/blog/2018/12/03/datafy-nav
+https://ask.clojure.org/index.php/8550/can-someone-explain-the-arguments-to-nav
+*** Clojure slow startup time http://clojure-goes-fast.com/blog/clojures-slow-start/
+*** Java decompilation http://clojure-goes-fast.com/blog/introspection-tools-java-decompilers/
+*** Deps & Cli limitations https://clojureverse.org/t/how-to-effectively-use-deps-cli/4787/4
+And supplementations https://github.com/clojure/tools.deps.alpha/wiki/Tools
+*** Specter vs Transducer code sample https://gist.github.com/borkdude/5f9a4ae710217e893a9462ff90b6cac3
+*** Decompiling Clojure (3 parts)  http://blog.guillermowinkler.com/blog/2014/04/13/decompiling-clojure-i/
 ** Cider
 *** cider hook http://root42.blogspot.com/2014/08/how-to-automatically-refresh-cider-when.html
+*** Making clojure lazier & streams https://clojure.org/reference/lazy
+*** Deep dive into sequences
+Easy start with: https://medium.com/@pwentz/laziness-in-clojure-3d83645bf7f3
+
+More concisely: https://insideclojure.org/2015/01/02/sequences/
+
+Then to pick apart the details of types: https://stackoverflow.com/questions/44095400/how-to-understand-clojures-lazy-seq/44102122
+
 ** Videos
 *** TODO Task : Make a doubly nested for loop, calling on a Java API (XLS) spreadsheet, to take a data structure and save it to tables.
 https://github.com/mjul/docjure
@@ -474,6 +774,7 @@ The naive way that a java programmer would code:
 (save-excel!)
 #+end_src
 *** Scope capture https://vimeo.com/237220354
+*** Clojure for ETLs https://www.youtube.com/watch?v=oOON--g1PyU
 ** Improvements
 *** Ensure that stacktrace window is colour coded obvious to communicate whether it's a runtime error or compile time error.
 *** Thread about how to compensate for the lack of dot https://www.reddit.com/r/Clojure/comments/6f6cq2/how_to_compensate_for_clojures_lack_of_dot/

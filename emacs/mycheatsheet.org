@@ -1,10 +1,3 @@
-* Cursor movement
-** C-v                    | page down  :movement:
-** M-v                    | page down  :movement:
-** C-n / C-p              | Move cursor up and down  :movement:
-** C-f / C-b              | Move cursor back and forward one char  :movement:
-** C-x <left>             | Jump to position in previous buffer, never showing the same buffer twice.  :movement:
-** and C-x <right>        | Same but forward...  :movement:
 * Navigation
 ** C-x →                  | Switch to next buffer.  :navigation:
 ** C-x ←                  | Switch to previous buffer.  :navigation:
@@ -16,6 +9,10 @@
 * Window
 ** C-x }                | Increase expand window horizontally  :window:
 ** C-x ^                  (enlarge-window)  :window:
+** C-x C- / C+          Zoom size of current buffer
+** C-mouse-wheel        zoom-all-frames-out/in 
+** C-x 1                Maximize and reverse toggle.
+** C-x 2                Split window vertically.
 * Macro
 | C-x (                 | Start macro                                                                                                                         |
 | C-x )                 | End macro (but this doesn't make it available)                                                                                      |
@@ -41,31 +38,46 @@ https://youtu.be/ONHEDj3kWrE?t=198
 | Go to source          | M-x find-library                                                                                                                    |
 | C-h b                 | Or (helm-decsbinds) to describe all key bindings                                                                                    |
 | toggle-truncate-lines | Word wrap                                                                                                                           |
-** 
+** M-o M-o               font-lock-fontify-block or reset/refresh syntax highlighting in the current block.
 * Spacemacs
 Helm https://tuhdo.github.io/helm-intro.html
 * Other
-| C-c C-c               | Babel execute code inside a code block                                                                                              |
-| C-x C-e               | Evaluate highlighted point                                                                                                          |
-| M-:                   | Evaluate single command                                                                                                             |
-| M-x calc u v          | Enter calc mode and show all units. Remember tha ' allows writing an algebraic expression.                                          |
-| C-x z                 | Repeat last command                                                                                                                 |
-| C-x d / D / R / C     | Dired delete, move, copy, can also use m to mark files                                                                              |
+| C-c C-c           | Babel execute code inside a code block                                                     |
+| C-x C-e           | Evaluate highlighted point                                                                 |
+| M-:               | Evaluate single command                                                                    |
+| M-x calc u v      | Enter calc mode and show all units. Remember tha ' allows writing an algebraic expression. |
+| C-x z             | Repeat last command                                                                        |
+| C-x d / D / R / C | Dired delete, move, copy, can also use m to mark files                                     |
 * Dired
 ** C-x d      Run Dired from the location of the current buffer.
 ** a          Switch locations but reuse buffer
+** M-m f y    Copy file path
 * File manipulation
 ** M-m f y    Copy file path                                      :spacemacs:
 * Helm
 ** C-u C-c C-k / C-c TAB  | From the helm file chooser buffer (M-m f f) this will select the full file path to the kill ring  :navigation:
 https://emacs.stackexchange.com/questions/19819/how-can-i-use-helm-file-finder-to-copy-a-file-path-to-a-buffer
-** helm find file contents
+** helm find files recursively
+Starting from the directory you are currently browsing, it is possible to have
+completion of all directories underneath.  Say you are at "/home/you/foo/" and
+you want to go to "/home/you/foo/bar/baz/somewhere/else", simply type
+"/home/you/foo/..else" and hit ‘C-j’ or enter
+the final "/".  Helm will then list all possible directories under "foo"
+matching "else".
+** M-C (use shift)    in M-f-f in order to helm copy file.
+** M-R (use shift)    in M-f-f in order to helm move/rename file.
+** helm find file contents (similar to grep -R)
+
+https://github.com/emacs-helm/helm/wiki/Grep
 You can use helm-ff-do-grep inside helm-find-files session.
 
-Inside helm-find-files session. 
-You can invoke helm-ff-run-grep with C-s and C-u as prefix argument. 
-Then choose where/what to search then it prompt you a pattern to search.
-https://emacs.stackexchange.com/questions/19875/how-to-find-files-by-content-across-lines-with-helm
+- M-m f f
+- navigate to directory and append /** or /** to the search directory path
+- C-s
+- Type in pattern like "mysearch" without the quotes.
+
+** TODO Helm recent? Within helm C-c h, but it isn't the same.
+** Expanded list of ALL helm documentation [[file:helm-file-help.org::*Helm%20Find%20Files][Helm Find Files]]
 * Unorganized
 - Useful: org-export-insert-default-template
 
@@ -102,7 +114,53 @@ https://github.com/bzg/org-mode/blob/300f15bcbbaf7a49c94e2cfca4f4335f0dc55fc8/li
 https://lists.gnu.org/archive/html/emacs-orgmode/2011-02/msg00260.html
 
 Still not sure how to postpone using org-schedule or org-agenda-schedule without bringing up dialog.
+** Clocking
+https://orgmode.org/manual/Clocking-commands.html
+C-c C-x C-i (org-clock-in)
+Start the clock on the current item (clock-in). This inserts the ‘CLOCK’ keyword together with a timestamp. If this is not the first clocking of this item, the multiple ‘CLOCK’ lines are wrapped into a ‘LOGBOOK’ drawer (see also the variable org-clock-into-drawer). You can also overrule the setting of this variable for a subtree by setting a ‘CLOCK_INTO_DRAWER’ or ‘LOG_INTO_DRAWER’ property. When called with a C-u prefix argument, select the task from a list of recently clocked tasks. With two C-u C-u prefixes, clock into the task at point and mark it as the default task; the default task is always be available with letter d when selecting a clocking task. With three C-u C-u C-u prefixes, force continuous clocking by starting the clock when the last clock stopped.
+
+While the clock is running, Org shows the current clocking time in the mode line, along with the title of the task. The clock time shown is all time ever clocked for this task and its children. If the task has an effort estimate (see Effort Estimates), the mode line displays the current clocking time against it73. If the task is a repeating one (see Repeated tasks), show only the time since the last reset of the task74. You can exercise more control over show time with the ‘CLOCK_MODELINE_TOTAL’ property. It may have the values ‘current’ to show only the current clocking instance, ‘today’ to show all time clocked on this tasks today—see also the variable org-extend-today-until, all to include all time, or auto which is the default75. Clicking with mouse-1 onto the mode line entry pops up a menu with clocking options.
+
+C-c C-x C-o (org-clock-out)
+Stop the clock (clock-out). This inserts another timestamp at the same location where the clock was last started. It also directly computes the resulting time in inserts it after the time range as ‘=>HH:MM’. See the variable org-log-note-clock-out for the possibility to record an additional note together with the clock-out timestamp76.
+
+C-c C-x C-x (org-clock-in-last)
+Re-clock the last clocked task. With one C-u prefix argument, select the task from the clock history. With two C-u prefixes, force continuous clocking by starting the clock when the last clock stopped.
+
+C-c C-x C-e (org-clock-modify-effort-estimate)
+Update the effort estimate for the current clock task.
+
+C-c C-c or C-c C-y (org-evaluate-time-range)
+Recompute the time interval after changing one of the timestamps. This is only necessary if you edit the timestamps directly. If you change them with S-<cursor> keys, the update is automatic.
+
+C-S-UP (org-clock-timestamps-up)
+C-S-DOWN (org-clock-timestamps-down)
+On CLOCK log lines, increase/decrease both timestamps so that the clock duration keeps the same value.
+
+S-M-UP (org-timestamp-up)
+S-M-DOWN (org-timestamp-down)
+On ‘CLOCK’ log lines, increase/decrease the timestamp at point and the one of the previous, or the next, clock timestamp by the same duration. For example, if you hit S-M-UP to increase a clocked-out timestamp by five minutes, then the clocked-in timestamp of the next clock is increased by five minutes.
+
+C-c C-t (org-todo)
+Changing the TODO state of an item to DONE automatically stops the clock if it is running in this same item.
+
+C-c C-x C-q (org-clock-cancel)
+Cancel the current clock. This is useful if a clock was started by mistake, or if you ended up working on something else.
+
+C-c C-x C-j (org-clock-goto)
+Jump to the headline of the currently clocked in task. With a C-u prefix argument, select the target task from a list of recently clocked tasks.
+
+C-c C-x C-d (org-clock-display)
+** Useful guide to clocking configuration
+https://writequit.org/denver-emacs/presentations/2017-04-11-time-clocking-with-org.html
+** M-x org-md-export-as-markdown        To export as markdown
+https://markdown-here.com/index.html
+https://emacs.stackexchange.com/questions/20562/how-to-make-the-org-mode-exported-table-aligned-in-gmail
+** Styling orgmode export
+https://github.com/fniessen/org-html-themes/blob/master/README.org
 * OrgAgenda https://www.gnu.org/software/emacs/manual/html_node/org/Agenda-commands.html
+** C-u C-u l         Will give you a clock log table of time logged (org-agenda-log-mode)
+https://emacs.stackexchange.com/questions/19746/get-a-timeline-of-clocked-time-in-org-mode
 ** C-c C-s +4        Postpone the task out the 'TODO' item by 4 days  :orgagenda:
 https://lists.gnu.org/archive/html/emacs-orgmode/2007-08/msg00059.html
 ** C-c C-c           Set tag for the current task  :orgagenda:
@@ -170,8 +228,12 @@ https://www.gnu.org/software/emacs/manual/html_node/eintr/car-cdr-_0026-cons.htm
 ** M-;                  Add or remove comments  :coding:
 https://www.gnu.org/software/emacs/manual/html_node/emacs/Comment-Commands.html
 ** M-m s j              helm-jump-in-buffer or show functions in file.
+** M-RET = or zprint    cider-format-buffer / zprint autoformatter
+https://clojureverse.org/t/autoformatting-clojure-code/1243
+*
 * Magit
 | k                     | Drop stash                                                                                                                          |
+Read the following https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified
 * Using Magit to solve conflicts
 
 ** RET on conflict opens in smerge editor
@@ -199,7 +261,11 @@ Also helm-swoop-caret-match seems to be blocking our ability to match new line c
 * BUGS
 ** helm-ag doesn't work in spacemacs https://github.com/bbatsov/helm-projectile/issues/113
 Might simply be that the `ag` command is not on the command prompt.
+* Non emacs infrastructure like tasks
+** Making a new brew formulae
+https://github.com/Homebrew/brew/blob/master/docs/Formula-Cookbook.md
 
+Instructions start from 'Grab the url, midway down on the page.
 * TODO Find out how to highlight helm actions 
 The following has ben useful
 https://github.com/emacs-helm/helm/wiki/Developing
