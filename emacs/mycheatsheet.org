@@ -2,6 +2,7 @@
 ** C-x →                  | Switch to next buffer.  :navigation:
 ** C-x ←                  | Switch to previous buffer.  :navigation:
 ** end-of-buffer-other-window    Really great feature to jump to the end of the buffer in the other window.
+** C-PgUp/PgDown        Page up and down in the next window.
 * Selection
 ** M-h                  Gradually select expanded line
 ** M-m v                Expand region
@@ -231,9 +232,27 @@ https://www.gnu.org/software/emacs/manual/html_node/emacs/Comment-Commands.html
 ** M-RET = or zprint    cider-format-buffer / zprint autoformatter
 https://clojureverse.org/t/autoformatting-clojure-code/1243
 *
+** C-;                  
 * Magit
-| k                     | Drop stash                                                                                                                          |
-Read the following https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified
+** Read the following https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified
+** k                Drop stash                                                                                                                          |
+** R                magit-file-rename  https://stackoverflow.com/questions/17610365/how-to-use-git-mv-from-magit
+** C-c M-g B        blame with options, or 'b' for just blame.
+** Duplicate file with history
+
+Even if git doesn't preserve the line history, it still can be seen with git blame.
+If you really need to see the history without passing options to blame, use the following technique.
+ https://stackoverflow.com/a/44036771/93074
+
+Otherwise consider just using -C and -M options.
+https://www.atlassian.com/git/tutorials/inspecting-a-repository/git-blame
+
+Or a better git log
+https://blog.andrewray.me/a-better-git-blame/
+#+begin_src 
+git log -p -M --follow --stat -- path/to/your/file
+#+end_src
+
 * Using Magit to solve conflicts
 
 ** RET on conflict opens in smerge editor

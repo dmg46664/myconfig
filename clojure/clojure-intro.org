@@ -684,6 +684,8 @@ https://clojuredocs.org/clojure.reflect/type-reflect
 ** Tools + libs
 *** https://github.com/dgrnbrg/spyscope
 *** Scala interop lib https://t6.github.io/from-scala/
+** Gotchas
+*** Autoresolution of keywords '::'  https://groups.google.com/forum/#!topic/clojure/i770QaIFiF0
 ** Don'ts (as recommended by Stuart)
 *** Threading of as-> https://stuartsierra.com/2018/07/15/clojure-donts-thread-as
 ** Interesting reads
@@ -722,6 +724,10 @@ https://ask.clojure.org/index.php/8550/can-someone-explain-the-arguments-to-nav
 And supplementations https://github.com/clojure/tools.deps.alpha/wiki/Tools
 *** Specter vs Transducer code sample https://gist.github.com/borkdude/5f9a4ae710217e893a9462ff90b6cac3
 *** Decompiling Clojure (3 parts)  http://blog.guillermowinkler.com/blog/2014/04/13/decompiling-clojure-i/
+*** Equivalent of node.js non-blocking? https://stackoverflow.com/questions/24980014/can-i-make-a-fully-non-blocking-backend-application-with-http-kit-and-core-async
+*** Datomic vs GraphQL https://www.indiehackers.com/post/a-time-saving-alternative-for-graphql-da674d0961
+https://maxweber.github.io/blog/2019-06-15-approaching-the-web-after-tomorrow-part-3
+https://maxweber.github.io/blog/2019-08-05-introducing-db-view-part-2
 ** Cider
 *** cider hook http://root42.blogspot.com/2014/08/how-to-automatically-refresh-cider-when.html
 *** Making clojure lazier & streams https://clojure.org/reference/lazy
