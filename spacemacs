@@ -403,7 +403,7 @@ you should place your code here."
 
   ;; From https://clojurians-log.clojureverse.org/spacemacs/2017-10-19
   ;; (require 'flycheck-joker) TODO for later.
-  (spacemacs/add-flycheck-hook 'clojure-mode)
+  (spacemacs/add-flycheck-hook 'clojure-mode) ;; flycheck-mode won't load on .clj files without this line.
   (spacemacs/add-flycheck-hook 'clojurescript-mode)
 
   ;; Set priority colours in org mode

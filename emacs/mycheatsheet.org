@@ -212,7 +212,6 @@ But you can do more than that: you can actually select the reference by using th
 
 General advise about editing and debugging fields
 https://orgmode.org/org.html#Editing-and-debugging-formulas
-
 * Elisp Coding
 
 
@@ -222,7 +221,6 @@ Remember to hover over commands to get highlighting about them.
 
 Some basics
 https://www.gnu.org/software/emacs/manual/html_node/eintr/car-cdr-_0026-cons.html
-
 
 
 * Clojure Coding
@@ -252,7 +250,6 @@ https://blog.andrewray.me/a-better-git-blame/
 #+begin_src 
 git log -p -M --follow --stat -- path/to/your/file
 #+end_src
-
 * Using Magit to solve conflicts
 
 ** RET on conflict opens in smerge editor
@@ -277,6 +274,8 @@ Also helm-swoop-caret-match seems to be blocking our ability to match new line c
 ** helm-ag is yet another version that is built with grep. https://github.com/syohex/emacs-helm-ag
 
 ** Agenda refreshing 
+* Wishlist
+** A way to go back when navigating menus.
 * BUGS
 ** helm-ag doesn't work in spacemacs https://github.com/bbatsov/helm-projectile/issues/113
 Might simply be that the `ag` command is not on the command prompt.

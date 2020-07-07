@@ -486,7 +486,7 @@ Every time this generator is asked to generate it:
 - generates a new value from the generator argument.
 - Uses the value to prepare a new non-generator value to return.
 - This generator is therefore a new fmap which produces these values.
-- You can see below that it still alls the generator argument each time to fill out this vector
+- You can see below that it still calls the generator argument each time to fill out this vector
 
 #+begin_src clojure
 (gen/generate
@@ -501,14 +501,62 @@ gen/bind also:
 #+begin_src clojure
 (gen/generate (gen/bind (gen/vector gen/large-integer 3)
                         (fn [xs] (gen/vector (gen/shuffle xs) 2))))
+[[0 28057239 -45698] [0 28057239 -45698]]
 
 ;; The vector of large ints will not be exploded, and still be a generator
 ;; that shuffle will work on.
 (gen/generate (gen/vector (gen/shuffle (gen/vector gen/large-integer 3)) 2))
+[[[:gen #function[clojure.test.check.generators/gen-fmap/fn--405]]]
+ [[:gen #function[clojure.test.check.generators/gen-fmap/fn--405]]]]
+
+;; Adding a generate is the equivalent of bind. I.e. it locks/binds the values at this point.
+(gen/generate (gen/vector (gen/shuffle
+                           (gen/generate (gen/vector gen/large-integer 3))) 2))
+
 #+end_src
 
-- However, these values are used merely as arguments to a new generators (or a composition of generators) and the user of gen/bind must return this generator.
+- However for bind, these values are used merely as arguments to a new generators (or a composition of generators) and the user of gen/bind must return this generator.
 
+Note also how gen/let works
+#+begin_src clojure
+(gen/generate
+ (gen/let 
+ [n (gen/vector gen/small-integer 3)] ;; here the output of an iteration is bound.
+   (gen/vector (gen/elements n)))) ;; however gen/elements here is not bound and so the vector is able to generate random items
+[7 7 7 -2 -20 -20 -20 -20 7]
+
+(gen/generate
+ (gen/let [n (gen/vector gen/small-integer 3)
+           e (gen/elements n) ;; However compared to the above, here elements is bound!
+           v (gen/vector (gen/return e))] ;;It makes the example different, but regardless see how we are only aboe to get a single value.
+   v))
+[-15 -15 -15 -15 -15 -15]
+
+
+;; However NOTE that the whole let block produces a generator, for which each call
+;; is independent!!! this means that for below, although like the above examples a vector of 3
+;; ints is generated and elements are selected from it.. each time the vector requires a new value
+;; a new list of 3 small ints is generated and so the result is simply a random list!
+(gen/generate
+ (gen/vector
+  (gen/let [n (gen/vector gen/small-integer 3)
+            e (gen/elements n)]
+    e)))
+[-17 -6 1 -14 0 -25 17 -21 -26 -6 -2 -13 -5 27 -7 19]
+
+#+end_src
+*** s/gen gotcha overriding map values
+
+#+begin_src clojure
+;; In 'ns'
+(s/def ::spec (s/keys :req-un [::field]))
+
+;; In other ns
+(s/gen ::spec {
+[::ns/field] #(gen/return :override) ;; Won't work! Presumably because ::spec is :req-un (but didn't test)
+[:field] #(gen/return :override2) ;; Works!
+})
+#+end_src
 *** A vector of something as a fn argument https://stackoverflow.com/questions/43230546/a-clojure-spec-that-matches-and-generates-an-ordered-vector-of-variable-length
 
 Example of Lack of expessivity out the box.
@@ -537,7 +585,7 @@ Then the example from comment in question, highlights further nuances
 ;; true !!! <- we are losing flatness 
 #+end_src
 *** Common problem with spec. Cryptic error messages
-**** Spec : nil
+**** Spec : nil TODO but why?
 Check the REPL for more information
 
 #+begin_src clojure
@@ -686,6 +734,9 @@ https://clojuredocs.org/clojure.reflect/type-reflect
 *** Scala interop lib https://t6.github.io/from-scala/
 ** Gotchas
 *** Autoresolution of keywords '::'  https://groups.google.com/forum/#!topic/clojure/i770QaIFiF0
+*** IllegalArgument with no help https://stackoverflow.com/questions/19590432/why-does-clojure-say-no-matching-method-for-an-illegal-argument
+- This could happen when passing nil to a primitive parameter in java.
+- Find this out by instrumenting the calling method in cider or equivalent.
 ** Don'ts (as recommended by Stuart)
 *** Threading of as-> https://stuartsierra.com/2018/07/15/clojure-donts-thread-as
 ** Interesting reads
