@@ -55,6 +55,7 @@ Helm https://tuhdo.github.io/helm-intro.html
 ** M-m f y    Copy file path
 * File manipulation
 ** M-m f y    Copy file path                                      :spacemacs:
+** helm-find-file, C-c X   Open a file with default application
 * Helm
 ** C-u C-c C-k / C-c TAB  | From the helm file chooser buffer (M-m f f) this will select the full file path to the kill ring  :navigation:
 https://emacs.stackexchange.com/questions/19819/how-can-i-use-helm-file-finder-to-copy-a-file-path-to-a-buffer
@@ -79,6 +80,7 @@ You can use helm-ff-do-grep inside helm-find-files session.
 
 ** TODO Helm recent? Within helm C-c h, but it isn't the same.
 ** Expanded list of ALL helm documentation [[file:helm-file-help.org::*Helm%20Find%20Files][Helm Find Files]]
+** M-e in helm find files to open eshell e-shell
 * Unorganized
 - Useful: org-export-insert-default-template
 
@@ -169,6 +171,12 @@ https://orgmode.org/guide/Setting-tags.html#Setting-tags
 ** m, B, s           In agenda view, mark, bulk, reschedule  :orgagenda:
 ** f, b              Go forward or back the current day span :orgagenda:
 ** j                 Go to date  :orgagenda:
+** Clock report
+Create an org file with the following contents
+#+BEGIN: clocktable :maxlevel 4 :scope agenda :block thisweek :step day 
+#+END:
+
+Fuller explanation https://emacs.stackexchange.com/questions/35708/org-mode-how-to-generate-clock-report-for-hours-worked-each-day
 * Org mode table stuff
 
 https://orgmode.org/worg/org-tutorials/org-spreadsheet-intro.html
@@ -250,6 +258,9 @@ https://blog.andrewray.me/a-better-git-blame/
 #+begin_src 
 git log -p -M --follow --stat -- path/to/your/file
 #+end_src
+** Selectively discarding bits
+Use shift on lines and k
+https://utcc.utoronto.ca/~cks/space/blog/programming/MagitDiscardingChanges?showcomments
 * Using Magit to solve conflicts
 
 ** RET on conflict opens in smerge editor

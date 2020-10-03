@@ -48,6 +48,8 @@ location 1.
 Maybe try scoop
 https://scoop.sh/
 
+There's also https://chocolatey.org/
+
 (Didn't have to install powershell or ndk
 
 #+begin_src 

@@ -364,6 +364,8 @@ Great tutorial in coverage, but a little tedious is mode and development.
 https://www.youtube.com/watch?v=ciGyHkDuPAE
 *** Protocols! Must watch https://www.youtube.com/watch?v=kQhOlWXXl2I
 *** Clojure script on react with figwheel https://medium.com/mindorks/building-mobile-apps-ios-and-android-with-clojurescript-4600235f826c
+*** TODO Datomic migration  https://grishaev.me/en/pg-to-datomic/
+*** TODO Building an ANKI clone using datomic https://www.youtube.com/watch?v=QrSnTIHotZE
 ** Useful clojure titbits
 *** Apply vs Map https://stackoverflow.com/questions/2311528/clojure-apply-vs-map
 *** Incrementing i https://stackoverflow.com/questions/4513078/i-equivalent-in-clojure
@@ -586,7 +588,7 @@ Then the example from comment in question, highlights further nuances
 #+end_src
 *** Common problem with spec. Cryptic error messages
 **** Spec : nil TODO but why?
-Check the REPL for more information
+     Check the REPL for more information
 
 #+begin_src clojure
  [clojure.spec.alpha :as s]
@@ -737,8 +739,87 @@ https://clojuredocs.org/clojure.reflect/type-reflect
 *** IllegalArgument with no help https://stackoverflow.com/questions/19590432/why-does-clojure-say-no-matching-method-for-an-illegal-argument
 - This could happen when passing nil to a primitive parameter in java.
 - Find this out by instrumenting the calling method in cider or equivalent.
+*** Equivalent https://clojureverse.org/t/1-2-equals-1-2/821/4
 ** Don'ts (as recommended by Stuart)
 *** Threading of as-> https://stuartsierra.com/2018/07/15/clojure-donts-thread-as
+** Idiomatic clojure
+*** Depth first iteration and dispatch encapsulation hell!
+If computer programs were artistic styles, then procedural programs would complete a drawing by tracing the outline, while clojure would build up a drawing from smaller shapes. Both methods would complete a drawing accurately.
+
+When building up a program from idiomatic clojure, be careful to slip back into procedural ways
+of doing things.
+
+
+Consider the example below which is no doubt contrived but it's not diffficult to add 
+extra criterion justifying the separation. Indeed the layout is not foreign and could
+be simplified further only given there are no further dependencies.
+#+begin_src clojure
+(defn output-valid-hash! [m]
+  (when (> (:hash m) -1695810776)
+    (println m)
+     )
+  )
+
+(defn output-hashed!
+  [m]
+  (output-valid-hash!
+   (assoc m :hash (some-> m :name hash))
+                      )
+  )
+
+(defn output-names!
+  [names]
+  ;; Imagine this is long and complicated
+  (doseq [n names]
+    (output-hashed! (assoc {} :name n))
+    )
+  )
+
+(output-names! ["John" "James" "Michael"])
+
+#+end_src
+
+
+The above only prints a record for Michael and you want to confirm why.
+In this case you may suspect the when around the println, but you want to test it easily.
+Perhaps it may also be assumptions about the creation of the map values.
+
+
+It's quite hard to test this code, because at each level there is some unpacking and repacking.
+There is a mental burden of understanding the context at each level.
+Having to rely on a debugger is not ideal.
+It's possible to make code changes to test the results, but these changes are distributed, making
+them error prone.
+
+It's positive that this code is depth first. It doesn't start processing the second name until the first is completed. It could potentially work on a stream of names,
+but addressing them one at a time.
+It can also be argued that the functions are available for processing code at different levels of completeness.
+
+Compare this to the clojure idiomatic:
+
+#+begin_src clojure
+(->> ["John" "James" "Michael"]
+     (map #(if (string? %)
+             (assoc {} :name %)
+             %)
+          )
+     (map #(assoc % :hash (hash (:name %))))
+     (filter #(> (:hash %) -1695810776))
+     (println)
+     )
+#+end_src
+
+Advantages:
+- Can operate on a stream of strings or maps with :name already.
+- It's possible to comment out the filter in one line and see the result.
+- Can see the result to the repl by commenting out the println (Dont' need to change the
+return values of the functions).
+
+NOTE this is only possible with Clojure's laziness model. Otherwise this pipeline would not be depth first and not appropriate for streams! It's also only possible in this 
+
+Java streams can help as an equivalence but there be dragons  https://jaxenter.com/java-8-streams-lazy-136183.html
+https://4comprehension.com/java-stream-api-was-broken-before-jdk10/
+
 ** Interesting reads
 *** Transient data structures https://clojure.org/reference/transients
 *** Missing elegant API for manipulating immutable data structures http://nathanmarz.com/blog/clojures-missing-piece.html
@@ -770,15 +851,30 @@ https://medium.com/@minfuyang/about-java-classloader-dynamic-class-generation-in
 *** Datafy & Nav http://corfield.org/blog/2018/12/03/datafy-nav
 https://ask.clojure.org/index.php/8550/can-someone-explain-the-arguments-to-nav
 *** Clojure slow startup time http://clojure-goes-fast.com/blog/clojures-slow-start/
+Follow up and patch here
+https://groups.google.com/g/clojure/c/jNWf19LvszU/m/iKZSKVLBAgAJ
+https://github.com/forax/clojure
 *** Java decompilation http://clojure-goes-fast.com/blog/introspection-tools-java-decompilers/
 *** Deps & Cli limitations https://clojureverse.org/t/how-to-effectively-use-deps-cli/4787/4
 And supplementations https://github.com/clojure/tools.deps.alpha/wiki/Tools
 *** Specter vs Transducer code sample https://gist.github.com/borkdude/5f9a4ae710217e893a9462ff90b6cac3
 *** Decompiling Clojure (3 parts)  http://blog.guillermowinkler.com/blog/2014/04/13/decompiling-clojure-i/
 *** Equivalent of node.js non-blocking? https://stackoverflow.com/questions/24980014/can-i-make-a-fully-non-blocking-backend-application-with-http-kit-and-core-async
-*** Datomic vs GraphQL https://www.indiehackers.com/post/a-time-saving-alternative-for-graphql-da674d0961
+*** TODO Datomic vs GraphQL https://www.indiehackers.com/post/a-time-saving-alternative-for-graphql-da674d0961
 https://maxweber.github.io/blog/2019-06-15-approaching-the-web-after-tomorrow-part-3
 https://maxweber.github.io/blog/2019-08-05-introducing-db-view-part-2
+*** Flatten, apply concat & friends http://chouser.n01se.net/apply-concat/
+And some playing around
+#+begin_src clojure
+(def y
+  (for [x ["sdfasf" "adfa" "erqewr"]]
+    (seq x))
+  )
+
+(identity y) ;; => ((\s \d \f \a \s \f) (\a \d \f \a) (\e \r \q \e \w \r))
+(map type y) ;; => (clojure.lang.StringSeq clojure.lang.StringSeq clojure.lang.StringSeq)
+(apply concat y)
+#+end_src
 ** Cider
 *** cider hook http://root42.blogspot.com/2014/08/how-to-automatically-refresh-cider-when.html
 *** Making clojure lazier & streams https://clojure.org/reference/lazy
