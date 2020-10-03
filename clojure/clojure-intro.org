@@ -364,6 +364,10 @@ Great tutorial in coverage, but a little tedious is mode and development.
 https://www.youtube.com/watch?v=ciGyHkDuPAE
 *** Protocols! Must watch https://www.youtube.com/watch?v=kQhOlWXXl2I
 *** Clojure script on react with figwheel https://medium.com/mindorks/building-mobile-apps-ios-and-android-with-clojurescript-4600235f826c
+*** Clojurescript with ReactNative https://medium.com/upwork-engineering/developing-react-native-applications-in-clojurescript-9386b1cd5869
+Basically start here:
+https://cljsrn.org/
+https://github.com/drapanjanas/re-natal
 *** TODO Datomic migration  https://grishaev.me/en/pg-to-datomic/
 *** TODO Building an ANKI clone using datomic https://www.youtube.com/watch?v=QrSnTIHotZE
 ** Useful clojure titbits
