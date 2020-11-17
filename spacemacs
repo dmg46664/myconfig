@@ -32,6 +32,7 @@ values."
    dotspacemacs-configuration-layers
    '(
      javascript
+     java
      python
      html
      ;; ----------------------------------------------------------------
@@ -46,6 +47,7 @@ values."
      git
      markdown
      org
+     command-log
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -70,8 +72,17 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(flycheck-clj-kondo
-                                      alarm-clock log4j-mode logview ztree zprint-mode heaven-and-hell
+   dotspacemacs-additional-packages '(
+                                      alarm-clock
+                                      flycheck-clj-kondo
+                                      gradle-mode
+                                      groovy-mode
+                                      heaven-and-hell
+                                      log4j-mode
+                                      logview
+                                      org-clock-csv
+                                      zprint-mode
+                                      ztree
                                                  ;; How to install packages not in melp https://github.com/syl20bnr/spacemacs/issues/2278
                                                  (periodic-commit-minor-mode :location (recipe
                                                                         :fetcher github
@@ -332,6 +343,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
    ;; https://github.com/syl20bnr/spacemacs/issues/1435
    mac-right-option-modifier nil)
 
+  ;; Problem!
+  ;; https://apple.stackexchange.com/questions/399187/how-to-set-default-directory-for-emacs-27-1-app
+  (setq default-directory "~/")
+  (setq command-line-default-directory "~/")
+
+
   ;; More reading https://www.masteringemacs.org/article/mastering-key-bindings-emacs
   ;; Problems with more than one keyboard: https://apple.stackexchange.com/questions/277510/osx-different-keyboards-with-different-input-methods-possible
   ;; In order to switch between # and £ on Mac, I've decided to simply change between keyboard sources, given two keyboard (Ctrl-SPC)
@@ -403,6 +420,12 @@ you should place your code here."
           (t "locate %s")))
   (if (eq system-type 'darwin) (setq helm-locate-fuzzy-match nil))
 
+
+  ;; Cider configuration
+  ;;
+  (setq cider-shadow-cljs-command "yarn shadow-cljs")
+  ;; clojure stacktraces may be huge, so make the *Messages* buffers bigger
+  ;; (setq message-log-max 100000)
   
   ;; https://github.com/borkdude/clj-kondo/blob/master/doc/editor-integration.md#spacemacs
   (use-package clojure-mode
@@ -477,7 +500,8 @@ you should place your code here."
   ;; Got idea https://github.com/kametoku/orgmine
   ;; #+PROPERTY: periodic_commit_minor_mode enable
   (add-hook 'org-mode-hook
-            (lambda () (if (assoc "periodic_commit_minor_mode" org-file-properties)
+            (lambda () (if (and (boundp 'org-file-properties)
+                            (assoc "periodic_commit_minor_mode" org-file-properties))
                            (periodic-commit-minor-mode))))
   ;; Only periodically commit tracked files (not all)
   (setq pcmm-commit-all nil)
@@ -587,18 +611,18 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
- '(custom-enabled-themes (quote (default adwaita)))
+ '(custom-enabled-themes '(deeper-blue))
  '(custom-safe-themes
-   (quote
-    ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+   '("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default))
  '(evil-want-Y-yank-to-eol nil)
- '(helm-completion-style (quote helm))
+ '(gradle-mode t)
+ '(helm-completion-style 'helm)
+ '(helm-external-programs-associations nil)
  '(menu-bar-mode t)
  '(org-agenda-files
    (list "~/mytrackedfiles/todolist.org" "~/mytrackedfiles/stock_research.org"))
  '(package-selected-packages
-   (quote
-    (web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc coffee-mode flycheck-clj-kondo alarm-clock zprint-mode heaven-and-hell pyenv-mode hy-mode company-anaconda anaconda-mode yapfify pyvenv pytest py-isort pip-requirements live-py-mode dash-functional helm-pydoc cython-mode pythonic clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg lv cider-eval-sexp-fu cider sesman queue parseedn clojure-mode parseclj a ztree noflet ensime sbt-mode scala-mode periodic-commit-minor-mode datetime extmap logview log4j-mode sass-mode company-web web-mode tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data cheatsheet emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+   '(org-clock-csv groovy-mode gradle-mode company-emacs-eclim eclim command-log-mode web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc coffee-mode flycheck-clj-kondo alarm-clock zprint-mode heaven-and-hell pyenv-mode hy-mode company-anaconda anaconda-mode yapfify pyvenv pytest py-isort pip-requirements live-py-mode dash-functional helm-pydoc cython-mode pythonic clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg lv cider-eval-sexp-fu cider sesman queue parseedn clojure-mode parseclj a ztree noflet ensime sbt-mode scala-mode periodic-commit-minor-mode datetime extmap logview log4j-mode sass-mode company-web web-mode tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data cheatsheet emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

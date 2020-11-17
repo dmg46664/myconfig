@@ -79,3 +79,6 @@ Checking hash of zulu13.28.11-ca-jdk13.0.1-win_x64.zip ... ok.
 ** Zsh
 
 https://github.com/romkatv/powerlevel10k
+
+Some basics
+https://scriptingosx.com/2019/06/moving-to-zsh-part-3-shell-options/

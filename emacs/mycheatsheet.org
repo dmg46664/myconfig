@@ -74,13 +74,29 @@ https://github.com/emacs-helm/helm/wiki/Grep
 You can use helm-ff-do-grep inside helm-find-files session.
 
 - M-m f f
-- navigate to directory and append /** or /** to the search directory path
+- navigate to directory and append /*.java or whatever or leave blank for all files
+  We used to be able to add /** but that seems to hang emacs now TODO?
 - C-s
 - Type in pattern like "mysearch" without the quotes.
 
 ** TODO Helm recent? Within helm C-c h, but it isn't the same.
 ** Expanded list of ALL helm documentation [[file:helm-file-help.org::*Helm%20Find%20Files][Helm Find Files]]
 ** M-e in helm find files to open eshell e-shell
+** Default file type
+   The below is not for default external files, just use right click on osx with `Get Info` and default open-with
+   #+begin_quote
+   https://emacs.stackexchange.com/questions/5854/how-to-set-default-program-to-open-a-file-in-helm
+   M-x customize-variable
+   helm-external-programs-associations
+   INS
+   csv soffice
+   Apply and save
+#+end_quote
+
+   Expecting to run helm-ff-run-open-file-with-default-tool
+   which eventually calls
+   https://github.com/emacs-helm/helm/blob/b09cbf452b08e44768c3ef17e7d93b78cde5e91d/helm-utils.el#L1041
+   
 * Unorganized
 - Useful: org-export-insert-default-template
 
@@ -230,7 +246,6 @@ Remember to hover over commands to get highlighting about them.
 Some basics
 https://www.gnu.org/software/emacs/manual/html_node/eintr/car-cdr-_0026-cons.html
 
-
 * Clojure Coding
 ** M-;                  Add or remove comments  :coding:
 https://www.gnu.org/software/emacs/manual/html_node/emacs/Comment-Commands.html
@@ -261,6 +276,14 @@ git log -p -M --follow --stat -- path/to/your/file
 ** Selectively discarding bits
 Use shift on lines and k
 https://utcc.utoronto.ca/~cks/space/blog/programming/MagitDiscardingChanges?showcomments
+** Ammending commits
+   https://emacs.stackexchange.com/questions/22557/add-change-to-a-previous-commit-with-magit
+c, a  => ammend both message and content of the HEAD
+c, e => extend content leaving message the same of the HEAD
+c, r => reword message leaving content the same of the HEAD
+
+c, f => Like c,e but not for the HEAD.
+
 * Using Magit to solve conflicts
 
 ** RET on conflict opens in smerge editor
@@ -290,6 +313,23 @@ Also helm-swoop-caret-match seems to be blocking our ability to match new line c
 * BUGS
 ** helm-ag doesn't work in spacemacs https://github.com/bbatsov/helm-projectile/issues/113
 Might simply be that the `ag` command is not on the command prompt.
+* Zsh
+** iTerm2
+Cmd+left arrow, Cmd+right arrow navigates among tabs. So does Cmd-{ and Cmd-}.
+Cmd+number navigates directly to a tab.
+Cmd+Option+Number navigates directly to a window.
+Cmd+Option+Arrow keys navigate among split panes.
+Cmd+] and Cmd+[ navigates among split panes in order of use.
+Cmd+D Close
+Shift+Tab Grow selection one word left
+Tab Grow selection one word right
+** Logging
+   https://gitlab.com/gnachman/iterm2/-/issues/6915
+   Might have had to install shell integration as per terminal notify because it did not start populating the directory immediately.
+** Terminal notify
+   https://stackoverflow.com/questions/30016716/how-do-i-make-iterm-terminal-notify-me-when-a-job-process-is-complete
+   Ensure than you go to OSX notifications and enable iterm
+   Options-Command-a
 * Non emacs infrastructure like tasks
 ** Making a new brew formulae
 https://github.com/Homebrew/brew/blob/master/docs/Formula-Cookbook.md

@@ -329,7 +329,544 @@ Might want to try https://github.com/RickMoynihan/nrebl.middleware
 
 Perhaps it doesn't work with symlinks of the jar?
 Adding the dependency as per comment here fixes this https://github.com/cognitect-labs/REBL-distro/issues/34
+* DONE DEPRECATED Setting up a clojurescript reactnative using re-natal
+  CLOSED: [2020-10-05 Mon 14:00]
 
+Advice: Lots to download both during project generation and first run.
+Make sure you have bandwidth.
+
+The following should be deprecated https://github.com/drapanjanas/re-natal
+In favour of https://figwheel.org/docs/react-native.html
+** DONE Problems installing re-natal
+   CLOSED: [2020-10-05 Mon 13:59]
+#+begin_src 
+❯ npm install -g react-native-cli
+added 83 packages from 28 contributors in 6.681s
+❯ brew install watchman
+
+❯ npm install -g re-natal
+dyld: Library not loaded: /usr/local/opt/icu4c/lib/libicui18n.62.dylib
+!!! But don't run `brew upgrade` to solve this.
+#+end_src
+
+Ran brew upgrade in order to get passed the above error, which worked but was heavy handed.
+** DONE Problems running Android.
+   CLOSED: [2020-10-05 Mon 13:59]
+Next you have to install android sdk or you'll get this.
+
+#+begin_src
+> SDK location not found. Define location with sdk.dir in the local.properties file or with an ANDROID_HOME environment variable.
+!!! This means you have to setup Android
+
+
+NOTE The following is deprecated:
+brew cask install android-sdk
+
+See
+https://developer.android.com/studio/releases/sdk-tools
+
+But this apparently works?
+
+brew cask install android-studio
+
+DONE This seemed to work.
+#+end_src
+
+Check where Android sdk was installed
+#+begin_src bash
+export ANDROID_HOME=~/Library/Android/sdk
+#+end_src
+
+#+begin_src
+❯ react-native run-android
+(node:5471) Warning: Accessing non-existent property 'padLevels' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+info Starting JS server...
+info Building and installing the app on the device (cd android && ./gradlew app:installDebug)...
+
+> Configure project :app
+File /Users/dmg46664/.android/repositories.cfg could not be loaded.
+Checking the license for package Android SDK Build-Tools 28.0.3 in /Users/dmg46664/Library/Android/sdk/licenses
+Warning: License for package Android SDK Build-Tools 28.0.3 not accepted.
+Checking the license for package Android SDK Platform 28 in /Users/dmg46664/Library/Android/sdk/licenses
+Warning: License for package Android SDK Platform 28 not accepted.
+
+FAILURE: Build failed with an exception.
+
+- What went wrong:
+A problem occurred configuring project ':app'.
+> Failed to install the following Android SDK packages as some licences have not been accepted.
+     build-tools;28.0.3 Android SDK Build-Tools 28.0.3
+     platforms;android-28 Android SDK Platform 28
+  To build this project, accept the SDK license agreements and install the missing components using the Android Studio SDK Manager.
+  Alternatively, to transfer the license agreements from one workstation to another, see http://d.android.com/r/studio-ui/export-licenses.html
+
+  Using Android SDK: /Users/dmg46664/Library/Android/sdk
+
+- Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+
+- Get more help at https://help.gradle.org
+
+BUILD FAILED in 5s
+error Could not install the app on the device, read the error above for details.
+Make sure you have an Android emulator running or a device connected and have
+set up your Android development environment:
+https://facebook.github.io/react-native/docs/getting-started.html
+error Command failed: ./gradlew app:installDebug. Run CLI with --verbose flag for more details.
+    ~/IdeaProjects/samson 
+#+end_src
+
+But it still doesn't run from the command line!?
+DONE So loaded the android directory into android studio itself.
+DONE Upgraded the gradle plugin
+
+DONE Updated the build numbers to what seems to match in my
+~/Library/Android/sdk/platforms/android-30
+
+#+begin_src json
+buildscript {
+    ext {
+        buildToolsVersion = "30.0.2"
+        minSdkVersion = 16
+        compileSdkVersion = 30
+        targetSdkVersion = 30
+        supportLibVersion = "30.0.0"
+    }
+#+end_src
+
+TODO But still problematic
+
+#+begin_src
+Failed to install the following Android SDK packages as some licences have not been accepted.
+   build-tools;29.0.2 Android SDK Build-Tools 29.0.2
+To build this project, accept the SDK license agreements and install the missing components using the Android Studio SDK Manager.
+Alternatively, to transfer the license agreements from one workstation to another, see http://d.android.com/r/studio-ui/export-licenses.html
+
+Using Android SDK: /Users/dmg46664/Library/Android/sdk
+Install missing SDK package(s)
+#+end_src
+
+TODO perhaps the following?
+
+#+begin_src
+Fixed adding the following:
+
+yes | sdkmanager --licenses && yes | sdkmanager --update
+
+This needs to be executed before any interaction with Android SDK.
+
+For Mac follow the images here downloading
+https://stackoverflow.com/questions/54273412/failed-to-install-the-following-android-sdk-packages-as-some-licences-have-not
+
+The following doesn't work. Perhaps needs JAVA_HOME is too new a version
+~/Library/Android/sdk/tools/bin/sdkmanager --licenses
+#+end_src
+
+TODO Running device from AVG Manager
+
+Chose Pixel 3a and downloaded.
+** DONE Getting Figwheel to work as expected
+   CLOSED: [2020-10-05 Mon 13:59]
+How to start the project in Emacs:
+#+begin_src
+At the command prompt:
+
+re-natal use-android-device avd
+re-natal use-figwheel
+
+Then in Emacs:
+Jack in to CLJS
+(switch-to-build "android")
+#+end_src
+
+#+begin_src clojure
+user> (fig-status)
+Figwheel System Status
+----------------------------------------------------
+Watching builds: [android]
+Client Connections
+	 any-build: 1 connection
+----------------------------------------------------
+nil
+#+end_src
+
+DONE Now you'll be able to save changes and see them in the emulator!
+
+However, you'll find that at this point you've lost the ability to run arbitrary REPL
+code in emacs.
+** DONE Run arbitrary REPL code in Emacs
+   CLOSED: [2020-10-05 Mon 15:09]
+
+   https://figwheel.org/docs/editor-integration.html
+
+Perhaps the problem happened here:
+
+#+begin_src
+Prompt will show when Figwheel connects to your application
+
+user> (switch-to-build "android")
+!!! sleep interrupted
+Exception Failed to launch Figwheel CLJS REPL: nREPL connection found but unable to load piggieback.
+This is commonly caused by
+ A) not providing piggieback as a dependency and/or
+ B) not adding piggieback middleware into your nrepl middleware chain.
+
+example profile.clj code:
+-----
+:profiles {:dev {:dependencies [[cider/piggieback <current-version>]
+                                [org.clojure/tools.nrepl  <current-version>]]
+                 :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}}
+-----
+Please see the documentation for piggieback here https://github.com/clojure-emacs/piggieback#installation
+
+Note: Cider will inject this config into your project.clj.
+This can cause confusion when your are not using Cider.  figwheel-sidecar.repl/eval19040/fn--19041 (repl.clj:182)
+Figwheel: Stopped watching build - ios
+Figwheel: Watching build - android
+Compiling build :android to "target/android/index.js" from ["src" "env/dev"]...
+Successfully compiled build :android to "target/android/index.js" in 3.043 seconds.
+nil
+#+end_src
+
+Interesting read
+https://github.com/bhauman/lein-figwheel/issues/703
+
+DONE See starting android first for the solution FIX!
+Once Android starts first then figwheel loads in the right order and waits
+to connect to your application with the CLJS REPL.
+If it loads ios first and then you switch it seems to fail for some reason.
+** DONE Figwheel-main doesn't work
+   CLOSED: [2020-10-05 Mon 16:40]
+
+So the CIDER instructions suggest not booting wth `figwheel` and choosing `figwheel-main`.
+However I get the latter with that instruction
+#+begin_src
+[nREPL] Starting server via /usr/local/bin/lein update-in :dependencies conj \[nrepl\ \"0.8.2\"\] -- update-in :dependencies conj \[cider/piggieback\ \"0.5.1\"\] -- update-in :plugins conj \[refactor-nrepl\ \"2.5.0\"\] -- update-in :plugins conj \[cider/cider-nrepl\ \"0.25.3\"\] -- repl :headless :host localhost
+Invalid face reference: t [740 times]
+[nREPL] server started on 61524
+Invalid face reference: t [40 times]
+error in process filter: user-error: No figwheel-main build files (<build-id>.cljs.edn) were found
+error in process filter: No figwheel-main build files (<build-id>.cljs.edn) were found
+Invalid face reference: t [63 times]
+#+end_src
+
+Some commentary here? About how a whole project interacts, but not that illuminating for this issue.
+https://luminusweb.com/docs/clojurescript.html
+
+I don't think it works with figwheel-main, so reverting to figwheel
+
+
+TODO Newer version fo bridge? Is the whole project invalidated?
+https://github.com/drapanjanas/re-natal/issues/209
+This bridge is interest
+** DONE How to get reframe/re-agent to automatically reload stuff on screen if the values have changed?
+   CLOSED: [2020-10-05 Mon 16:40]
+   I.e. if I save db.clj with a new value,
+   It doesn't automatically reload.
+
+   Neither is this the case with
+This whole project is deprecated with https://figwheel.org/docs/react-native.html
+   
+** DONE Why isn't it starting with android first?
+   CLOSED: [2020-10-05 Mon 15:14]
+   Perhaps the reason is https://cljdoc.org/d/figwheel-sidecar/figwheel-sidecar/0.5.20/doc/readme
+
+   In project.clj swap the following
+#+begin_src clojure
+  ;; Swap the order in the vector of ios and android builds
+  :profiles :dev :cljsbuild :builds
+
+  ;; Then rerun
+
+       ;;
+       ;; ClojureScript REPL type: figwheel
+       ;; ClojureScript REPL init form: (do (require 'figwheel-sidecar.repl-api) (figwheel-sidecar.repl-api/start-figwheel!) (figwheel-sidecar.repl-api/cljs-repl))
+       ;;
+       Figwheel: Starting server at http://0.0.0.0:3449
+       Figwheel: Watching build - android
+       Compiling build :android to "target/android/index.js" from ["src" "env/dev"]...
+       Successfully compiled build :android to "target/android/index.js" in 15.003 seconds.
+       Launching ClojureScript REPL for build: android
+       Figwheel Controls:
+                 (stop-autobuild)                ;; stops Figwheel autobuilder
+                 (start-autobuild id ...)        ;; starts autobuilder focused on optional ids
+                 (switch-to-build id ...)        ;; switches autobuilder to different build
+                 (reset-autobuild)               ;; stops, cleans, and starts autobuilder
+                 (reload-config)                 ;; reloads build config and resets autobuild
+                 (build-once id ...)             ;; builds source one time
+                 (clean-builds id ..)            ;; deletes compiled cljs target files
+                 (print-config id ...)           ;; prints out build configurations
+                 (fig-status)                    ;; displays current state of system
+                 (figwheel.client/set-autoload false)    ;; will turn autoloading off
+                 (figwheel.client/set-repl-pprint false) ;; will turn pretty printing off
+         Switch REPL build focus:
+                 :cljs/quit                      ;; allows you to switch REPL to another build
+           Docs: (doc function-name-here)
+           Exit: :cljs/quit
+        Results: Stored in vars *1, *2, *3, *e holds last exception object
+       Prompt will show when Figwheel connects to your application
+       To quit, type: :cljs/quit
+       nil
+       user> 
+       cljs.user> 
+   #+end_src
+* DONE DEPRECATED ReactNative with ClojureScript and figWheel
+  CLOSED: [2020-11-12 Thu 13:39]
+  https://figwheel.org/docs/react-native.html
+
+NOTE Rather use shadow-cljs
+  
+When reading the above add a
+android.cljs.edn instead of the ios.
+
+#+begin_src sh
+user-error: The clojure executable isn’t on your ‘exec-path’
+#+end_src
+
+Check if you can run `clj` from the command line.
+
+#+begin_src shell
+brew install clojure/tools/clojure
+Error: No available formula or cask with the name "clojure/tools/clojure".
+
+❯ brew install clojure
+Updating Homebrew...
+==> Auto-updated Homebrew!
+Updated 1 tap (homebrew/cask).
+==> Updated Casks
+praat
+
+Warning: clojure 1.10.1.697 is already installed, it's just not linked
+You can use `brew link clojure` to link this version.
+❯ clj
+zsh: command not found: clj
+❯ brew link clojure
+Linking /usr/local/Cellar/clojure/1.10.1.697... 8 symlinks created
+❯ clj DONE
+#+end_src
+
+Not able to communicate yet
+
+#+begin_src
+[Error: Figwheel Bridge Unable to fetch optionsUrl: http://localhost:9500/cljs-out/android/cljsc_opts.json]
+#+end_src
+
+#+begin_src shell
+Change path
+export PATH=$HOME/bin:/usr/local/bin:~/Library/Android/sdk/platform-tools:$PATH
+#+end_src
+
+Now run adb command as per tutorial
+** TODO ERROR evaluating SECRET_INTERNALS_DO_NOT
+#+begin_src 
+TypeError: Cannot read property '__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED' of undefined
+    at eval (eval at tryCallOne (core.js:37), <anonymous>:18:36)
+    at eval (eval at tryCallOne (core.js:37), <anonymous>:15:29)
+    at eval (eval at tryCallOne (core.js:37), <anonymous>:16:2)
+    at eval (<anonymous>)
+    at tryCallOne (core.js:37)
+    at core.js:123
+    at JSTimers.js:274
+    at _callTimer (JSTimers.js:130)
+    at _callImmediatesPass (JSTimers.js:181)
+    at MessageQueue.callImmediates [as _immediatesCallback] (JSTimers.js:441)
+reactConsoleErrorHandler @ ExceptionsManager.js:179
+n @ backend.js:32
+registerError @ LogBox.js:148
+errorImpl @ LogBox.js:59
+console.error @ LogBox.js:33
+tryCallOne @ core.js:37
+(anonymous) @ core.js:123
+(anonymous) @ JSTimers.js:274
+_callTimer @ JSTimers.js:130
+_callImmediatesPass @ JSTimers.js:181
+callImmediates @ JSTimers.js:441
+__callImmediates @ MessageQueue.js:387
+(anonymous) @ MessageQueue.js:135
+__guard @ MessageQueue.js:364
+flushedQueue @ MessageQueue.js:134
+invokeCallbackAndReturnFlushedQueue @ MessageQueue.js:130
+(anonymous) @ debuggerWorker.cff11639.js:4
+   #+end_src
+
+
+TODO I might have got this after adding depedencies?
+Hypothesis, adding the dependencies complicated the complication of core.js
+
+https://github.com/facebook/react-native/issues/13874
+
+;;/Users/dmg46664/IdeaProjects/Samson/target/public/cljs-out/android/cljs/core.js
+/Users/dmg46664/IdeaProjects/Samson/node_modules/promise/core.js
+
+TODO https://github.com/thheller/shadow-cljs/issues/31
+
+TODO "A note to anyone else trying to run RN from master. Double check the react version in RN's package.json matches the one in your app's yarn lockfile."
+** DONE Error: Figwheel Bridge Unable to fetch optionsUrl:
+   CLOSED: [2020-11-12 Thu 10:48]
+   http://localhost:9500/cljs-out/android/cljsc_opts.json
+
+
+   It's likely that you get this error when the reverse proxy with adb hasn't run.
+   Because the emulator can't yet see the REPL server
+
+   You should see the following in the metro task
+   
+#+begin_src shell
+[Wed Nov 11 2020 22:05:43.960]  LOG      Running "Samson" with {"rootTag":1}
+[Wed Nov 11 2020 22:05:43.363]  ERROR    [Error: Figwheel Bridge Unable to fetch optionsUrl: http://localhost:9500/cljs-out/android/cljsc_opts.json]
+[Thu Nov 12 2020 10:45:15.927]  BUNDLE  ./index.js
+
+[Thu Nov 12 2020 10:45:24.810]  LOG      Running "Samson" with {"rootTag":1}
+[Thu Nov 12 2020 10:45:38.904]  LOG       [goog.net.WebSocket] Opening the WebSocket on ws://localhost:9500/figwheel-connect?fwprocess=2ecd9b&fwbuild=android&fwsid=5d44fc9a-3ef1-4d86-a701-86bfa453fac9
+[Thu Nov 12 2020 10:45:40.833]  LOG       [goog.net.WebSocket] WebSocket opened on ws://localhost:9500/figwheel-connect?fwprocess=2ecd9b&fwbuild=android&fwsid=5d44fc9a-3ef1-4d86-a701-86bfa453fac9
+[Thu Nov 12 2020 10:45:41.147]  LOG       [Figwheel REPL] Session ID: 5d44fc9a-3ef1-4d86-a701-86bfa453fac9
+[Thu Nov 12 2020 10:45:41.148]  LOG       [Figwheel REPL] Session Name: Jolie
+#+end_src
+
+Probably ADB reverse proxy solves this.
+** DONE error: Error: Unable to resolve module `./target/public/cljs-out/android/krell_assets.js` from `index.js`:
+   CLOSED: [2020-11-12 Thu 14:55]
+
+From metro bundler
+#+begin_src
+None of these files exist:
+  * target/public/cljs-out/android/krell_assets.js(.native|.android.js|.native.js|.js|.android.json|.native.json|.json|.android.ts|.native.ts|.ts|.android.tsx|.native.tsx|.tsx)
+  * target/public/cljs-out/android/krell_assets.js/index(.native|.android.js|.native.js|.js|.android.json|.native.json|.json|.android.ts|.native.ts|.ts|.android.tsx|.native.tsx|.tsx)
+    at ModuleResolver.resolveDependency (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js:163:15)
+    at ResolutionRequest.resolveDependency (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/node-haste/DependencyGraph/ResolutionRequest.js:52:18)
+    at DependencyGraph.resolveDependency (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/node-haste/DependencyGraph.js:287:16)
+    at Object.resolve (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/lib/transformHelpers.js:267:42)
+    at /Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/DeltaBundler/traverseDependencies.js:434:31
+    at Array.map (<anonymous>)
+    at resolveDependencies (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/DeltaBundler/traverseDependencies.js:431:18)
+    at /Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/DeltaBundler/traverseDependencies.js:275:33
+    at Generator.next (<anonymous>)
+    at asyncGeneratorStep (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/DeltaBundler/traverseDependencies.js:87:24)
+#+end_src
+
+Info: https://github.com/vouch-opensource/krell
+
+I think this occurred when adding dependencies to deps.edn.
+Rejacking in, followed by reloading the app (not sure if npx / or reloading metro),
+made this go away.
+** TODO ERROR loading react-dom.inc.js
+   [Thu Nov 12 2020 14:53:47.607]  ERROR     [Figwheel REPL] Error loading file http://localhost:9500/cljs-out/android/cljsjs/react-dom/development/react-dom.inc.js
+
+   Strange as I can see this file. Error went away on reload.
+
+   Suspect this is adb reverse proxy resolves this.
+Background reading:
+https://stackoverflow.com/questions/37320212/use-a-different-react-version-with-clojurescript-react-libraries-reagent-om-rum
+https://cljdoc.org/d/reagent/reagent/1.0.0-alpha2/doc/frequently-asked-questions/reagent-doesn-t-work-after-updating-dependencies
+
+   https://stackoverflow.com/questions/21063587/what-is-index-js-used-for-in-node-js-projects
+https://stackoverflow.com/questions/44803681/how-to-use-index-js-instead-of-index-ios-js-index-android-js-in-react-native
+
+
+Getting dependencies
+#+begin_src shell
+❯ clj -X:deps tree
+#+end_src
+
+
+** DONE how to get metro to show stacktraces? (Hint start debugger)
+   CLOSED: [2020-11-14 Sat 14:59]
+https://stackoverflow.com/questions/49319291/how-to-debug-unexpected-token-in-react-native-metro
+
+Press d for developer menu inside app.
+The following from a terminal seems to have the same effect.
+#+begin_src shell
+adb shell input keyevent 82
+#+end_src
+
+This brings up the menu that allows starting and stopping of debugger.
+If you start the debugger, it will open up a tab in the browser with a webworker.
+If you open developer tools and look at the console, you'll see the same sets of errors
+and should be able to expand errors to get stacktraces.
+** DONE Adding dependencies
+   CLOSED: [2020-11-16 Mon 12:20]
+   Add deps to deps.edn
+* DONE ReactNative & Shadow-cljs
+  CLOSED: [2020-11-16 Mon 12:43]
+
+  NOTE Don't use the following https://github.com/flexsurfer/ClojureRNProject
+  Pros and cons
+   + Uses yarn
+   - Shouldn't put react-native directory in root
+   - duplicates dependencies
+   - hides shims
+   - despoke libs
+
+  Use this as a guide instead https://github.com/thheller/reagent-react-native
+
+  NOTE However, see modern advice on create reactnative apps https://stackoverflow.com/a/45780332/93074
+  #+begin_src
+    brew install yarn
+    yarn global add create-react-native-app
+    create-react-native-app
+     #selecting default app, new-name
+    mv new-name react-native
+    yarn init -y
+    yarn add --dev shadow-cljs
+    #+end_src
+
+    Now complete rest of guide as is
+
+    NOTE but advise in favour of committing the repo before building
+
+** DONE ERROR Invariant Violation: "main" has not been registered
+   CLOSED: [2020-11-17 Tue 14:06]
+   This can happen if:
+ Metro (the local dev server) is run from the wrong folder. Check if Metro is running, stop it and restart it in the current project.
+ A module failed to load due to an error and `AppRegistry.registerComponent` wasn't called.
+
+ https://stackoverflow.com/questions/29287987/invariant-violation-application-awesomeproject-has-not-been-registered-when-b
+
+ Seems I needed to change render-root to "main"
+** DONE error: Error: Unable to resolve module `react-native-safe-area-context`
+   CLOSED: [2020-11-16 Mon 12:18]
+   from `app/index.js`: react-native-safe-area-context could not be found within the project.
+
+    https://stackoverflow.com/questions/59560312/getting-this-error-error-bundling-failed-error-unable-to-resolve-module-rea
+
+    ❯ yarn add react-native-safe-area-view react-native-safe-area-context
+yarn add v1.22.10
+warning package-lock.json found. Your project contains lock files generated by tools other than Yarn. It is advised not to mix package managers in order to avoid resolution inconsistencies caused by unsynchronized lock files. To clear this warning, remove package-lock.json.
+[1/4] 🔍  Resolving packages...
+[2/4] 🚚  Fetching packages...
+[3/4] 🔗  Linking dependencies...
+warning "@react-native-community/eslint-config > @typescript-eslint/eslint-plugin > tsutils@3.17.1" has unmet peer dependency "typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta".
+[4/4] 🔨  Building fresh packages...
+success Saved lockfile.
+success Saved 3 new dependencies.
+info Direct dependencies
+├─ react-native-safe-area-context@3.1.9
+└─ react-native-safe-area-view@1.1.1
+info All dependencies
+├─ hoist-non-react-statics@2.5.5
+├─ react-native-safe-area-context@3.1.9
+└─ react-native-safe-area-view@1.1.1
+✨  Done in 10.32s.
+
+Now I get:
+
+[Mon Nov 16 2020 06:28:34.348]  ERROR    Invariant Violation: requireNativeComponent: "RNCSafeAreaView" was not found in the UIManager.
+
+This error is located at:
+    in RNCSafeAreaView (created by samson.core.root_comp)
+    in samson.core.root_comp (created by reagent1)
+    in RCTView (at View.js:34)
+    in View (created by reagent1)
+    in reagent1 (at renderApplication.js:45)
+    in RCTView (at View.js:34)
+    in View (at AppContainer.js:106)
+    in RCTView (at View.js:34)
+    in View (at AppContainer.js:132)
+    in AppContainer (at renderApplication.js:39)
+
+Then to reinstall the new native dependencies
+yarn android
 * Clojure assistance
 
 ** Refactoring
@@ -367,7 +904,8 @@ https://www.youtube.com/watch?v=ciGyHkDuPAE
 *** Clojurescript with ReactNative https://medium.com/upwork-engineering/developing-react-native-applications-in-clojurescript-9386b1cd5869
 Basically start here:
 https://cljsrn.org/
-https://github.com/drapanjanas/re-natal
+*** Re-frame tutorial https://day8.github.io/re-frame/dominoes-live/
+    
 *** TODO Datomic migration  https://grishaev.me/en/pg-to-datomic/
 *** TODO Building an ANKI clone using datomic https://www.youtube.com/watch?v=QrSnTIHotZE
 ** Useful clojure titbits
@@ -879,6 +1417,7 @@ And some playing around
 (map type y) ;; => (clojure.lang.StringSeq clojure.lang.StringSeq clojure.lang.StringSeq)
 (apply concat y)
 #+end_src
+*** TODO What React alone vs Reframe https://purelyfunctional.tv/article/react-vs-re-frame/
 ** Cider
 *** cider hook http://root42.blogspot.com/2014/08/how-to-automatically-refresh-cider-when.html
 *** Making clojure lazier & streams https://clojure.org/reference/lazy
@@ -889,8 +1428,8 @@ More concisely: https://insideclojure.org/2015/01/02/sequences/
 
 Then to pick apart the details of types: https://stackoverflow.com/questions/44095400/how-to-understand-clojures-lazy-seq/44102122
 
-** Videos
-*** TODO Task : Make a doubly nested for loop, calling on a Java API (XLS) spreadsheet, to take a data structure and save it to tables.
+* Videos
+** TODO Task : Make a doubly nested for loop, calling on a Java API (XLS) spreadsheet, to take a data structure and save it to tables.
 https://github.com/mjul/docjure
 
 The naive way that a java programmer would code:
@@ -930,13 +1469,14 @@ The naive way that a java programmer would code:
 
 (save-excel!)
 #+end_src
-*** Scope capture https://vimeo.com/237220354
-*** Clojure for ETLs https://www.youtube.com/watch?v=oOON--g1PyU
-** Improvements
-*** Ensure that stacktrace window is colour coded obvious to communicate whether it's a runtime error or compile time error.
-*** Thread about how to compensate for the lack of dot https://www.reddit.com/r/Clojure/comments/6f6cq2/how_to_compensate_for_clojures_lack_of_dot/
-*** The stacktrace window should allow one ot preview items without go
-*** To clojurephant
+** Scope capture https://vimeo.com/237220354
+** Clojure for ETLs https://www.youtube.com/watch?v=oOON--g1PyU
+** Introduction to CS and Reagent https://www.youtube.com/watch?v=wq6ctyZBb0A
+* Improvements
+** Ensure that stacktrace window is colour coded obvious to communicate whether it's a runtime error or compile time error.
+** Thread about how to compensate for the lack of dot https://www.reddit.com/r/Clojure/comments/6f6cq2/how_to_compensate_for_clojures_lack_of_dot/
+** The stacktrace window should allow one ot preview items without go
+** To clojurephant
 ; (in [1 2] 1) ; like .contains
 ; (expand-case) to expand out case test-contants.
 
