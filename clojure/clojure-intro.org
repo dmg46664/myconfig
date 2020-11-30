@@ -815,6 +815,20 @@ and should be able to expand errors to get stacktraces.
 
     NOTE but advise in favour of committing the repo before building
 
+Connecting with cider definitely works when jacking in, but not with connecting.
+
+Apparently another way
+    https://github.com/clojure-emacs/cider-nrepl/issues/638
+
+#+begin_src cljs
+shadow.user> (shadow/repl :app)
+or shadow.user> (shadow.cljs.devtools.api/nrepl-select :app)
+To quit, type: :cljs/quit
+cljs.user> (in-ns 'dimigi.test)
+(ns-publics 'dimigi.test)
+    #+end_src
+
+    
 ** DONE ERROR Invariant Violation: "main" has not been registered
    CLOSED: [2020-11-17 Tue 14:06]
    This can happen if:
@@ -899,15 +913,20 @@ https://stackoverflow.com/questions/3337888/clojure-named-arguments
 ** Tutorials
 Great tutorial in coverage, but a little tedious is mode and development.
 https://www.youtube.com/watch?v=ciGyHkDuPAE
-*** Protocols! Must watch https://www.youtube.com/watch?v=kQhOlWXXl2I
-*** Clojure script on react with figwheel https://medium.com/mindorks/building-mobile-apps-ios-and-android-with-clojurescript-4600235f826c
-*** Clojurescript with ReactNative https://medium.com/upwork-engineering/developing-react-native-applications-in-clojurescript-9386b1cd5869
-Basically start here:
-https://cljsrn.org/
-*** Re-frame tutorial https://day8.github.io/re-frame/dominoes-live/
-    
+*** Protocols! Must watch https://www.youtube.com/watch?v=kQhOlWXXl2I    
 *** TODO Datomic migration  https://grishaev.me/en/pg-to-datomic/
 *** TODO Building an ANKI clone using datomic https://www.youtube.com/watch?v=QrSnTIHotZE
+** Clojurescript
+*** Re-frame tutorial https://day8.github.io/re-frame/dominoes-live/
+*** Reagent docs https://cljdoc.org/d/reagent/reagent/1.0.0-alpha2/doc/tutorials/creating-reagent-components
+*** CLJS JS interop     https://lwhorton.github.io/2018/10/20/clojurescript-interop-with-javascript.html 
+*** CLJS type inference https://blog.klipse.tech/clojure/2019/05/20/type-inference-in-clojurescript.html
+*** CLJS gotchas
+https://stackoverflow.com/questions/15049413/how-do-i-get-properties-with-dashes-in-their-names-in-clojurescript
+*** DEPRECATED Clojure script on react with figwheel https://medium.com/mindorks/building-mobile-apps-ios-and-android-with-clojurescript-4600235f826c
+*** DEPRECATED Clojurescript with ReactNative https://medium.com/upwork-engineering/developing-react-native-applications-in-clojurescript-9386b1cd5869
+Basically start here:
+https://cljsrn.org/
 ** Useful clojure titbits
 *** Apply vs Map https://stackoverflow.com/questions/2311528/clojure-apply-vs-map
 *** Incrementing i https://stackoverflow.com/questions/4513078/i-equivalent-in-clojure
