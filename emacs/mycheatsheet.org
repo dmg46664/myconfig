@@ -300,6 +300,10 @@ Remember to expand out the subtree to fix the problems.
 
 Useful reading
 https://magit.vc/manual/magit/Resolving-Conflicts.html
+
+* OSX
+** Turn off screen
+   pmset displaysleepnow
 * Notes
 ** helm-occur is the default edit window that comes with helm.
 ** TODO helm-swoop is an advanced mode version that hasn't been committed to in a while.

@@ -295,6 +295,9 @@ Create a basic application:
 
 Starting repl in cider https://youtu.be/SPSn02RxpxM?t=3848
 
+You can still add lein?
+
+
 ** TODO Adding REBL to lein and cider
 
 #+begin_src
@@ -881,6 +884,11 @@ This error is located at:
 
 Then to reinstall the new native dependencies
 yarn android
+* TODO Clojure shell / Babashka
+  https://www.youtube.com/watch?v=Nw8aN-nrdEk
+  https://github.com/borkdude/babashka
+
+  brew install borkdude/brew/babashka
 * Clojure assistance
 
 ** Refactoring
@@ -1382,6 +1390,7 @@ Java streams can help as an equivalence but there be dragons  https://jaxenter.c
 https://4comprehension.com/java-stream-api-was-broken-before-jdk10/
 
 ** Interesting reads
+*** TODO Java time https://nextjournal.com/schmudde/java-time
 *** Transient data structures https://clojure.org/reference/transients
 *** Missing elegant API for manipulating immutable data structures http://nathanmarz.com/blog/clojures-missing-piece.html
 *** Clojure workflow tips https://clojureverse.org/t/share-the-nitty-gritty-details-of-your-clojure-workflow/1208/23

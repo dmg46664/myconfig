@@ -1,7 +1,9 @@
 * Setting up Spacemacs
   
-** Installing emacs
+** Installing emacs mac
    brew cask install emacs
+
+   Clone spacemacs
 ** Setting up the .spacemacs file  :windows:
 https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/
 
