@@ -283,7 +283,10 @@ c, e => extend content leaving message the same of the HEAD
 c, r => reword message leaving content the same of the HEAD
 
 c, f => Like c,e but not for the HEAD.
-
+** How to rebase https://www.lvguowei.me/post/magit-rebase-2/
+   r to rebase
+   e to select master from already checked out feature branch
+   r on commits after fixing issues with each one presumably.
 * Using Magit to solve conflicts
 
 ** RET on conflict opens in smerge editor

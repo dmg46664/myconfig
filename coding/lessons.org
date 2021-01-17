@@ -1,0 +1,245 @@
+** MSOffice doesn't work
+   https://office365.uservoice.com/forums/264636-general/suggestions/34609312-add-the-manage-rules-function-in-conditional-for
+** Python on Mac
+   https://opensource.com/article/19/5/python-3-default-mac
+
+   https://docs.conda.io/en/latest/index.html
+
+   You need this:
+   https://github.com/pyenv/pyenv/issues/849
+   ??
+** Fn vs java
+*** Jwrap - Map.map tuple2-> tuple2 workaround
+*** Still no equivalent to clojure threading, especially relevant when threading jooq.
+*** Map is responsible for BOTH transforming type & the arguments in map are responsible for,
+    closing over laziness.
+*** Getting a submap in Java based on a list of keys
+*** No spec, and worse the loss of autocomplete
+** Jooq and dynamic sql
+   https://www.jooq.org/doc/3.9/manual-single-page/#dynamic-sql
+   https://blog.jooq.org/2017/01/16/a-functional-programming-approach-to-dynamic-sql-with-jooq/
+
+   https://blog.jooq.org/2018/11/05/how-to-use-jooqs-updatablerecord-for-crud-to-apply-a-delta/
+   https://www.jooq.org/doc/latest/manual/sql-execution/crud-with-updatablerecords/simple-crud/
+   https://blog.jooq.org/tag/insert-returning/
+
+   Problems many-to-many mapping
+   https://www.reddit.com/r/java/comments/28llql/joins_and_mapping_many_to_many_in_jooq/
+   TODO https://dzone.com/articles/use-modelmapper-and-jooq
+   TODO https://www.jooq.org/doc/latest/manual/sql-execution/fetching/lazy-fetching-with-streams/
+
+   Nested
+   https://stackoverflow.com/questions/38222957/jooq-can-i-fetch-a-join-of-two-tables-into-the-respective-pojos
+** Spring transaction management
+   https://dzone.com/articles/spring-transaction-management-an-unconventional-gu
+   https://stackoverflow.com/questions/11779469/how-do-i-get-the-connection-inside-of-a-spring-transaction
+** Spring request params
+    https://www.baeldung.com/spring-requestparam-vs-pathvariable
+   https://stackoverflow.com/questions/56468760/how-to-collect-all-fields-annotated-with-requestparam-into-one-object
+Abandoned   https://github.com/spring-projects/spring-framework/issues/23618
+** Spring Testing & dependency injection
+   https://stackoverflow.com/questions/45659316/spring-boot-tests-cant-find-test-properties
+   Spring minimal properties https://github.com/itzg/try-sb-test-properties-loading
+   https://stackoverflow.com/questions/17353327/populating-spring-value-during-unit-test
+   https://github.com/spring-projects/spring-framework/issues/16289
+   https://stackoverflow.com/questions/13728000/value-not-resolved-when-using-propertysource-annotation-how-to-configure-prop
+
+   org.springframework.context.support.AbstractApplicationContext#refresh
+
+   https://docs.spring.io/spring-framework/docs/5.3.1/javadoc-api/org/springframework/context/annotation/Configuration.html
+
+   Stack when loading a @Bean from test @Configuration
+#+begin_src
+	  at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	  at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:651)
+	  at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:484)
+	  at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1336)
+	  at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1179)
+	  at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:571)
+	  at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:531)
+	  at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	  at org.springframework.beans.factory.support.AbstractBeanFactory$$Lambda$355.1013334985.getObject(Unknown Source:-1)
+	  at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	  - locked <0x1024> (a java.util.concurrent.ConcurrentHashMap)
+	  at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	  at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:213)
+	  at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:158)
+	  at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:751)
+	  at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:569)
+	  - locked <0x1025> (a java.lang.Object)
+	  at org.springframework.test.context.support.AbstractGenericContextLoader.loadContext(AbstractGenericContextLoader.java:127)
+	  at org.springframework.test.context.support.AbstractGenericContextLoader.loadContext(AbstractGenericContextLoader.java:60)
+	  at org.springframework.test.context.support.AbstractDelegatingSmartContextLoader.delegateLoading(AbstractDelegatingSmartContextLoader.java:275)
+	  at org.springframework.test.context.support.AbstractDelegatingSmartContextLoader.loadContext(AbstractDelegatingSmartContextLoader.java:243)
+	  at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:99)
+	  at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)
+	  - locked <0x1026> (a org.springframework.test.context.cache.DefaultContextCache)
+	  at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:123)
+	  at org.springframework.test.context.support.DependencyInjectionTestExecutionListener.injectDependencies(DependencyInjectionTestExecutionListener.java:118)
+	  at org.springframework.test.context.support.DependencyInjectionTestExecutionListener.prepareTestInstance(DependencyInjectionTestExecutionListener.java:83)
+	  at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:244)
+	  at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:99)
+	 
+#+end_src
+
+How spring loads a MergedContextConfiguration for a test
+#+begin_src
+	  at org.springframework.test.context.MergedContextConfiguration.<init>(MergedContextConfiguration.java:246)
+	  at org.springframework.test.context.support.AbstractTestContextBootstrapper.buildMergedContextConfiguration(AbstractTestContextBootstrapper.java:389)
+	  at org.springframework.test.context.support.AbstractTestContextBootstrapper.buildMergedContextConfiguration(AbstractTestContextBootstrapper.java:291)
+	  at org.springframework.test.context.support.AbstractTestContextBootstrapper.buildTestContext(AbstractTestContextBootstrapper.java:107)
+	  at org.springframework.test.context.TestContextManager.<init>(TestContextManager.java:137)
+	  at org.springframework.test.context.TestContextManager.<init>(TestContextManager.java:122)
+	  at org.springframework.test.context.junit.jupiter.SpringExtension$$Lambda$272.547913624.apply(Unknown Source:-1)
+	  at org.junit.jupiter.engine.execution.ExtensionValuesStore.lambda$getOrComputeIfAbsent$0(ExtensionValuesStore.java:81)
+	  at org.junit.jupiter.engine.execution.ExtensionValuesStore$$Lambda$273.1867832864.get(Unknown Source:-1)
+	  at org.junit.jupiter.engine.execution.ExtensionValuesStore$MemoizingSupplier.get(ExtensionValuesStore.java:182)
+	  at org.junit.jupiter.engine.execution.ExtensionValuesStore.getOrComputeIfAbsent(ExtensionValuesStore.java:84)
+	  at org.junit.jupiter.engine.execution.ExtensionValuesStore.getOrComputeIfAbsent(ExtensionValuesStore.java:88)
+	  at org.junit.jupiter.engine.execution.NamespaceAwareStore.getOrComputeIfAbsent(NamespaceAwareStore.java:61)
+	  at org.springframework.test.context.junit.jupiter.SpringExtension.getTestContextManager(SpringExtension.java:218)
+	  at org.springframework.test.context.junit.jupiter.SpringExtension.beforeAll(SpringExtension.java:78)
+	  at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeBeforeAllCallbacks$7(ClassBasedTestDescriptor.java:359)
+	  at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor$$Lambda$267.1316443691.execute(Unknown Source:-1)
+	  at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	  at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeBeforeAllCallbacks(ClassBasedTestDescriptor.java:359)
+	  at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:189)
+	  at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:78)
+	  at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:132)
+	  at org.junit.platform.engine.support.hierarchical.NodeTestTask$$Lambda$219.579456446.execute(Unknown Source:-1)
+	  at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	  at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125)
+	  at org.junit.platform.engine.support.hierarchical.NodeTestTask$$Lambda$218.1335224354.invoke(Unknown Source:-1)
+	  at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135)
+	  at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123)
+	  at org.junit.platform.engine.support.hierarchical.NodeTestTask$$Lambda$217.1315606012.execute(Unknown Source:-1)
+	  at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	  at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122)
+	  at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80)
+	  at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService$$Lambda$223.1940696900.accept(Unknown Source:-1)
+#+end_src
+
+Notice that @TestPropertySource must be on the test class (not on the configuration class) for it to show properites added when creating the MergedContextConfiguration above.
+https://www.concretepage.com/spring-5/testpropertysource-example-spring-test
+
+and the properties in the source added will show up here
+#+begin_src
+  java.lang.Thread.State: RUNNABLE
+	  at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.postProcessBeanFactory(PropertySourcesPlaceholderConfigurer.java:129)
+	  at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:299)
+	  at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:170)
+	  at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:751)
+	  at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:569)
+	  - locked <0x1041> (a java.lang.Object)
+	  at org.springframework.test.context.support.AbstractGenericContextLoader.loadContext(AbstractGenericContextLoader.java:127)
+	  at org.springframework.test.context.support.AbstractGenericContextLoader.loadContext(AbstractGenericContextLoader.java:60)
+	  at org.springframework.test.context.support.AbstractDelegatingSmartContextLoader.delegateLoading(AbstractDelegatingSmartContextLoader.java:275)
+	  at org.springframework.test.context.support.AbstractDelegatingSmartContextLoader.loadContext(AbstractDelegatingSmartContextLoader.java:243)
+	  at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:99)
+	  at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)
+	  - locked <0x1042> (a org.springframework.test.context.cache.DefaultContextCache)
+	  at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:123)
+	  at org.springframework.test.context.support.DependencyInjectionTestExecutionListener.injectDependencies(DependencyInjectionTestExecutionListener.java:118)
+	  at org.springframework.test.context.support.DependencyInjectionTestExecutionListener.prepareTestInstance(DependencyInjectionTestExecutionListener.java:83)
+	  at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:244)
+
+#+end_src
+
+Problems with Lombok and Spring
+https://stackoverflow.com/questions/52321988/best-practice-for-value-fields-lombok-and-constructor-injection
+
+@EnableAutoConfiguration makes default autoconfiguration occur which will bring in hibenrate validators and other DI.
+simplest to remove.
+
+** GPG usage
+   https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/signing-commits
+
+   List keys
+   gpg --list-secret-keys --keyid-format LONG
+
+   Good tutorial on usage. Quite involved.
+   https://github.com/lfit/itpol/blob/master/protecting-code-integrity.md
+
+   https://security.stackexchange.com/questions/186649/gpg-masterkey-and-subkey-for-encryption-and-signature-and-default-keys
+
+   http://bouncy-castle.1462172.n4.nabble.com/Trouble-Understanding-Key-Rings-and-Key-Ring-Collections-td4659433.html
+** GPG Java
+   https://github.com/justinludwig/jpgpj
+** Spring authorisation
+   Start with this:  https://www.youtube.com/watch?v=caCJAJC41Rk spring filters
+   https://docs.spring.io/spring-security/site/docs/5.2.x/reference/html/authorization.html#el-common-built-in
+
+   Can't exclude filters
+   https://github.com/spring-projects/spring-boot/issues/5427
+
+   Faking it
+   https://engineering.pivotal.io/post/faking_oauth_sso/
+
+   Externalising spring
+   https://stackoverflow.com/questions/46057625/externalising-spring-boot-properties-when-deploying-to-docker
+   
+   https://stackoverflow.com/questions/44467133/spring-boot-authentication-for-integration-tests
+
+   https://gigsterous.github.io/engineering/2017/05/18/wiremock-testing-security.html
+
+   https://spring.io/guides/tutorials/spring-boot-oauth2/
+   Section on 2 providers
+
+https://stackoverflow.com/questions/59044876/whats-the-different-between-oauth2login-and-oauth2client-what-are-the-use-case
+** Junit Jupiter test framework https://junit.org/junit5/docs/current/user-guide/
+   https://www.baeldung.com/mockito-junit-5-extension
+** TODO Spring 5 webclient  https://www.baeldung.com/spring-5-webclient
+   But requires understanding https://www.baeldung.com/spring-webflux
+** Git
+See all anwers   https://softwareengineering.stackexchange.com/questions/365658/does-squashing-pull-requests-break-gits-merging-algorithm
+
+Problems with squash and merge: https://softwareengineering.stackexchange.com/questions/365658/does-squashing-pull-requests-break-gits-merging-algorithm
+https://dev.to/neshaz/when-to-use-git-reset-git-revert--git-checkout-18je#:~:text=%2D%2Dsoft%20%3A%20Tells%20Git%20to,the%20commit%20will%20be%20staged.
+** Optimistic locking
+   https://vladmihalcea.com/how-to-fix-optimistic-locking-race-conditions-with-pessimistic-locking/
+   https://blog.jooq.org/tag/pessimistic-locking/
+   https://www.burnison.ca/articles/pessimistic-optimism-the-case-of-unexpected-deadlocks
+   Oracle commiting?
+   https://in.relation.to/2005/10/20/pop-quiz-does-connectionclose-result-in-commit-or-rollback/
+** Functional Java
+   https://stackoverflow.com/questions/19757300/java-8-lambda-streams-filter-by-method-with-exception
+** TLS and SSL connection in Java & AWS PKI
+    Overview
+    https://stackoverflow.com/questions/24868820/how-to-make-tls-work-with-java
+    Useful code pointed to 
+    https://stackoverflow.com/questions/46527060/cacerts-jdk-or-jre
+    Fuller overview of keytool. Doesn't make use of location.
+    https://www.baeldung.com/keytool-intro
+
+    https://docs.aws.amazon.com/crypto/latest/userguide/awspki-service-toplevel.html
+
+    The different file formats
+    https://serverfault.com/questions/9708/what-is-a-pem-file-and-how-does-it-differ-from-other-openssl-generated-key-file
+
+    Some PPK format
+    https://superuser.com/questions/1012868/generating-rsa-private-key-from-pgp-private-key-block
+
+    https://www.wowza.com/docs/how-to-import-an-existing-ssl-certificate-and-private-key
+
+    X509 -> GPG
+    https://stackoverflow.com/questions/41904252/how-to-convert-x509-certificate-and-private-key-in-pem-format-to-gpg-format
+
+    All different conversion. Great!
+    - GnuPG to OpenSSL (self signed)
+    http://sysmic.org/dotclear/index.php?post/2010/03/24/Convert-keys-betweens-GnuPG%2C-OpenSsh-and-OpenSSL
+
+    11.1 Creating a TLS server certificate
+    https://gnupg.org/documentation/manuals/gnupg.pdf
+
+    Key tool problem
+    https://p2p.wrox.com/book-beginning-cryptography-java/84066-how-save-public-key-keystore-using-keytool.html
+
+    Which means BouncyCastle, unless other solution
+    Alternatively a wrapper because BC is difficult
+    https://github.com/neuhalje/bouncy-gpg
+
+    Problem of configuring bouncy castle with only private key
+    https://stackoverflow.com/questions/19187875/bouncycastle-openpgpg-how-to-create-a-pgp-keypair-with-two-user-ids
+** OAuth
+   https://jwt.io/
+   JSON Formatter extension

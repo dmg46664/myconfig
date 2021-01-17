@@ -156,6 +156,7 @@ values."
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
+   dotspacemacs-mode-line-theme 'spacemacs
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
@@ -348,6 +349,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq default-directory "~/")
   (setq command-line-default-directory "~/")
 
+  ;; Must install coreutils on a mac
+  ;; https://emacs.stackexchange.com/questions/29096/how-to-sort-directories-first-in-dire  
+  ;;https://gitlab.com/xuhdev/dired-quick-sort/-/issues/8
+  (setq insert-directory-program "/usr/local/bin/gls")
+  ;; (setq insert-directory-program nil)
+  ;; https://gitlab.com/xuhdev/dired-quick-sort/-/blob/9741bae65b5ca077a81589dcc6b3ca3c12f0f76f/dired-quick-sort.el#L187
+  ;; NOTE may have to load this set program manually in buffer with C-x C-e as per issue.
+
+
 
   ;; More reading https://www.masteringemacs.org/article/mastering-key-bindings-emacs
   ;; Problems with more than one keyboard: https://apple.stackexchange.com/questions/277510/osx-different-keyboards-with-different-input-methods-possible
@@ -380,6 +390,7 @@ you should place your code here."
   ;; Give a warning when you are actively working on a particular clock
   (setq org-clock-idle-time 15)
   (setq org-log-note-clock-out t)
+
 
   ;; ISO 8601 timestamp insertion
   (defun timestamp ()
@@ -420,6 +431,13 @@ you should place your code here."
           (t "locate %s")))
   (if (eq system-type 'darwin) (setq helm-locate-fuzzy-match nil))
 
+  ;; Org Agenda
+  (setq org-agenda-files (list "~/work-tracked-files/todo.org"))
+
+  ;; TODO add a switch back in
+  ;;(org-agenda-files
+  ;;    -   (list "~/mytrackedfiles/todolist.org" "~/mytrackedfiles/stock_research.org"))
+
 
   ;; Cider configuration
   ;;
@@ -435,8 +453,9 @@ you should place your code here."
 
   ;; From https://clojurians-log.clojureverse.org/spacemacs/2017-10-19
   ;; (require 'flycheck-joker) TODO for later.
-  (spacemacs/add-flycheck-hook 'clojure-mode) ;; flycheck-mode won't load on .clj files without this line.
-  (spacemacs/add-flycheck-hook 'clojurescript-mode)
+  ;; TODO fix this.
+  ;;(spacemacs/add-flycheck-hook 'clojure-mode) ;; flycheck-mode won't load on .clj files without this line.
+  ;;(spacemacs/add-flycheck-hook 'clojurescript-mode)
 
   ;; Set priority colours in org mode
   (setq org-priority-faces '((?A . (:foreground "red" :weight 'bold))
@@ -602,8 +621,11 @@ you should place your code here."
 
   )
 
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -619,8 +641,7 @@ you should place your code here."
  '(helm-completion-style 'helm)
  '(helm-external-programs-associations nil)
  '(menu-bar-mode t)
- '(org-agenda-files
-   (list "~/mytrackedfiles/todolist.org" "~/mytrackedfiles/stock_research.org"))
+ '(org-agenda-files nil)
  '(package-selected-packages
    '(org-clock-csv groovy-mode gradle-mode company-emacs-eclim eclim command-log-mode web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc coffee-mode flycheck-clj-kondo alarm-clock zprint-mode heaven-and-hell pyenv-mode hy-mode company-anaconda anaconda-mode yapfify pyvenv pytest py-isort pip-requirements live-py-mode dash-functional helm-pydoc cython-mode pythonic clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg lv cider-eval-sexp-fu cider sesman queue parseedn clojure-mode parseclj a ztree noflet ensime sbt-mode scala-mode periodic-commit-minor-mode datetime extmap logview log4j-mode sass-mode company-web web-mode tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data cheatsheet emoji-cheat-sheet-plus company-emoji jira-markup-mode emojify smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete meghanada ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
 (custom-set-faces
@@ -629,3 +650,4 @@ you should place your code here."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+)

@@ -4,6 +4,10 @@
    brew cask install emacs
 
    Clone spacemacs
+
+   https://emacs.stackexchange.com/questions/29096/how-to-sort-directories-first-in-dired
+   brew install coreutils
+
 ** Setting up the .spacemacs file  :windows:
 https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/
 
