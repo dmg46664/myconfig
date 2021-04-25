@@ -253,8 +253,11 @@ https://www.gnu.org/software/emacs/manual/html_node/emacs/Comment-Commands.html
 ** M-RET = or zprint    cider-format-buffer / zprint autoformatter
 https://clojureverse.org/t/autoformatting-clojure-code/1243
 *
-** C-;                  
+** C-;
+** C-u C-M-x            instrument/debug function
 * Magit
+** x  Rest current branch to selection
+   https://magit.vc/manual/magit/Resetting.html
 ** Read the following https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified
 ** k                Drop stash                                                                                                                          |
 ** R                magit-file-rename  https://stackoverflow.com/questions/17610365/how-to-use-git-mv-from-magit
@@ -287,8 +290,8 @@ c, f => Like c,e but not for the HEAD.
    r to rebase
    e to select master from already checked out feature branch
    r on commits after fixing issues with each one presumably.
+** Squash (useful) http://www.howardism.org/Technical/Emacs/magit-squashing.html
 * Using Magit to solve conflicts
-
 ** RET on conflict opens in smerge editor
 
 Three way diff:

@@ -60,6 +60,7 @@ values."
      (clojure :variables
               clojure-enable-fancify-symbols t
               ;; https://github.com/syl20bnr/spacemacs/blob/develop/layers/+lang/clojure/README.org#enabling-sayid-or-clj-refactor
+              ;; https://github.com/clojure-emacs/cider/issues/2284 NOTE that errors regarding now "Libs must be qualified, change refactor-nrepl" was just a problem parsing deps.edn
               clojure-enable-clj-refactor t
               ;; https://develop.spacemacs.org/layers/+lang/clojure/README.html 2.3.1
               ;; If using the develop branch, clj-kondo is available as a part of the standard clojure layer.
@@ -432,19 +433,19 @@ you should place your code here."
   (if (eq system-type 'darwin) (setq helm-locate-fuzzy-match nil))
 
   ;; Org Agenda
-  (setq org-agenda-files (list "~/work-tracked-files/todo.org"))
-
-  ;; TODO add a switch back in
-  ;;(org-agenda-files
-  ;;    -   (list "~/mytrackedfiles/todolist.org" "~/mytrackedfiles/stock_research.org"))
-
+  (setq org-agenda-files (list
+                          "~/work-tracked-files/"
+                          "~/mytrackedfiles/"
+                          )
+        )
 
   ;; Cider configuration
   ;;
   (setq cider-shadow-cljs-command "yarn shadow-cljs")
   ;; clojure stacktraces may be huge, so make the *Messages* buffers bigger
   ;; (setq message-log-max 100000)
-  
+  ;;(setq cljr-inject-dependencies-at-jack-in nil)
+
   ;; https://github.com/borkdude/clj-kondo/blob/master/doc/editor-integration.md#spacemacs
   (use-package clojure-mode
     :ensure t
