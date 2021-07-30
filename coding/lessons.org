@@ -15,6 +15,18 @@
     closing over laziness.
 *** Getting a submap in Java based on a list of keys
 *** No spec, and worse the loss of autocomplete
+*** Problematic construction
+
+                .getInputUserFile())
+                .filter(inputUserFile -> x.equals(inputUserFile.getUserFileInformation().getUserNumber()))
+                .orElse(List.of()).stream() //need this
+                //.flatMap(Collection::stream)//errors
+
+                .flatMap(Collection::stream)
+
+                .map(errorItem -> Tuple.tuple(file, errorItem));
+
+
 ** Jooq and dynamic sql
    https://www.jooq.org/doc/3.9/manual-single-page/#dynamic-sql
    https://blog.jooq.org/2017/01/16/a-functional-programming-approach-to-dynamic-sql-with-jooq/
@@ -30,6 +42,29 @@
 
    Nested
    https://stackoverflow.com/questions/38222957/jooq-can-i-fetch-a-join-of-two-tables-into-the-respective-pojos
+
+   Batch updates (and the long manual)
+   https://www.jooq.org/doc/3.14/manual-single-page/#batch-execution
+** Liquibase
+   https://www.exoplatform.com/blog/2017/10/18/how-to-modify-a-change-set-in-liquibase/
+
+   Jooq runs and H2 instance and no liquibase postgres test container yet https://github.com/jOOQ/jOOQ/issues/6551
+
+
+
+https://stackoverflow.com/questions/29503015/why-a-liquibase-migration-works-on-mysql-and-not-in-h2
+
+   
+   And subsequent problems after upgrading.
+   https://groups.google.com/g/jooq-user/c/GNV4nFyxFHg
+
+** Postgres
+   https://www.citusdata.com/blog/2018/02/15/when-postgresql-blocks/
+
+https://dba.stackexchange.com/questions/97216/how-to-correctly-use-postgresql-to-limit-multiple-and-or-concurrent-executions-o
+
+https://www.2ndquadrant.com/en/blog/what-is-select-skip-locked-for-in-postgresql-9-5/
+
 ** Spring transaction management
    https://dzone.com/articles/spring-transaction-management-an-unconventional-gu
    https://stackoverflow.com/questions/11779469/how-do-i-get-the-connection-inside-of-a-spring-transaction
@@ -38,6 +73,18 @@
    https://stackoverflow.com/questions/56468760/how-to-collect-all-fields-annotated-with-requestparam-into-one-object
 Abandoned   https://github.com/spring-projects/spring-framework/issues/23618
 ** Spring Testing & dependency injection
+
+   https://www.tothenew.com/blog/loading-and-removing-bean-at-run-time-in-spring-application/
+   #+begin_src
+static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+        @Override
+        public void initialize(final ConfigurableApplicationContext configurableApplicationContext) {
+
+final DefaultSingletonBeanRegistry beanRegistry =
+                    (DefaultSingletonBeanRegistry) configurableApplicationContext.getBeanFactory();
+   #+end_src
+
    https://stackoverflow.com/questions/45659316/spring-boot-tests-cant-find-test-properties
    Spring minimal properties https://github.com/itzg/try-sb-test-properties-loading
    https://stackoverflow.com/questions/17353327/populating-spring-value-during-unit-test
@@ -195,6 +242,10 @@ See all anwers   https://softwareengineering.stackexchange.com/questions/365658/
 
 Problems with squash and merge: https://softwareengineering.stackexchange.com/questions/365658/does-squashing-pull-requests-break-gits-merging-algorithm
 https://dev.to/neshaz/when-to-use-git-reset-git-revert--git-checkout-18je#:~:text=%2D%2Dsoft%20%3A%20Tells%20Git%20to,the%20commit%20will%20be%20staged.
+
+https://superuser.com/questions/397149/can-you-gpg-sign-old-commits
+
+https://gpgtools.org/
 ** Optimistic locking
    https://vladmihalcea.com/how-to-fix-optimistic-locking-race-conditions-with-pessimistic-locking/
    https://blog.jooq.org/tag/pessimistic-locking/
@@ -240,6 +291,204 @@ https://dev.to/neshaz/when-to-use-git-reset-git-revert--git-checkout-18je#:~:tex
 
     Problem of configuring bouncy castle with only private key
     https://stackoverflow.com/questions/19187875/bouncycastle-openpgpg-how-to-create-a-pgp-keypair-with-two-user-ids
+** Configuring SFTP
+
+   https://hub.docker.com/r/atmoz/sftp
+   https://stackoverflow.com/questions/17989883/the-cipher-aes256-cbc-is-required-but-it-is-not-available
+   https://serverfault.com/questions/945505/convert-rsa-to-ppk-file-in-mac
 ** OAuth
    https://jwt.io/
    JSON Formatter extension
+** Swagger Spring OpenAPI
+** Testing
+   https://medium.com/@jdmwood/integration-test-code-coverage-with-java-docker-jacoco-132f63e2f083
+** MockServer
+   https://mock-server.com/mock_server/running_mock_server.html
+
+   #+begin_src
+PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+java.io.IOException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+   #+end_src
+Might get this from the client trying to connect. Make sure the client ignores certificate errors.
+** SAML
+   https://www.youtube.com/watch?v=SvppXbpv-5k
+** JaxB
+   https://www.vogella.com/tutorials/JAXB/article.html (and the Java 11 stuff at the bottom)
+   Followed by :
+   https://stackoverflow.com/questions/51916221/javax-xml-bind-jaxbexception-implementation-of-jaxb-api-has-not-been-found-on-mo
+** Bacs transaction codes
+   https://www.bacs.co.uk/resources/pages/glossary.aspx
+** Clojure setup with Gradle & Reveal
+*** Reveal   
+    https://github.com/clojure-emacs/cider/issues/2927
+
+    https://github.com/clojure-emacs/cider/blob/master/cider.el#L472
+
+    From https://docs.cider.mx/cider/basics/middleware_setup.html
+    #+begin_src clojure
+      {:paths ["src" "resources"]
+       :deps {org.clojure/clojure {:mvn/version "1.10.1"}
+              vlaaad/reveal {:mvn/version "1.3.196"}
+              }
+       :aliases
+       {
+   ...
+        :cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.22.4"}}
+                    :main-opts ["-m" "nrepl.cmdline" "--middleware" "[\"cider.nrepl/cider-middleware\",\"vlaaad.reveal.nrepl/middleware\"]"]}
+
+    #+end_src
+*** Classpaths extract from Gradle
+    https://gamlor.info/posts-output/2019-10-24-compile-java-with-clojure-deps/en/
+    
+   https://stackoverflow.com/questions/19299316/require-gradle-project-from-another-directory
+
+   https://docs.diffblue.com/knowledge-base/cli/passing-classpath/
+
+   https://insideclojure.org/2018/05/04/add-lib/
+
+   This was pretty simple https://blog.mrhaki.com/2010/11/gradle-goodness-create-jar-artifact.html?m=1
+
+   https://stackoverflow.com/questions/17416629/why-doesnt-gradle-include-transitive-dependencies-in-compile-runtime-classpat
+
+   Maybe this?
+   https://stackoverflow.com/questions/40897051/how-to-include-test-classes-into-shadowjar
+
+   https://www.oreilly.com/library/view/gradle-beyond-the/9781449373801/ch04.html
+
+   https://github.com/johnrengelman/shadow/issues/448
+
+   https://discuss.gradle.org/t/how-to-include-dependencies-in-jar/19571/16
+
+
+   #+begin_src groovy
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+task testShadowJar(type: ShadowJar) {
+    classifier = 'tests-shadow'
+//    manifest {
+//        attributes 'Implementation-Title': '?????',
+//                'Implementation-Version': '1.0',
+//                'Built-By': '?????',
+//                'Built-Date': new Date(),
+//                'Built-JDK': System.getProperty('java.version'),
+//                'Main-Class': mainClassName
+//    }
+    // Exclude signature files from other jars, because it messes up loading.
+    exclude "META-INF/*.SF"
+    exclude "META-INF/*.DSA"
+    exclude "META-INF/*.RSA"
+    // TODO Try and make it so that these aren't packaged and loaded directly
+    // from build directory.
+    from sourceSets.test.output
+    from sourceSets.api.output
+    from sourceSets.main.output
+    // By default won't see transitive dependencies where implementation is called
+    project.configurations.implementation.canBeResolved = true
+    project.configurations.testImplementation.canBeResolved = true
+    configurations = [project.configurations.testRuntime]
+    configurations += [project.configurations.implementation]
+    configurations += [project.configurations.testImplementation]
+}
+   #+end_src
+
+#+begin_src groovy
+
+task createPom  {
+    doLast {
+        pom {
+            project {
+                groupId 'sg.test.spring.web.guide'
+                artifactId 'sg-web-initial'
+                version '1.0.0-SNAPSHOT'
+
+                inceptionYear '2008'
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+            }
+        }.writeTo("build/libs/pom.xml")
+    }
+}
+#+end_src
+   
+   https://stackoverflow.com/questions/17325163/dependencies-dependency-version-is-missing-error-but-version-is-managed-in-pa
+
+#+begin_src
+daniel.gerson@OodleAdmins-MacBook-Pro bankrec-hud % clj -M:cider-clj
+DEPRECATED: Libs must be qualified, change oobook-bankrec-deps => oobook-bankrec-deps/oobook-bankrec-deps (deps.edn)
+Error building classpath. 10 problems were encountered while building the effective model for sg.test.spring.web.guide:sg-web-initial:1.0.0-SNAPSHOT
+[ERROR] 'dependencies.dependency.version' for org.springframework.boot:spring-boot-starter:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for software.amazon.awssdk:aws-core:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for software.amazon.awssdk:secretsmanager:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for software.amazon.awssdk:sns:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for software.amazon.awssdk:sqs:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for org.springframework.boot:spring-boot-starter-web:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for org.springframework.boot:spring-boot-starter-actuator:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for org.springframework.boot:spring-boot-starter-jdbc:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for org.springframework.boot:spring-boot-starter-validation:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for org.springframework.boot:spring-boot-starter-test:jar is missing. @
+
+org.apache.maven.model.building.ModelBuildingException: 10 problems were encountered while building the effective model for sg.test.spring.web.guide:sg-web-initial:1.0.0-SNAPSHOT
+[ERROR] 'dependencies.dependency.version' for org.springframework.boot:spring-boot-starter:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for software.amazon.awssdk:aws-core:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for software.amazon.awssdk:secretsmanager:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for software.amazon.awssdk:sns:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for software.amazon.awssdk:sqs:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for org.springframework.boot:spring-boot-starter-web:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for org.springframework.boot:spring-boot-starter-actuator:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for org.springframework.boot:spring-boot-starter-jdbc:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for org.springframework.boot:spring-boot-starter-validation:jar is missing. @
+[ERROR] 'dependencies.dependency.version' for org.springframework.boot:spring-boot-starter-test:jar is missing. @
+
+	at org.apache.maven.model.building.DefaultModelProblemCollector.newModelBuildingException(DefaultModelProblemCollector.java:197)
+	at org.apache.maven.model.building.DefaultModelBuilder.build(DefaultModelBuilder.java:498)
+	at org.apache.maven.model.building.DefaultModelBuilder.build(DefaultModelBuilder.java:440)
+	at org.apache.maven.model.building.DefaultModelBuilder.Build(DefaultModelBuilder.java:430)
+	at clojure.tools.deps.alpha.extensions.pom$read_model.invokeStatic(pom.clj:64)
+	at clojure.tools.deps.alpha.extensions.pom$read_model.invoke(pom.clj:54)
+	at clojure.tools.deps.alpha.extensions.pom$read_model_file.invokeStatic(pom.clj:69)
+	at clojure.tools.deps.alpha.extensions.pom$read_model_file.invoke(pom.clj:67)
+	at clojure.tools.deps.alpha.extensions.pom$eval1401$fn__1403.invoke(pom.clj:105)
+	at clojure.lang.MultiFn.invoke(MultiFn.java:244)
+	at clojure.tools.deps.alpha$expand_deps$children_task__785$fn__787$fn__788.invoke(alpha.clj:403)
+	at clojure.tools.deps.alpha.util.concurrent$submit_task$task__502.invoke(concurrent.clj:34)
+	at clojure.lang.AFn.call(AFn.java:18)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+
+#+end_src
+
+To solve this, just add versions to all exports.
+And then make sure you change all <scope>test</scope> to runtime.
+** AWS tips
+   Log insights query tips
+   https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html
+
+   Log pattern
+   https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AgentReference.html
+
+   Localstack setup
+AWS_ACCESS_KEY_ID=DUMMY;AWS_SECRET_ACCESS_KEY=DUMMY;OOB_AWS_ENDPOINT_OVERRIDE=http://localhost:4566;AWS_REGION=eu-west-1;AWS_PROFILE=x
+** Chrome
+   https://flaviocopes.com/how-to-fix-chrome-rendering-issue/
+** JIRA
+
+   Wysiwyg debacle https://jira.atlassian.com/browse/JRACLOUD-72631
+
+and temp solution:
+   
+   https://oodlefinance.atlassian.net/browse/XXXXX?oldIssueView=true
+** IntelliJ
+
+   Suppress warnings
+   https://gist.github.com/vegaasen/157fbc6dce8545b7f12c
+** Docker
+   Way to have multiple containers interact
+   https://github.com/palantir/docker-compose-rule
+
+   https://stackoverflow.com/questions/64182352/can-testcontainers-join-existing-network
