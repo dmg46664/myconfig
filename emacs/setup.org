@@ -7,7 +7,8 @@
 
    https://emacs.stackexchange.com/questions/29096/how-to-sort-directories-first-in-dired
    brew install coreutils
-
+** Installing spacemacs on windows
+   
 ** Setting up the .spacemacs file  :windows:
 https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/
 
@@ -18,6 +19,7 @@ TODO At some point move spacemacs to the emacs directory
 #+begin_src 
 mklink C:\Users\PC\AppData\Roaming\.spacemacs C:\Users\PC\AppData\Roaming\myconfig\spacemacs
 #+end_src
+
 
 Soft links are as follows but we don't want that:
 #+begin_src 
@@ -56,10 +58,14 @@ location 1.
 
 Maybe try scoop
 https://scoop.sh/
-
 There's also https://chocolatey.org/
+https://dev.to/bowmanjd/chocolatey-vs-scoop-package-managers-for-windows-2kik
+
+https://github.com/lukesampson/scoop/issues/4097
 
 (Didn't have to install powershell or ndk
+
+Had to turn off McAfee by Settings (top right icon) -> Off: Real time scanning, Firewall, 
 
 #+begin_src 
 PS C:\Users\PC> scoop bucket add java
@@ -86,8 +92,20 @@ Installing 'zulu13' (13.28.11) [64bit]
 Checking hash of zulu13.28.11-ca-jdk13.0.1-win_x64.zip ... ok.
 #+end_src
 ** Zsh
+** Other windows stuff
+https://github.com/lukesampson/scoop/issues/335
+scoop bucket add extras
+scoop install emacs
+(hangs at the end and have to click enter)
+
+scoop install keepass
 
 https://github.com/romkatv/powerlevel10k
 
 Some basics
 https://scriptingosx.com/2019/06/moving-to-zsh-part-3-shell-options/
+
+logitech.com/support/x56
+
+New nvidia drivers
+Geforce Experience
