@@ -84,6 +84,7 @@ values."
                                       org-clock-csv
                                       zprint-mode
                                       ztree
+                                      highlight-numbers ;;otherwise got an error in clojure-mode
                                                  ;; How to install packages not in melp https://github.com/syl20bnr/spacemacs/issues/2278
                                                  (periodic-commit-minor-mode :location (recipe
                                                                         :fetcher github
@@ -432,11 +433,18 @@ you should place your code here."
           (t "locate %s")))
   (if (eq system-type 'darwin) (setq helm-locate-fuzzy-match nil))
 
+
+
+  (defun dir-exists? (x) (if (f-exists? x) x nil))
+
   ;; Org Agenda
-  (setq org-agenda-files (list
-                          "~/work-tracked-files/"
-                          "~/mytrackedfiles/"
-                          )
+  (setq org-agenda-files
+        (remove nil
+                (mapcar #'dir-exists?
+                        (list
+                         "~/work-tracked-files/"
+                         "E:/Projects/mytrackedfiles/"
+                         )))
         )
 
   ;; Cider configuration
@@ -585,11 +593,6 @@ you should place your code here."
 
   ;; The default of 20 cuts off clojure repl buffer information helpful to locate it.
   (setq helm-buffer-max-length 30)
-
-  ;; Add the improved org tags functionality to emacs.
-  (with-eval-after-load 'org 
-    (load "~/myconfig/emacs/air-org-set-tags-hook.el")
-    )
 
   ;; using heaven-and-hell to switch between themes
   (use-package heaven-and-hell

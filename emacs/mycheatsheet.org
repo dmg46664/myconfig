@@ -40,6 +40,7 @@ https://youtu.be/ONHEDj3kWrE?t=198
 | C-h b                 | Or (helm-decsbinds) to describe all key bindings                                                                                    |
 | toggle-truncate-lines | Word wrap                                                                                                                           |
 ** M-o M-o               font-lock-fontify-block or reset/refresh syntax highlighting in the current block.
+** toggle-debug-on-error
 * Spacemacs
 Helm https://tuhdo.github.io/helm-intro.html
 * Other
