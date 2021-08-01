@@ -1,5 +1,3 @@
-* Setting up Spacemacs
-  
 ** Installing emacs mac
    brew cask install emacs
 
@@ -15,7 +13,12 @@ https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-
 You should use a hard link!
 
 
-TODO At some point move spacemacs to the emacs directory
+#+begin_src
+git clone https://github.com/syl20bnr/spacemacs $home\AppData\Roaming\.emacs.d
+#+end_src
+
+
+Do the following from admin command line (Powershell doesn't work https://superuser.com/questions/1307360/how-do-you-create-a-new-symlink-in-windows-10-using-powershell-not-mklink-exe )
 #+begin_src 
 mklink C:\Users\PC\AppData\Roaming\.spacemacs C:\Users\PC\AppData\Roaming\myconfig\spacemacs
 #+end_src
@@ -68,7 +71,7 @@ https://github.com/lukesampson/scoop/issues/4097
 Had to turn off McAfee by Settings (top right icon) -> Off: Real time scanning, Firewall, 
 
 #+begin_src 
-PS C:\Users\PC> scoop bucket add java
+PS C:\Users\PC> scoop install git
 Checking repo... ok
 The java bucket was added successfully.
 PS C:\Users\PC> scoop bucket add scoop-clojure https://github.com/littleli/scoop-clojure
@@ -77,9 +80,6 @@ The scoop-clojure bucket was added successfully.
 PS C:\Users\PC> scoop bucket add java
 Checking repo... ok
 The java bucket was added successfully.
-PS C:\Users\PC> scoop bucket add scoop-clojure https://github.com/littleli/scoop-clojure
-Checking repo... ok
-The scoop-clojure bucket was added successfully.
 PS C:\Users\PC> scoop install zulu13
 Installing 'zulu13' (13.28.11) [64bit]
 #+end_src
@@ -92,19 +92,42 @@ Installing 'zulu13' (13.28.11) [64bit]
 Checking hash of zulu13.28.11-ca-jdk13.0.1-win_x64.zip ... ok.
 #+end_src
 ** Zsh
-** Other windows stuff
-https://github.com/lukesampson/scoop/issues/335
-scoop bucket add extras
-scoop install emacs
-(hangs at the end and have to click enter)
-
-scoop install keepass
 
 https://github.com/romkatv/powerlevel10k
 
 Some basics
 https://scriptingosx.com/2019/06/moving-to-zsh-part-3-shell-options/
 
+** More scoop installs
+https://github.com/lukesampson/scoop/issues/335
+scoop bucket add extras
+scoop install emacs
+(hangs at the end and have to click enter)
+
+When you load emacs on Windows, you'll likely get too many pipes/files
+error each time you load it as it installs the libraries.
+Just keep closing it and opening it until it loads.
+
+scoop install keepass
+
+# Note: if you get an error you might need to change the execution policy (i.e. enable Powershell) with
+# Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
+
+scoop bucket add scoop-clojure https://github.com/littleli/scoop-clojure
+scoop bucket add extras
+scoop install babashka
+
+https://superuser.com/questions/361816/pass-command-line-arguments-to-windows-open-with
+
+** Shell
+
+https://hyper.is/#installation
+
+** Drivers
+
+https://www.instructables.com/How-to-Fix-Double-Press-Apostrophe-and-Quotes-in-W/
+   
 logitech.com/support/x56
 
 New nvidia drivers
