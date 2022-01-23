@@ -924,6 +924,7 @@ https://www.youtube.com/watch?v=ciGyHkDuPAE
 *** Protocols! Must watch https://www.youtube.com/watch?v=kQhOlWXXl2I    
 *** TODO Datomic migration  https://grishaev.me/en/pg-to-datomic/
 *** TODO Building an ANKI clone using datomic https://www.youtube.com/watch?v=QrSnTIHotZE
+*** Literate devops https://www.youtube.com/watch?v=dljNabciEGg
 ** Clojurescript
 *** Re-frame tutorial https://day8.github.io/re-frame/dominoes-live/
 *** Reagent docs https://cljdoc.org/d/reagent/reagent/1.0.0-alpha2/doc/tutorials/creating-reagent-components

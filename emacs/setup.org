@@ -132,3 +132,28 @@ logitech.com/support/x56
 
 New nvidia drivers
 Geforce Experience
+
+*** Bluetooth disconnection issue
+ Dell drivers
+ https://mail.google.com/mail/u/0/#search/dell/FMfcgzGkXwGgkltrGHNmhlFHmTqgCmQb
+
+
+ Keychron issue?
+ Bluetooth HID device  either went out of range or became unresponsive.
+ https://www.reddit.com/r/Keychron/comments/hu60to/keychron_k2_v1_bluetooth_issues_i_give_up/
+
+ Bluetooth waking up
+ https://answers.microsoft.com/en-us/windows/forum/all/how-can-shutting-down-bluetooth-on-one-device/46917ef7-130e-4073-8094-0b002ea0e8b4
+
+ Attempted to change power settings under Power and sleep.
+
+
+ Killer Wi-Fi 6 AX1650x:
+ Device Manager -> Killer Wi-Fi 6 AX1650x 160Mhz -> Power -> Allow the computer to turn off device to save power. (Disable)
+ https://answers.microsoft.com/en-us/surface/forum/all/power-management-tab-is-missing-from-device/0a3c563a-5ec7-4809-9609-4bc257444590
+ https://support.plugable.com/t/bluetooth-connections-being-broken-after-being-idle-presumably-due-to-power-management/19491/2
+
+Error when installing latest drivers
+ https://downloadcenter.intel.com/download/30581/Intel-Killer-Performance-Suite
+
+ 
