@@ -936,6 +936,7 @@ https://stackoverflow.com/questions/15049413/how-do-i-get-properties-with-dashes
 Basically start here:
 https://cljsrn.org/
 ** Useful clojure titbits
+*** shadlow-cljs & tools.build? https://clojurians-log.clojureverse.org/tools-build/2021-10-05/1633472745.474100
 *** Apply vs Map https://stackoverflow.com/questions/2311528/clojure-apply-vs-map
 *** Incrementing i https://stackoverflow.com/questions/4513078/i-equivalent-in-clojure
   also note the atom and swap example?
@@ -1303,7 +1304,9 @@ https://clojuredocs.org/clojure.reflect/type-reflect
 ** Tools + libs
 *** https://github.com/dgrnbrg/spyscope
 *** Scala interop lib https://t6.github.io/from-scala/
+*** https://github.com/noprompt/meander
 ** Gotchas
+*** reduce or apply https://stackoverflow.com/questions/2891707/reduce-or-apply-using-logical-functions-in-clojure
 *** Autoresolution of keywords '::'  https://groups.google.com/forum/#!topic/clojure/i770QaIFiF0
 *** IllegalArgument with no help https://stackoverflow.com/questions/19590432/why-does-clojure-say-no-matching-method-for-an-illegal-argument
 - This could happen when passing nil to a primitive parameter in java.
@@ -1446,6 +1449,7 @@ And some playing around
 (apply concat y)
 #+end_src
 *** TODO What React alone vs Reframe https://purelyfunctional.tv/article/react-vs-re-frame/
+*** Navigating tree comparison Java and Clojure https://insideclojure.org/images/j-treevisit-pdf.pdf
 ** Cider
 *** cider hook http://root42.blogspot.com/2014/08/how-to-automatically-refresh-cider-when.html
 *** Making clojure lazier & streams https://clojure.org/reference/lazy
