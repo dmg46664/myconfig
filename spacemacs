@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(windows-scripts
+     lua
      yaml
      javascript
      java
@@ -340,12 +341,14 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (setq-default
-
    ;; Allow hash # to be entered on a UK keyboard.
    ;; Note there is a second part to this fix lower down in the file.
    ;; Discussion on spacemacs forum
    ;; https://github.com/syl20bnr/spacemacs/issues/1435
    mac-right-option-modifier nil)
+
+  ;; https://github.com/Somelauw/evil-org-mode/issues/93
+  (fset 'evil-redirect-digit-argument 'ignore) ;; before evil-org loaded
 
   ;; Problem!
   ;; https://apple.stackexchange.com/questions/399187/how-to-set-default-directory-for-emacs-27-1-app
@@ -374,6 +377,14 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
+
+  ;; https://github.com/Somelauw/evil-org-mode/issues/93
+  ;;(fset 'evil-redirect-digit-argument 'ignore) ;; before evil-org loaded
+  (add-to-list 'evil-digit-bound-motions 'evil-org-beginning-of-line)
+  (evil-define-key 'motion 'evil-org-mode
+    (kbd "0") 'evil-org-beginning-of-line)
+
 
   ;; My overridden configuration to enable transparency at startup
   ;; https://github.com/syl20bnr/spacemacs/issues/4435
@@ -446,6 +457,7 @@ you should place your code here."
                 (mapcar #'dir-exists?
                         (list
                          "~/work-tracked-files/"
+                         "~/projects/mytrackedfiles/"
                          "E:/Projects/mytrackedfiles/"
                          )))
         )
