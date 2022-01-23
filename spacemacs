@@ -30,7 +30,8 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(lua
+   '(windows-scripts
+     lua
      yaml
      javascript
      java
@@ -403,6 +404,8 @@ you should place your code here."
   ;; Give a warning when you are actively working on a particular clock
   (setq org-clock-idle-time 15)
   (setq org-log-note-clock-out t)
+
+  (setq lsp-enable-links nil)
 
 
   ;; ISO 8601 timestamp insertion

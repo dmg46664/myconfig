@@ -307,7 +307,8 @@ Remember to expand out the subtree to fix the problems.
 
 Useful reading
 https://magit.vc/manual/magit/Resolving-Conflicts.html
-
+* Gmail
+  Windows-Shift-? for help
 * OSX
 ** Turn off screen
    pmset displaysleepnow
