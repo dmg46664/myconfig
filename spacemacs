@@ -422,6 +422,7 @@ you should place your code here."
     ("{" sp-wrap-curly)
     ("(" sp-wrap-round)
     ("[" sp-wrap-square)
+    ("u" sp-unwrap-sexp)
     ("+" enlarge-window)
     ("<up>" (lambda ()
               (interactive)

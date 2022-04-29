@@ -492,3 +492,180 @@ and temp solution:
    https://github.com/palantir/docker-compose-rule
 
    https://stackoverflow.com/questions/64182352/can-testcontainers-join-existing-network
+
+
+   Alternatives
+   https://www.youtube.com/watch?v=LGNEG-t96eE
+   Minikube: https://minikube.sigs.k8s.io/
+
+   Minikube author https://matt-rickard.com/docker-desktop-alternatives/
+** Mesos
+   https://www.youtube.com/watch?v=fxJ7qnpFtrc
+
+   Strangeloop
+   https://www.youtube.com/watch?v=gVGZHzRjvo0
+
+   Executor
+   https://www.youtube.com/watch?v=tzaYXgnYKyQ
+   https://blog.allegro.tech/2018/01/mesos_executor.html
+
+   Aurora - Gears vs maze
+   https://youtu.be/uSa6WZO_vCg?t=242
+** Localstack
+   https://docs.localstack.cloud/aws/apigatewayv2/
+** AWS
+*** Articles and how tos
+    AWS CDK vs Terraform
+    https://www.metosin.fi/blog/comparing-aws-cdk-and-terraform/
+
+    websockets with api gateway
+    https://tsh.io/blog/implementing-websocket-with-aws-lambda-and-api-gateway/
+*** Installing and using CDK & SAM & Localstack & CDK local
+    Getting started
+    https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html
+    npm install -g aws-cdk
+
+    Your first app
+    https://docs.aws.amazon.com/cdk/v2/guide/hello_world.html
+    (Skip this if dealing with existing app)
+    
+    Install aws-sam-cli (SAM)
+    https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install-mac.html
+    See brew commands on page. (install takes a while)
+    https://github.com/aws/aws-sam-cli
+
+    Install Localstack
+    https://docs.localstack.cloud/get-started/#localstack-cli
+    Using pip as per instructions.
+    After running 'localstack start' it takes a little while
+    the logs to update.
+
+    Install CDK local
+    https://www.npmjs.com/package/aws-cdk-local
+
+    Install AWS CLI
+    https://formulae.brew.sh/formula/awscli
+    brew install awscli
+
+    Set up AWS account and configuring a profile.
+    https://www.youtube.com/watch?v=2o6pY2DmVoo
+
+    Install aws-local (wrapper around aws for localstack)
+    https://github.com/localstack/awscli-local
+    pip3 install awscli-loca
+    
+**** TODO Problems during brew install awscli
+     https://github.com/Homebrew/homebrew-core/issues/100320
+     
+     #+begin_src
+==> Pouring six--1.16.0_2.all.bottle.1.tar.gz
+Error: The `brew link` step did not complete successfully
+The formula built, but is not symlinked into /opt/homebrew
+Could not symlink lib/python3.9/site-packages/six.py
+Target /opt/homebrew/lib/python3.9/site-packages/six.py
+already exists. You may want to remove it:
+  rm '/opt/homebrew/lib/python3.9/site-packages/six.py'
+
+To force the link and overwrite all conflicting files:
+  brew link --overwrite six
+
+To list all files that would be deleted:
+  brew link --overwrite --dry-run six
+
+Possible conflicting files are:
+/opt/homebrew/lib/python3.9/site-packages/six.py
+==> Summary
+     #+end_src
+**** DONE Unable to run cdklocal deploy or bootstrap
+     CLOSED: [2022-04-28 Thu 16:24]
+     This is solved by setting up an AWS and configuring a profile.
+     
+#+begin_src js
+Unable to resolve AWS account to use. It must be either configured when you define your CDK Stack, or through the environment
+Error: Unable to resolve AWS account to use. It must be either configured when you define your CDK Stack, or through the environment
+    at SdkProvider.resolveEnvironment (/opt/homebrew/lib/node_modules/aws-cdk/lib/api/aws-auth/sdk-provider.ts:238:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at globEnvironmentsFromStacks (/opt/homebrew/lib/node_modules/aws-cdk/lib/api/cxapp/environments.ts:19:20)
+    at CdkToolkit.bootstrap (/opt/homebrew/lib/node_modules/aws-cdk/lib/cdk-toolkit.ts:569:28)
+    at initCommandLine (/opt/homebrew/lib/node_modules/aws-cdk/lib/cli.ts:341:12)
+#+end_src
+*** Lambda deployment and testing
+Testing locally with localstack! Requires installation instructions in section above.
+    https://www.youtube.com/watch?v=eszNbLXoaGQ
+
+    Deploy and testing locally
+#+begin_src bash
+Deploy locally
+sam local invoke -t cdk.out/***AwsDeployStack.template.json
+
+cdklocal deploy
+awslocal lambda invoke --function-name samsonBroker output.txt
+#+end_src
+**** DONE ERROR Not finding logs in localstack
+     CLOSED: [2022-04-28 Thu 16:22]
+     https://github.com/localstack/localstack/issues/2003
+     https://stackoverflow.com/questions/55436251/aws-logs-the-specified-log-group-does-not-exist
+ NOTE Error
+ #+begin_src bash
+   ;; Not necessary
+   ;; export AWS_PROFILE=danielmarkgerson
+   ;;
+   
+   awslocal logs tail /aws/lambda/
+   
+   An error occurred (ResourceNotFoundException) when calling the FilterLogEvents operation:
+   The specified log group does not exist
+ #+end_src
+
+ Use the following to find the write name of the stack
+
+ #+begin_src  bash
+   awslocal logs describe-log-groups --endpoint-url http://localhost:4566
+ #+end_src
+ 
+*** Lambda comparison methods, further reading/viewing
+
+Comparison
+https://sanderknape.com/2018/02/comparing-aws-sam-with-serverless-framework/#:~:text=The%20biggest%20difference%20is%20that,creating%20a%20serverless%20HTTP%20endpoint.
+
+    
+https://github.com/aws-samples/simple-websockets-chat-app
+
+*** SAM
+
+    sam local start-api
+    https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-using-start-api.html
+    command reference and what happens behind the scenes.
+    https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html
+    Understanding API gateway lambda integrations
+    https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-create-api-as-simple-proxy
+    
+
+    SAM example and deployment
+    https://youtu.be/MipjLaTp5nA?t=424
+    - Understanding templates for type AWS::Serverless::Function lambdas (good description of considerations)
+    
+
+    Lambdas and SAM testing
+    https://www.youtube.com/watch?v=AUQRyl1SNcU
+    - sam local invoke -e
+    - ApiGatewayFunction
+    - docker in the background but this tutorial is only command line invoked.
+
+    SAM with localstack
+    https://stackoverflow.com/questions/60077552/how-to-deploy-sam-stack-with-localstack
+
+    and SAM on same localstack network
+    https://dev.to/vikasgarghb/sam-local-with-localstack-4285
+    https://github.com/bilzard/aws-sam-localstack-example
+
+    
+   5 use cases
+   https://www.youtube.com/watch?v=K-nnzpgrzwM
+    
+*** Serverless Framework (Alternative to CDK and cloudformation?)
+    
+    NPM https://www.npmjs.com/package/serverless-offline
+    Github https://github.com/dherault/serverless-offline
+    Tutorial https://www.youtube.com/watch?v=ul_85jfM0oo
+    Youtube https://www.youtube.com/watch?v=dMVfqCTzuwk

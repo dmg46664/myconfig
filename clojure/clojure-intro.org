@@ -1,4 +1,14 @@
-* How to set up Cider
+* Create new application (deps.edn)
+
+  Understanding the new tools.build tool chain
+  https://www.youtube.com/watch?v=BTAx-gFz6Ks
+  
+  Then progress to deps-new
+  https://github.com/seancorfield/deps-new
+
+  Note there is a problem for Windows, but not for Mac.
+  https://github.com/seancorfield/deps-new/issues/25
+* Leiningen and Cider troubles
 
 If you're having the following problem
 
@@ -33,7 +43,17 @@ https://cider.readthedocs.io/en/latest/up_and_running/
 https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md
 
 brew install leiningen
+* Getting started Tutorial
+Tutorial:
+https://www.youtube.com/watch?v=SPSn02RxpxM
 
+which tracks this larger blog tutorial:
+https://practicalli.github.io/blog/posts/clojure-web-server-cli-tools-deps-edn/
+
+
+Starting repl in cider https://youtu.be/SPSn02RxpxM?t=3848
+
+You can still add lein?
 * DONE Adding Clojure to your App
   CLOSED: [2019-10-24 Thu 17:26]
 ** DONE Understanding Clojure & the REPL
@@ -275,27 +295,6 @@ https://github.com/clojure-emacs/cider-nrepl/issues/464
 
 https://github.com/clojure-emacs/cider/issues/2528
 
-** DONE Getting started with Deps.edn
-   CLOSED: [2020-01-05 Sun 13:42]
-Tutorial:
-https://www.youtube.com/watch?v=SPSn02RxpxM
-
-which tracks this larger blog tutorial:
-https://practicalli.github.io/blog/posts/clojure-web-server-cli-tools-deps-edn/
-
-Starting a new project:
-https://github.com/seancorfield/clj-new#getting-started
-
-Create a basic application:
-#+begin_src 
-    clj -A:new app myname/myapp
-    cd myapp
-    clj -m myname.myapp
-#+end_src
-
-Starting repl in cider https://youtu.be/SPSn02RxpxM?t=3848
-
-You can still add lein?
 
 
 ** TODO Adding REBL to lein and cider
@@ -332,464 +331,6 @@ Might want to try https://github.com/RickMoynihan/nrebl.middleware
 
 Perhaps it doesn't work with symlinks of the jar?
 Adding the dependency as per comment here fixes this https://github.com/cognitect-labs/REBL-distro/issues/34
-* DONE DEPRECATED Setting up a clojurescript reactnative using re-natal
-  CLOSED: [2020-10-05 Mon 14:00]
-
-Advice: Lots to download both during project generation and first run.
-Make sure you have bandwidth.
-
-The following should be deprecated https://github.com/drapanjanas/re-natal
-In favour of https://figwheel.org/docs/react-native.html
-** DONE Problems installing re-natal
-   CLOSED: [2020-10-05 Mon 13:59]
-#+begin_src 
-❯ npm install -g react-native-cli
-added 83 packages from 28 contributors in 6.681s
-❯ brew install watchman
-
-❯ npm install -g re-natal
-dyld: Library not loaded: /usr/local/opt/icu4c/lib/libicui18n.62.dylib
-!!! But don't run `brew upgrade` to solve this.
-#+end_src
-
-Ran brew upgrade in order to get passed the above error, which worked but was heavy handed.
-** DONE Problems running Android.
-   CLOSED: [2020-10-05 Mon 13:59]
-Next you have to install android sdk or you'll get this.
-
-#+begin_src
-> SDK location not found. Define location with sdk.dir in the local.properties file or with an ANDROID_HOME environment variable.
-!!! This means you have to setup Android
-
-
-NOTE The following is deprecated:
-brew cask install android-sdk
-
-See
-https://developer.android.com/studio/releases/sdk-tools
-
-But this apparently works?
-
-brew cask install android-studio
-
-DONE This seemed to work.
-#+end_src
-
-Check where Android sdk was installed
-#+begin_src bash
-export ANDROID_HOME=~/Library/Android/sdk
-#+end_src
-
-#+begin_src
-❯ react-native run-android
-(node:5471) Warning: Accessing non-existent property 'padLevels' of module exports inside circular dependency
-(Use `node --trace-warnings ...` to show where the warning was created)
-info Starting JS server...
-info Building and installing the app on the device (cd android && ./gradlew app:installDebug)...
-
-> Configure project :app
-File /Users/dmg46664/.android/repositories.cfg could not be loaded.
-Checking the license for package Android SDK Build-Tools 28.0.3 in /Users/dmg46664/Library/Android/sdk/licenses
-Warning: License for package Android SDK Build-Tools 28.0.3 not accepted.
-Checking the license for package Android SDK Platform 28 in /Users/dmg46664/Library/Android/sdk/licenses
-Warning: License for package Android SDK Platform 28 not accepted.
-
-FAILURE: Build failed with an exception.
-
-- What went wrong:
-A problem occurred configuring project ':app'.
-> Failed to install the following Android SDK packages as some licences have not been accepted.
-     build-tools;28.0.3 Android SDK Build-Tools 28.0.3
-     platforms;android-28 Android SDK Platform 28
-  To build this project, accept the SDK license agreements and install the missing components using the Android Studio SDK Manager.
-  Alternatively, to transfer the license agreements from one workstation to another, see http://d.android.com/r/studio-ui/export-licenses.html
-
-  Using Android SDK: /Users/dmg46664/Library/Android/sdk
-
-- Try:
-Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
-
-- Get more help at https://help.gradle.org
-
-BUILD FAILED in 5s
-error Could not install the app on the device, read the error above for details.
-Make sure you have an Android emulator running or a device connected and have
-set up your Android development environment:
-https://facebook.github.io/react-native/docs/getting-started.html
-error Command failed: ./gradlew app:installDebug. Run CLI with --verbose flag for more details.
-    ~/IdeaProjects/samson 
-#+end_src
-
-But it still doesn't run from the command line!?
-DONE So loaded the android directory into android studio itself.
-DONE Upgraded the gradle plugin
-
-DONE Updated the build numbers to what seems to match in my
-~/Library/Android/sdk/platforms/android-30
-
-#+begin_src json
-buildscript {
-    ext {
-        buildToolsVersion = "30.0.2"
-        minSdkVersion = 16
-        compileSdkVersion = 30
-        targetSdkVersion = 30
-        supportLibVersion = "30.0.0"
-    }
-#+end_src
-
-TODO But still problematic
-
-#+begin_src
-Failed to install the following Android SDK packages as some licences have not been accepted.
-   build-tools;29.0.2 Android SDK Build-Tools 29.0.2
-To build this project, accept the SDK license agreements and install the missing components using the Android Studio SDK Manager.
-Alternatively, to transfer the license agreements from one workstation to another, see http://d.android.com/r/studio-ui/export-licenses.html
-
-Using Android SDK: /Users/dmg46664/Library/Android/sdk
-Install missing SDK package(s)
-#+end_src
-
-TODO perhaps the following?
-
-#+begin_src
-Fixed adding the following:
-
-yes | sdkmanager --licenses && yes | sdkmanager --update
-
-This needs to be executed before any interaction with Android SDK.
-
-For Mac follow the images here downloading
-https://stackoverflow.com/questions/54273412/failed-to-install-the-following-android-sdk-packages-as-some-licences-have-not
-
-The following doesn't work. Perhaps needs JAVA_HOME is too new a version
-~/Library/Android/sdk/tools/bin/sdkmanager --licenses
-#+end_src
-
-TODO Running device from AVG Manager
-
-Chose Pixel 3a and downloaded.
-** DONE Getting Figwheel to work as expected
-   CLOSED: [2020-10-05 Mon 13:59]
-How to start the project in Emacs:
-#+begin_src
-At the command prompt:
-
-re-natal use-android-device avd
-re-natal use-figwheel
-
-Then in Emacs:
-Jack in to CLJS
-(switch-to-build "android")
-#+end_src
-
-#+begin_src clojure
-user> (fig-status)
-Figwheel System Status
-----------------------------------------------------
-Watching builds: [android]
-Client Connections
-	 any-build: 1 connection
-----------------------------------------------------
-nil
-#+end_src
-
-DONE Now you'll be able to save changes and see them in the emulator!
-
-However, you'll find that at this point you've lost the ability to run arbitrary REPL
-code in emacs.
-** DONE Run arbitrary REPL code in Emacs
-   CLOSED: [2020-10-05 Mon 15:09]
-
-   https://figwheel.org/docs/editor-integration.html
-
-Perhaps the problem happened here:
-
-#+begin_src
-Prompt will show when Figwheel connects to your application
-
-user> (switch-to-build "android")
-!!! sleep interrupted
-Exception Failed to launch Figwheel CLJS REPL: nREPL connection found but unable to load piggieback.
-This is commonly caused by
- A) not providing piggieback as a dependency and/or
- B) not adding piggieback middleware into your nrepl middleware chain.
-
-example profile.clj code:
------
-:profiles {:dev {:dependencies [[cider/piggieback <current-version>]
-                                [org.clojure/tools.nrepl  <current-version>]]
-                 :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}}
------
-Please see the documentation for piggieback here https://github.com/clojure-emacs/piggieback#installation
-
-Note: Cider will inject this config into your project.clj.
-This can cause confusion when your are not using Cider.  figwheel-sidecar.repl/eval19040/fn--19041 (repl.clj:182)
-Figwheel: Stopped watching build - ios
-Figwheel: Watching build - android
-Compiling build :android to "target/android/index.js" from ["src" "env/dev"]...
-Successfully compiled build :android to "target/android/index.js" in 3.043 seconds.
-nil
-#+end_src
-
-Interesting read
-https://github.com/bhauman/lein-figwheel/issues/703
-
-DONE See starting android first for the solution FIX!
-Once Android starts first then figwheel loads in the right order and waits
-to connect to your application with the CLJS REPL.
-If it loads ios first and then you switch it seems to fail for some reason.
-** DONE Figwheel-main doesn't work
-   CLOSED: [2020-10-05 Mon 16:40]
-
-So the CIDER instructions suggest not booting wth `figwheel` and choosing `figwheel-main`.
-However I get the latter with that instruction
-#+begin_src
-[nREPL] Starting server via /usr/local/bin/lein update-in :dependencies conj \[nrepl\ \"0.8.2\"\] -- update-in :dependencies conj \[cider/piggieback\ \"0.5.1\"\] -- update-in :plugins conj \[refactor-nrepl\ \"2.5.0\"\] -- update-in :plugins conj \[cider/cider-nrepl\ \"0.25.3\"\] -- repl :headless :host localhost
-Invalid face reference: t [740 times]
-[nREPL] server started on 61524
-Invalid face reference: t [40 times]
-error in process filter: user-error: No figwheel-main build files (<build-id>.cljs.edn) were found
-error in process filter: No figwheel-main build files (<build-id>.cljs.edn) were found
-Invalid face reference: t [63 times]
-#+end_src
-
-Some commentary here? About how a whole project interacts, but not that illuminating for this issue.
-https://luminusweb.com/docs/clojurescript.html
-
-I don't think it works with figwheel-main, so reverting to figwheel
-
-
-TODO Newer version fo bridge? Is the whole project invalidated?
-https://github.com/drapanjanas/re-natal/issues/209
-This bridge is interest
-** DONE How to get reframe/re-agent to automatically reload stuff on screen if the values have changed?
-   CLOSED: [2020-10-05 Mon 16:40]
-   I.e. if I save db.clj with a new value,
-   It doesn't automatically reload.
-
-   Neither is this the case with
-This whole project is deprecated with https://figwheel.org/docs/react-native.html
-   
-** DONE Why isn't it starting with android first?
-   CLOSED: [2020-10-05 Mon 15:14]
-   Perhaps the reason is https://cljdoc.org/d/figwheel-sidecar/figwheel-sidecar/0.5.20/doc/readme
-
-   In project.clj swap the following
-#+begin_src clojure
-  ;; Swap the order in the vector of ios and android builds
-  :profiles :dev :cljsbuild :builds
-
-  ;; Then rerun
-
-       ;;
-       ;; ClojureScript REPL type: figwheel
-       ;; ClojureScript REPL init form: (do (require 'figwheel-sidecar.repl-api) (figwheel-sidecar.repl-api/start-figwheel!) (figwheel-sidecar.repl-api/cljs-repl))
-       ;;
-       Figwheel: Starting server at http://0.0.0.0:3449
-       Figwheel: Watching build - android
-       Compiling build :android to "target/android/index.js" from ["src" "env/dev"]...
-       Successfully compiled build :android to "target/android/index.js" in 15.003 seconds.
-       Launching ClojureScript REPL for build: android
-       Figwheel Controls:
-                 (stop-autobuild)                ;; stops Figwheel autobuilder
-                 (start-autobuild id ...)        ;; starts autobuilder focused on optional ids
-                 (switch-to-build id ...)        ;; switches autobuilder to different build
-                 (reset-autobuild)               ;; stops, cleans, and starts autobuilder
-                 (reload-config)                 ;; reloads build config and resets autobuild
-                 (build-once id ...)             ;; builds source one time
-                 (clean-builds id ..)            ;; deletes compiled cljs target files
-                 (print-config id ...)           ;; prints out build configurations
-                 (fig-status)                    ;; displays current state of system
-                 (figwheel.client/set-autoload false)    ;; will turn autoloading off
-                 (figwheel.client/set-repl-pprint false) ;; will turn pretty printing off
-         Switch REPL build focus:
-                 :cljs/quit                      ;; allows you to switch REPL to another build
-           Docs: (doc function-name-here)
-           Exit: :cljs/quit
-        Results: Stored in vars *1, *2, *3, *e holds last exception object
-       Prompt will show when Figwheel connects to your application
-       To quit, type: :cljs/quit
-       nil
-       user> 
-       cljs.user> 
-   #+end_src
-* DONE DEPRECATED ReactNative with ClojureScript and figWheel
-  CLOSED: [2020-11-12 Thu 13:39]
-  https://figwheel.org/docs/react-native.html
-
-NOTE Rather use shadow-cljs
-  
-When reading the above add a
-android.cljs.edn instead of the ios.
-
-#+begin_src sh
-user-error: The clojure executable isn’t on your ‘exec-path’
-#+end_src
-
-Check if you can run `clj` from the command line.
-
-#+begin_src shell
-brew install clojure/tools/clojure
-Error: No available formula or cask with the name "clojure/tools/clojure".
-
-❯ brew install clojure
-Updating Homebrew...
-==> Auto-updated Homebrew!
-Updated 1 tap (homebrew/cask).
-==> Updated Casks
-praat
-
-Warning: clojure 1.10.1.697 is already installed, it's just not linked
-You can use `brew link clojure` to link this version.
-❯ clj
-zsh: command not found: clj
-❯ brew link clojure
-Linking /usr/local/Cellar/clojure/1.10.1.697... 8 symlinks created
-❯ clj DONE
-#+end_src
-
-Not able to communicate yet
-
-#+begin_src
-[Error: Figwheel Bridge Unable to fetch optionsUrl: http://localhost:9500/cljs-out/android/cljsc_opts.json]
-#+end_src
-
-#+begin_src shell
-Change path
-export PATH=$HOME/bin:/usr/local/bin:~/Library/Android/sdk/platform-tools:$PATH
-#+end_src
-
-Now run adb command as per tutorial
-** TODO ERROR evaluating SECRET_INTERNALS_DO_NOT
-#+begin_src 
-TypeError: Cannot read property '__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED' of undefined
-    at eval (eval at tryCallOne (core.js:37), <anonymous>:18:36)
-    at eval (eval at tryCallOne (core.js:37), <anonymous>:15:29)
-    at eval (eval at tryCallOne (core.js:37), <anonymous>:16:2)
-    at eval (<anonymous>)
-    at tryCallOne (core.js:37)
-    at core.js:123
-    at JSTimers.js:274
-    at _callTimer (JSTimers.js:130)
-    at _callImmediatesPass (JSTimers.js:181)
-    at MessageQueue.callImmediates [as _immediatesCallback] (JSTimers.js:441)
-reactConsoleErrorHandler @ ExceptionsManager.js:179
-n @ backend.js:32
-registerError @ LogBox.js:148
-errorImpl @ LogBox.js:59
-console.error @ LogBox.js:33
-tryCallOne @ core.js:37
-(anonymous) @ core.js:123
-(anonymous) @ JSTimers.js:274
-_callTimer @ JSTimers.js:130
-_callImmediatesPass @ JSTimers.js:181
-callImmediates @ JSTimers.js:441
-__callImmediates @ MessageQueue.js:387
-(anonymous) @ MessageQueue.js:135
-__guard @ MessageQueue.js:364
-flushedQueue @ MessageQueue.js:134
-invokeCallbackAndReturnFlushedQueue @ MessageQueue.js:130
-(anonymous) @ debuggerWorker.cff11639.js:4
-   #+end_src
-
-
-TODO I might have got this after adding depedencies?
-Hypothesis, adding the dependencies complicated the complication of core.js
-
-https://github.com/facebook/react-native/issues/13874
-
-;;/Users/dmg46664/IdeaProjects/Samson/target/public/cljs-out/android/cljs/core.js
-/Users/dmg46664/IdeaProjects/Samson/node_modules/promise/core.js
-
-TODO https://github.com/thheller/shadow-cljs/issues/31
-
-TODO "A note to anyone else trying to run RN from master. Double check the react version in RN's package.json matches the one in your app's yarn lockfile."
-** DONE Error: Figwheel Bridge Unable to fetch optionsUrl:
-   CLOSED: [2020-11-12 Thu 10:48]
-   http://localhost:9500/cljs-out/android/cljsc_opts.json
-
-
-   It's likely that you get this error when the reverse proxy with adb hasn't run.
-   Because the emulator can't yet see the REPL server
-
-   You should see the following in the metro task
-   
-#+begin_src shell
-[Wed Nov 11 2020 22:05:43.960]  LOG      Running "Samson" with {"rootTag":1}
-[Wed Nov 11 2020 22:05:43.363]  ERROR    [Error: Figwheel Bridge Unable to fetch optionsUrl: http://localhost:9500/cljs-out/android/cljsc_opts.json]
-[Thu Nov 12 2020 10:45:15.927]  BUNDLE  ./index.js
-
-[Thu Nov 12 2020 10:45:24.810]  LOG      Running "Samson" with {"rootTag":1}
-[Thu Nov 12 2020 10:45:38.904]  LOG       [goog.net.WebSocket] Opening the WebSocket on ws://localhost:9500/figwheel-connect?fwprocess=2ecd9b&fwbuild=android&fwsid=5d44fc9a-3ef1-4d86-a701-86bfa453fac9
-[Thu Nov 12 2020 10:45:40.833]  LOG       [goog.net.WebSocket] WebSocket opened on ws://localhost:9500/figwheel-connect?fwprocess=2ecd9b&fwbuild=android&fwsid=5d44fc9a-3ef1-4d86-a701-86bfa453fac9
-[Thu Nov 12 2020 10:45:41.147]  LOG       [Figwheel REPL] Session ID: 5d44fc9a-3ef1-4d86-a701-86bfa453fac9
-[Thu Nov 12 2020 10:45:41.148]  LOG       [Figwheel REPL] Session Name: Jolie
-#+end_src
-
-Probably ADB reverse proxy solves this.
-** DONE error: Error: Unable to resolve module `./target/public/cljs-out/android/krell_assets.js` from `index.js`:
-   CLOSED: [2020-11-12 Thu 14:55]
-
-From metro bundler
-#+begin_src
-None of these files exist:
-  * target/public/cljs-out/android/krell_assets.js(.native|.android.js|.native.js|.js|.android.json|.native.json|.json|.android.ts|.native.ts|.ts|.android.tsx|.native.tsx|.tsx)
-  * target/public/cljs-out/android/krell_assets.js/index(.native|.android.js|.native.js|.js|.android.json|.native.json|.json|.android.ts|.native.ts|.ts|.android.tsx|.native.tsx|.tsx)
-    at ModuleResolver.resolveDependency (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js:163:15)
-    at ResolutionRequest.resolveDependency (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/node-haste/DependencyGraph/ResolutionRequest.js:52:18)
-    at DependencyGraph.resolveDependency (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/node-haste/DependencyGraph.js:287:16)
-    at Object.resolve (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/lib/transformHelpers.js:267:42)
-    at /Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/DeltaBundler/traverseDependencies.js:434:31
-    at Array.map (<anonymous>)
-    at resolveDependencies (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/DeltaBundler/traverseDependencies.js:431:18)
-    at /Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/DeltaBundler/traverseDependencies.js:275:33
-    at Generator.next (<anonymous>)
-    at asyncGeneratorStep (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/DeltaBundler/traverseDependencies.js:87:24)
-#+end_src
-
-Info: https://github.com/vouch-opensource/krell
-
-I think this occurred when adding dependencies to deps.edn.
-Rejacking in, followed by reloading the app (not sure if npx / or reloading metro),
-made this go away.
-** TODO ERROR loading react-dom.inc.js
-   [Thu Nov 12 2020 14:53:47.607]  ERROR     [Figwheel REPL] Error loading file http://localhost:9500/cljs-out/android/cljsjs/react-dom/development/react-dom.inc.js
-
-   Strange as I can see this file. Error went away on reload.
-
-   Suspect this is adb reverse proxy resolves this.
-Background reading:
-https://stackoverflow.com/questions/37320212/use-a-different-react-version-with-clojurescript-react-libraries-reagent-om-rum
-https://cljdoc.org/d/reagent/reagent/1.0.0-alpha2/doc/frequently-asked-questions/reagent-doesn-t-work-after-updating-dependencies
-
-   https://stackoverflow.com/questions/21063587/what-is-index-js-used-for-in-node-js-projects
-https://stackoverflow.com/questions/44803681/how-to-use-index-js-instead-of-index-ios-js-index-android-js-in-react-native
-
-
-Getting dependencies
-#+begin_src shell
-❯ clj -X:deps tree
-#+end_src
-
-
-** DONE how to get metro to show stacktraces? (Hint start debugger)
-   CLOSED: [2020-11-14 Sat 14:59]
-https://stackoverflow.com/questions/49319291/how-to-debug-unexpected-token-in-react-native-metro
-
-Press d for developer menu inside app.
-The following from a terminal seems to have the same effect.
-#+begin_src shell
-adb shell input keyevent 82
-#+end_src
-
-This brings up the menu that allows starting and stopping of debugger.
-If you start the debugger, it will open up a tab in the browser with a webworker.
-If you open developer tools and look at the console, you'll see the same sets of errors
-and should be able to expand errors to get stacktraces.
-** DONE Adding dependencies
-   CLOSED: [2020-11-16 Mon 12:20]
-   Add deps to deps.edn
 * DONE ReactNative & Shadow-cljs
   CLOSED: [2020-11-16 Mon 12:43]
 
@@ -802,7 +343,16 @@ and should be able to expand errors to get stacktraces.
    - despoke libs
 
   Use this as a guide instead https://github.com/thheller/reagent-react-native
+  OR EVEN BETTER
+  https://github.com/thheller/reagent-expo for use with expo
+  Official docs :https://docs.expo.dev/get-started/create-a-new-app/
+  - After expo init, choose minimal.
+    (Need an expo account)
+  - expo build:android
 
+    https://docs.expo.dev/bare/installing-updates/
+
+  
   NOTE However, see modern advice on create reactnative apps https://stackoverflow.com/a/45780332/93074
   #+begin_src
     brew install yarn
@@ -831,6 +381,12 @@ cljs.user> (in-ns 'dimigi.test)
 (ns-publics 'dimigi.test)
     #+end_src
 
+See https://www.youtube.com/watch?v=Ykztwp2DXjs and comment for cljs and cider-nrepl.
+    
+    See https://clojurians-log.clojureverse.org/tools-build/2021-10-05
+** TODO https://stackoverflow.com/questions/47150410/failed-to-run-sdkmanager-list-with-java-9
+
+   
     
 ** DONE ERROR Invariant Violation: "main" has not been registered
    CLOSED: [2020-11-17 Tue 14:06]
@@ -884,19 +440,475 @@ This error is located at:
 
 Then to reinstall the new native dependencies
 yarn android
+** DONE DEPRECATED Setting up a clojurescript reactnative using re-natal
+   CLOSED: [2022-01-27 Thu 12:37]
+
+ Advice: Lots to download both during project generation and first run.
+ Make sure you have bandwidth.
+
+ The following should be deprecated https://github.com/drapanjanas/re-natal
+ In favour of https://figwheel.org/docs/react-native.html
+*** DONE Problems installing re-natal
+    CLOSED: [2020-10-05 Mon 13:59]
+ #+begin_src 
+ ❯ npm install -g react-native-cli
+ added 83 packages from 28 contributors in 6.681s
+ ❯ brew install watchman
+
+ ❯ npm install -g re-natal
+ dyld: Library not loaded: /usr/local/opt/icu4c/lib/libicui18n.62.dylib
+ !!! But don't run `brew upgrade` to solve this.
+ #+end_src
+
+ Ran brew upgrade in order to get passed the above error, which worked but was heavy handed.
+*** DONE Problems running Android.
+    CLOSED: [2020-10-05 Mon 13:59]
+ Next you have to install android sdk or you'll get this.
+
+ #+begin_src
+ > SDK location not found. Define location with sdk.dir in the local.properties file or with an ANDROID_HOME environment variable.
+ !!! This means you have to setup Android
+
+
+ NOTE The following is deprecated:
+ brew cask install android-sdk
+
+ See
+ https://developer.android.com/studio/releases/sdk-tools
+
+ But this apparently works?
+
+ brew cask install android-studio
+
+ DONE This seemed to work.
+ #+end_src
+
+ Check where Android sdk was installed
+ #+begin_src bash
+ export ANDROID_HOME=~/Library/Android/sdk
+ #+end_src
+
+ #+begin_src
+ ❯ react-native run-android
+ (node:5471) Warning: Accessing non-existent property 'padLevels' of module exports inside circular dependency
+ (Use `node --trace-warnings ...` to show where the warning was created)
+ info Starting JS server...
+ info Building and installing the app on the device (cd android && ./gradlew app:installDebug)...
+
+ > Configure project :app
+ File /Users/dmg46664/.android/repositories.cfg could not be loaded.
+ Checking the license for package Android SDK Build-Tools 28.0.3 in /Users/dmg46664/Library/Android/sdk/licenses
+ Warning: License for package Android SDK Build-Tools 28.0.3 not accepted.
+ Checking the license for package Android SDK Platform 28 in /Users/dmg46664/Library/Android/sdk/licenses
+ Warning: License for package Android SDK Platform 28 not accepted.
+
+ FAILURE: Build failed with an exception.
+
+ - What went wrong:
+ A problem occurred configuring project ':app'.
+ > Failed to install the following Android SDK packages as some licences have not been accepted.
+      build-tools;28.0.3 Android SDK Build-Tools 28.0.3
+      platforms;android-28 Android SDK Platform 28
+   To build this project, accept the SDK license agreements and install the missing components using the Android Studio SDK Manager.
+   Alternatively, to transfer the license agreements from one workstation to another, see http://d.android.com/r/studio-ui/export-licenses.html
+
+   Using Android SDK: /Users/dmg46664/Library/Android/sdk
+
+ - Try:
+ Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+
+ - Get more help at https://help.gradle.org
+
+ BUILD FAILED in 5s
+ error Could not install the app on the device, read the error above for details.
+ Make sure you have an Android emulator running or a device connected and have
+ set up your Android development environment:
+ https://facebook.github.io/react-native/docs/getting-started.html
+ error Command failed: ./gradlew app:installDebug. Run CLI with --verbose flag for more details.
+     ~/IdeaProjects/samson 
+ #+end_src
+
+ But it still doesn't run from the command line!?
+ DONE So loaded the android directory into android studio itself.
+ DONE Upgraded the gradle plugin
+
+ DONE Updated the build numbers to what seems to match in my
+ ~/Library/Android/sdk/platforms/android-30
+
+ #+begin_src json
+ buildscript {
+     ext {
+         buildToolsVersion = "30.0.2"
+         minSdkVersion = 16
+         compileSdkVersion = 30
+         targetSdkVersion = 30
+         supportLibVersion = "30.0.0"
+     }
+ #+end_src
+
+ TODO But still problematic
+
+ #+begin_src
+ Failed to install the following Android SDK packages as some licences have not been accepted.
+    build-tools;29.0.2 Android SDK Build-Tools 29.0.2
+ To build this project, accept the SDK license agreements and install the missing components using the Android Studio SDK Manager.
+ Alternatively, to transfer the license agreements from one workstation to another, see http://d.android.com/r/studio-ui/export-licenses.html
+
+ Using Android SDK: /Users/dmg46664/Library/Android/sdk
+ Install missing SDK package(s)
+ #+end_src
+
+ TODO perhaps the following?
+
+ #+begin_src
+ Fixed adding the following:
+
+ yes | sdkmanager --licenses && yes | sdkmanager --update
+
+ This needs to be executed before any interaction with Android SDK.
+
+ For Mac follow the images here downloading
+ https://stackoverflow.com/questions/54273412/failed-to-install-the-following-android-sdk-packages-as-some-licences-have-not
+
+ The following doesn't work. Perhaps needs JAVA_HOME is too new a version
+ ~/Library/Android/sdk/tools/bin/sdkmanager --licenses
+ #+end_src
+
+ TODO Running device from AVG Manager
+
+ Chose Pixel 3a and downloaded.
+*** DONE Getting Figwheel to work as expected
+    CLOSED: [2020-10-05 Mon 13:59]
+ How to start the project in Emacs:
+ #+begin_src
+ At the command prompt:
+
+ re-natal use-android-device avd
+ re-natal use-figwheel
+
+ Then in Emacs:
+ Jack in to CLJS
+ (switch-to-build "android")
+ #+end_src
+
+ #+begin_src clojure
+ user> (fig-status)
+ Figwheel System Status
+ ----------------------------------------------------
+ Watching builds: [android]
+ Client Connections
+	  any-build: 1 connection
+ ----------------------------------------------------
+ nil
+ #+end_src
+
+ DONE Now you'll be able to save changes and see them in the emulator!
+
+ However, you'll find that at this point you've lost the ability to run arbitrary REPL
+ code in emacs.
+*** DONE Run arbitrary REPL code in Emacs
+    CLOSED: [2020-10-05 Mon 15:09]
+
+    https://figwheel.org/docs/editor-integration.html
+
+ Perhaps the problem happened here:
+
+ #+begin_src
+ Prompt will show when Figwheel connects to your application
+
+ user> (switch-to-build "android")
+ !!! sleep interrupted
+ Exception Failed to launch Figwheel CLJS REPL: nREPL connection found but unable to load piggieback.
+ This is commonly caused by
+  A) not providing piggieback as a dependency and/or
+  B) not adding piggieback middleware into your nrepl middleware chain.
+
+ example profile.clj code:
+ -----
+ :profiles {:dev {:dependencies [[cider/piggieback <current-version>]
+                                 [org.clojure/tools.nrepl  <current-version>]]
+                  :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}}
+ -----
+ Please see the documentation for piggieback here https://github.com/clojure-emacs/piggieback#installation
+
+ Note: Cider will inject this config into your project.clj.
+ This can cause confusion when your are not using Cider.  figwheel-sidecar.repl/eval19040/fn--19041 (repl.clj:182)
+ Figwheel: Stopped watching build - ios
+ Figwheel: Watching build - android
+ Compiling build :android to "target/android/index.js" from ["src" "env/dev"]...
+ Successfully compiled build :android to "target/android/index.js" in 3.043 seconds.
+ nil
+ #+end_src
+
+ Interesting read
+ https://github.com/bhauman/lein-figwheel/issues/703
+
+ DONE See starting android first for the solution FIX!
+ Once Android starts first then figwheel loads in the right order and waits
+ to connect to your application with the CLJS REPL.
+ If it loads ios first and then you switch it seems to fail for some reason.
+*** DONE Figwheel-main doesn't work
+    CLOSED: [2020-10-05 Mon 16:40]
+
+ So the CIDER instructions suggest not booting wth `figwheel` and choosing `figwheel-main`.
+ However I get the latter with that instruction
+ #+begin_src
+ [nREPL] Starting server via /usr/local/bin/lein update-in :dependencies conj \[nrepl\ \"0.8.2\"\] -- update-in :dependencies conj \[cider/piggieback\ \"0.5.1\"\] -- update-in :plugins conj \[refactor-nrepl\ \"2.5.0\"\] -- update-in :plugins conj \[cider/cider-nrepl\ \"0.25.3\"\] -- repl :headless :host localhost
+ Invalid face reference: t [740 times]
+ [nREPL] server started on 61524
+ Invalid face reference: t [40 times]
+ error in process filter: user-error: No figwheel-main build files (<build-id>.cljs.edn) were found
+ error in process filter: No figwheel-main build files (<build-id>.cljs.edn) were found
+ Invalid face reference: t [63 times]
+ #+end_src
+
+ Some commentary here? About how a whole project interacts, but not that illuminating for this issue.
+ https://luminusweb.com/docs/clojurescript.html
+
+ I don't think it works with figwheel-main, so reverting to figwheel
+
+
+ TODO Newer version fo bridge? Is the whole project invalidated?
+ https://github.com/drapanjanas/re-natal/issues/209
+ This bridge is interest
+*** DONE How to get reframe/re-agent to automatically reload stuff on screen if the values have changed?
+    CLOSED: [2020-10-05 Mon 16:40]
+    I.e. if I save db.clj with a new value,
+    It doesn't automatically reload.
+
+    Neither is this the case with
+ This whole project is deprecated with https://figwheel.org/docs/react-native.html
+   
+*** DONE Why isn't it starting with android first?
+    CLOSED: [2020-10-05 Mon 15:14]
+    Perhaps the reason is https://cljdoc.org/d/figwheel-sidecar/figwheel-sidecar/0.5.20/doc/readme
+
+    In project.clj swap the following
+ #+begin_src clojure
+   ;; Swap the order in the vector of ios and android builds
+   :profiles :dev :cljsbuild :builds
+
+   ;; Then rerun
+
+        ;;
+        ;; ClojureScript REPL type: figwheel
+        ;; ClojureScript REPL init form: (do (require 'figwheel-sidecar.repl-api) (figwheel-sidecar.repl-api/start-figwheel!) (figwheel-sidecar.repl-api/cljs-repl))
+        ;;
+        Figwheel: Starting server at http://0.0.0.0:3449
+        Figwheel: Watching build - android
+        Compiling build :android to "target/android/index.js" from ["src" "env/dev"]...
+        Successfully compiled build :android to "target/android/index.js" in 15.003 seconds.
+        Launching ClojureScript REPL for build: android
+        Figwheel Controls:
+                  (stop-autobuild)                ;; stops Figwheel autobuilder
+                  (start-autobuild id ...)        ;; starts autobuilder focused on optional ids
+                  (switch-to-build id ...)        ;; switches autobuilder to different build
+                  (reset-autobuild)               ;; stops, cleans, and starts autobuilder
+                  (reload-config)                 ;; reloads build config and resets autobuild
+                  (build-once id ...)             ;; builds source one time
+                  (clean-builds id ..)            ;; deletes compiled cljs target files
+                  (print-config id ...)           ;; prints out build configurations
+                  (fig-status)                    ;; displays current state of system
+                  (figwheel.client/set-autoload false)    ;; will turn autoloading off
+                  (figwheel.client/set-repl-pprint false) ;; will turn pretty printing off
+          Switch REPL build focus:
+                  :cljs/quit                      ;; allows you to switch REPL to another build
+            Docs: (doc function-name-here)
+            Exit: :cljs/quit
+         Results: Stored in vars *1, *2, *3, *e holds last exception object
+        Prompt will show when Figwheel connects to your application
+        To quit, type: :cljs/quit
+        nil
+        user> 
+        cljs.user> 
+    #+end_src
+** DONE DEPRECATED ReactNative with ClojureScript and figWheel
+   CLOSED: [2020-11-12 Thu 13:39]
+   https://figwheel.org/docs/react-native.html
+
+ NOTE Rather use shadow-cljs
+  
+ When reading the above add a
+ android.cljs.edn instead of the ios.
+
+ #+begin_src sh
+ user-error: The clojure executable isn’t on your ‘exec-path’
+ #+end_src
+
+ Check if you can run `clj` from the command line.
+
+ #+begin_src shell
+ brew install clojure/tools/clojure
+ Error: No available formula or cask with the name "clojure/tools/clojure".
+
+ ❯ brew install clojure
+ Updating Homebrew...
+ ==> Auto-updated Homebrew!
+ Updated 1 tap (homebrew/cask).
+ ==> Updated Casks
+ praat
+
+ Warning: clojure 1.10.1.697 is already installed, it's just not linked
+ You can use `brew link clojure` to link this version.
+ ❯ clj
+ zsh: command not found: clj
+ ❯ brew link clojure
+ Linking /usr/local/Cellar/clojure/1.10.1.697... 8 symlinks created
+ ❯ clj DONE
+ #+end_src
+
+ Not able to communicate yet
+
+ #+begin_src
+ [Error: Figwheel Bridge Unable to fetch optionsUrl: http://localhost:9500/cljs-out/android/cljsc_opts.json]
+ #+end_src
+
+ #+begin_src shell
+ Change path
+ export PATH=$HOME/bin:/usr/local/bin:~/Library/Android/sdk/platform-tools:$PATH
+ #+end_src
+
+ Now run adb command as per tutorial
+*** TODO ERROR evaluating SECRET_INTERNALS_DO_NOT
+ #+begin_src 
+ TypeError: Cannot read property '__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED' of undefined
+     at eval (eval at tryCallOne (core.js:37), <anonymous>:18:36)
+     at eval (eval at tryCallOne (core.js:37), <anonymous>:15:29)
+     at eval (eval at tryCallOne (core.js:37), <anonymous>:16:2)
+     at eval (<anonymous>)
+     at tryCallOne (core.js:37)
+     at core.js:123
+     at JSTimers.js:274
+     at _callTimer (JSTimers.js:130)
+     at _callImmediatesPass (JSTimers.js:181)
+     at MessageQueue.callImmediates [as _immediatesCallback] (JSTimers.js:441)
+ reactConsoleErrorHandler @ ExceptionsManager.js:179
+ n @ backend.js:32
+ registerError @ LogBox.js:148
+ errorImpl @ LogBox.js:59
+ console.error @ LogBox.js:33
+ tryCallOne @ core.js:37
+ (anonymous) @ core.js:123
+ (anonymous) @ JSTimers.js:274
+ _callTimer @ JSTimers.js:130
+ _callImmediatesPass @ JSTimers.js:181
+ callImmediates @ JSTimers.js:441
+ __callImmediates @ MessageQueue.js:387
+ (anonymous) @ MessageQueue.js:135
+ __guard @ MessageQueue.js:364
+ flushedQueue @ MessageQueue.js:134
+ invokeCallbackAndReturnFlushedQueue @ MessageQueue.js:130
+ (anonymous) @ debuggerWorker.cff11639.js:4
+    #+end_src
+
+
+ TODO I might have got this after adding depedencies?
+ Hypothesis, adding the dependencies complicated the complication of core.js
+
+ https://github.com/facebook/react-native/issues/13874
+
+ ;;/Users/dmg46664/IdeaProjects/Samson/target/public/cljs-out/android/cljs/core.js
+ /Users/dmg46664/IdeaProjects/Samson/node_modules/promise/core.js
+
+ TODO https://github.com/thheller/shadow-cljs/issues/31
+
+ TODO "A note to anyone else trying to run RN from master. Double check the react version in RN's package.json matches the one in your app's yarn lockfile."
+*** DONE Error: Figwheel Bridge Unable to fetch optionsUrl:
+    CLOSED: [2020-11-12 Thu 10:48]
+    http://localhost:9500/cljs-out/android/cljsc_opts.json
+
+
+    It's likely that you get this error when the reverse proxy with adb hasn't run.
+    Because the emulator can't yet see the REPL server
+
+    You should see the following in the metro task
+   
+ #+begin_src shell
+ [Wed Nov 11 2020 22:05:43.960]  LOG      Running "Samson" with {"rootTag":1}
+ [Wed Nov 11 2020 22:05:43.363]  ERROR    [Error: Figwheel Bridge Unable to fetch optionsUrl: http://localhost:9500/cljs-out/android/cljsc_opts.json]
+ [Thu Nov 12 2020 10:45:15.927]  BUNDLE  ./index.js
+
+ [Thu Nov 12 2020 10:45:24.810]  LOG      Running "Samson" with {"rootTag":1}
+ [Thu Nov 12 2020 10:45:38.904]  LOG       [goog.net.WebSocket] Opening the WebSocket on ws://localhost:9500/figwheel-connect?fwprocess=2ecd9b&fwbuild=android&fwsid=5d44fc9a-3ef1-4d86-a701-86bfa453fac9
+ [Thu Nov 12 2020 10:45:40.833]  LOG       [goog.net.WebSocket] WebSocket opened on ws://localhost:9500/figwheel-connect?fwprocess=2ecd9b&fwbuild=android&fwsid=5d44fc9a-3ef1-4d86-a701-86bfa453fac9
+ [Thu Nov 12 2020 10:45:41.147]  LOG       [Figwheel REPL] Session ID: 5d44fc9a-3ef1-4d86-a701-86bfa453fac9
+ [Thu Nov 12 2020 10:45:41.148]  LOG       [Figwheel REPL] Session Name: Jolie
+ #+end_src
+
+ Probably ADB reverse proxy solves this.
+*** DONE error: Error: Unable to resolve module `./target/public/cljs-out/android/krell_assets.js` from `index.js`:
+    CLOSED: [2020-11-12 Thu 14:55]
+
+ From metro bundler
+ #+begin_src
+ None of these files exist:
+   * target/public/cljs-out/android/krell_assets.js(.native|.android.js|.native.js|.js|.android.json|.native.json|.json|.android.ts|.native.ts|.ts|.android.tsx|.native.tsx|.tsx)
+   * target/public/cljs-out/android/krell_assets.js/index(.native|.android.js|.native.js|.js|.android.json|.native.json|.json|.android.ts|.native.ts|.ts|.android.tsx|.native.tsx|.tsx)
+     at ModuleResolver.resolveDependency (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js:163:15)
+     at ResolutionRequest.resolveDependency (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/node-haste/DependencyGraph/ResolutionRequest.js:52:18)
+     at DependencyGraph.resolveDependency (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/node-haste/DependencyGraph.js:287:16)
+     at Object.resolve (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/lib/transformHelpers.js:267:42)
+     at /Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/DeltaBundler/traverseDependencies.js:434:31
+     at Array.map (<anonymous>)
+     at resolveDependencies (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/DeltaBundler/traverseDependencies.js:431:18)
+     at /Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/DeltaBundler/traverseDependencies.js:275:33
+     at Generator.next (<anonymous>)
+     at asyncGeneratorStep (/Users/dmg46664/IdeaProjects/Samson/node_modules/metro/src/DeltaBundler/traverseDependencies.js:87:24)
+ #+end_src
+
+ Info: https://github.com/vouch-opensource/krell
+
+ I think this occurred when adding dependencies to deps.edn.
+ Rejacking in, followed by reloading the app (not sure if npx / or reloading metro),
+ made this go away.
+*** TODO ERROR loading react-dom.inc.js
+    [Thu Nov 12 2020 14:53:47.607]  ERROR     [Figwheel REPL] Error loading file http://localhost:9500/cljs-out/android/cljsjs/react-dom/development/react-dom.inc.js
+
+    Strange as I can see this file. Error went away on reload.
+
+    Suspect this is adb reverse proxy resolves this.
+ Background reading:
+ https://stackoverflow.com/questions/37320212/use-a-different-react-version-with-clojurescript-react-libraries-reagent-om-rum
+ https://cljdoc.org/d/reagent/reagent/1.0.0-alpha2/doc/frequently-asked-questions/reagent-doesn-t-work-after-updating-dependencies
+
+    https://stackoverflow.com/questions/21063587/what-is-index-js-used-for-in-node-js-projects
+ https://stackoverflow.com/questions/44803681/how-to-use-index-js-instead-of-index-ios-js-index-android-js-in-react-native
+
+
+ Getting dependencies
+ #+begin_src shell
+ ❯ clj -X:deps tree
+ #+end_src
+
+
+*** DONE how to get metro to show stacktraces? (Hint start debugger)
+    CLOSED: [2020-11-14 Sat 14:59]
+ https://stackoverflow.com/questions/49319291/how-to-debug-unexpected-token-in-react-native-metro
+
+ Press d for developer menu inside app.
+ The following from a terminal seems to have the same effect.
+ #+begin_src shell
+ adb shell input keyevent 82
+ #+end_src
+
+ This brings up the menu that allows starting and stopping of debugger.
+ If you start the debugger, it will open up a tab in the browser with a webworker.
+ If you open developer tools and look at the console, you'll see the same sets of errors
+ and should be able to expand errors to get stacktraces.
+*** DONE Adding dependencies
+    CLOSED: [2020-11-16 Mon 12:20]
+    Add deps to deps.edn
 * TODO Clojure shell / Babashka
   https://www.youtube.com/watch?v=Nw8aN-nrdEk
   https://github.com/borkdude/babashka
 
   brew install borkdude/brew/babashka
-* Clojure assistance
-
-** Refactoring
-*** C-c C-m rs     To call rs functions.
+* Refactoring
+** C-c C-m rs     To call rs functions.
 All functions in clj-refactor have a two-letter mnemonic shortcut. E.g. rs for cljr-rename-symbol. 
 Given the prefix choice in the example setup you'd call this function by hitting 
 https://github.com/clojure-emacs/clj-refactor.el/wiki
-** Importing libraries
+* Importing libraries
 https://8thlight.com/blog/colin-jones/2010/12/05/clojure-libs-and-namespaces-require-use-import-and-ns.html
 &
 https://stackoverflow.com/questions/10358149/in-clojure-1-4-what-is-the-use-of-refer-within-require/10370672
@@ -909,54 +921,53 @@ https://github.com/yogthos/clojure-error-message-catalog/blob/master/clj/class-n
 
 More on class loaders
 https://www.baeldung.com/java-classloaders
-
-** Quoting and unbound function errors
-https://8thlight.com/blog/colin-jones/2012/05/22/quoting-without-confusion.html
-** Destructuring
+* Destructuring
 http://blog.brunobonacci.com/2014/11/16/clojure-complete-guide-to-destructuring/
 
 https://stackoverflow.com/questions/3337888/clojure-named-arguments
-** Forum topics
-*** Clojure spec greedy operators https://clojurians-log.clojureverse.org/clojure-spec/2018-01-04
-** Tutorials
+* Forum topics
+** Clojure spec greedy operators https://clojurians-log.clojureverse.org/clojure-spec/2018-01-04
+* Tutorials
 Great tutorial in coverage, but a little tedious is mode and development.
 https://www.youtube.com/watch?v=ciGyHkDuPAE
-*** Protocols! Must watch https://www.youtube.com/watch?v=kQhOlWXXl2I    
-*** TODO Datomic migration  https://grishaev.me/en/pg-to-datomic/
-*** TODO Building an ANKI clone using datomic https://www.youtube.com/watch?v=QrSnTIHotZE
-*** Literate devops https://www.youtube.com/watch?v=dljNabciEGg
-** Clojurescript
-*** Re-frame tutorial https://day8.github.io/re-frame/dominoes-live/
-*** Reagent docs https://cljdoc.org/d/reagent/reagent/1.0.0-alpha2/doc/tutorials/creating-reagent-components
-*** CLJS JS interop     https://lwhorton.github.io/2018/10/20/clojurescript-interop-with-javascript.html 
-*** CLJS type inference https://blog.klipse.tech/clojure/2019/05/20/type-inference-in-clojurescript.html
-*** CLJS gotchas
-https://stackoverflow.com/questions/15049413/how-do-i-get-properties-with-dashes-in-their-names-in-clojurescript
-*** DEPRECATED Clojure script on react with figwheel https://medium.com/mindorks/building-mobile-apps-ios-and-android-with-clojurescript-4600235f826c
-*** DEPRECATED Clojurescript with ReactNative https://medium.com/upwork-engineering/developing-react-native-applications-in-clojurescript-9386b1cd5869
+** Protocols! Must watch https://www.youtube.com/watch?v=kQhOlWXXl2I    
+** TODO Datomic migration  https://grishaev.me/en/pg-to-datomic/
+** TODO Building an ANKI clone using datomic https://www.youtube.com/watch?v=QrSnTIHotZE
+** Literate devops https://www.youtube.com/watch?v=dljNabciEGg
+** Transducers https://lambdaisland.com/episodes/transducers
+* Clojurescript
+** Re-frame tutorial https://day8.github.io/re-frame/dominoes-live/
+** Reagent docs https://cljdoc.org/d/reagent/reagent/1.0.0-alpha2/doc/tutorials/creating-reagent-components
+** CLJS JS interop     https://lwhorton.github.io/2018/10/20/clojurescript-interop-with-javascript.html 
+** CLJS type inference https://blog.klipse.tech/clojure/2019/05/20/type-inference-in-clojurescript.html
+** CLJS gotchas
+   https://stackoverflow.com/questions/15049413/how-do-i-get-properties-with-dashes-in-their-names-in-clojurescript
+** DEPRECATED Clojure script on react with figwheel https://medium.com/mindorks/building-mobile-apps-ios-and-android-with-clojurescript-4600235f826c
+** DEPRECATED Clojurescript with ReactNative https://medium.com/upwork-engineering/developing-react-native-applications-in-clojurescript-9386b1cd5869
 Basically start here:
 https://cljsrn.org/
-** Useful clojure titbits
-*** shadlow-cljs & tools.build? https://clojurians-log.clojureverse.org/tools-build/2021-10-05/1633472745.474100
-*** Apply vs Map https://stackoverflow.com/questions/2311528/clojure-apply-vs-map
-*** Incrementing i https://stackoverflow.com/questions/4513078/i-equivalent-in-clojure
+** CLJS Performance https://numergent.com/2015-12/ClojureScript-performance-revisited.html
+* Useful clojure titbits
+** shadlow-cljs & tools.build? https://clojurians-log.clojureverse.org/tools-build/2021-10-05/1633472745.474100
+** Apply vs Map https://stackoverflow.com/questions/2311528/clojure-apply-vs-map
+** Incrementing i https://stackoverflow.com/questions/4513078/i-equivalent-in-clojure
   also note the atom and swap example?
 
 See map-indexed for a solution
  https://stackoverflow.com/questions/24798831/clojure-increment-a-counter
 https://clojuredocs.org/clojure.core/map-indexed
 https://clojuredocs.org/clojure.core/dissoc
-*** Odd examples https://stackoverflow.com/questions/44052252/what-does-clojure-function-jerry-means
-*** Two dots https://clojure.org/reference/java_interop#_the_dot_special_form
-*** doseq vs for (lazy)  https://stackoverflow.com/questions/4725417/difference-between-doseq-and-for-in-clojure
+** Odd examples https://stackoverflow.com/questions/44052252/what-does-clojure-function-jerry-means
+** Two dots https://clojure.org/reference/java_interop#_the_dot_special_form
+** doseq vs for (lazy)  https://stackoverflow.com/questions/4725417/difference-between-doseq-and-for-in-clojure
 https://blog.jeaye.com/2016/07/27/clojure-for/
 
 Tip. See the combination of doseq and map-index  https://github.com/mjul/docjure/blob/master/src/dk/ative/docjure/spreadsheet.clj#L267
-*** Reading wierd clojure characters https://clojure.org/guides/weird_characters
-*** Add index to a vector of maps (assoc & map-index) https://stackoverflow.com/questions/34490944/clojure-add-index-to-vector-of-maps
-*** Converting non lazy sequences (2nd answer)  https://stackoverflow.com/a/1645224/93074
-*** Prototyping https://grishaev.me/en/clj-args/
-*** How to download clojuredocs documentation offline
+** Reading wierd clojure characters https://clojure.org/guides/weird_characters
+** Add index to a vector of maps (assoc & map-index) https://stackoverflow.com/questions/34490944/clojure-add-index-to-vector-of-maps
+** Converting non lazy sequences (2nd answer)  https://stackoverflow.com/a/1645224/93074
+** Prototyping https://grishaev.me/en/clj-args/
+** How to download clojuredocs documentation offline
 #+begin_src 
 wget -k -m http://clojuredocs.org/
 #+end_src
@@ -986,9 +997,9 @@ python server.py
 #+end_src
 
 https://docs.python.org/3/library/http.server.html
-**** TODO Find a way so that the server shows pages without the .html in html format. This could be either with python or 
+*** TODO Find a way so that the server shows pages without the .html in html format. This could be either with python or 
 https://github.com/ring-clojure/ring/wiki/Getting-Started
-*** TODO How do Clojure return types work?
+** TODO How do Clojure return types work?
 https://clojuredocs.org/clojure.core/doall
 
 #+begin_src clojure
@@ -1017,21 +1028,21 @@ https://clojuredocs.org/clojure.core/doall
   )
 
 #+end_src
-*** Testing in clojure
+** Testing in clojure
 Need an intro guide to testing your app with the repl?
 Say you're Repl'ing your app and you want to run a test on a function change. How do you do this?
 
 Some background.
 https://stackoverflow.com/questions/21294294/run-tests-from-clojure-repl-and-leiningen
-*** Last repl exception  https://clojuredocs.org/clojure.core/*e
-*** Exercise to visualize functional: 
+** Last repl exception  https://clojuredocs.org/clojure.core/*e
+** Exercise to visualize functional: 
 Have the user write code that takes records and tranforms it to legacy api.
 I.e. takes a map, and has to take a dynamic list of excel columns
 and put that data into a record in those columns, perhaps accommodating for different types:
 i.e. formulas dates and values.
 This should help the student understand the difference between creating data vs. walking over
 the data tree maintaining state.
-*** TODO Another exercise
+** TODO Another exercise
 
 ; figure out how get the following to return a simple list.
 
@@ -1039,8 +1050,8 @@ the data tree maintaining state.
 (genSummaryHeaders ["BTC" "EUR" "ETH" "GBP"] ["EUR"])
 ; Should return ("Date" "Summary" "BTC" "BTC Balance" ... same for other currencies "EUR fee")
 ; Or a vector
-** Spec & generative testing
-*** Spec and test.check guides
+* Spec & generative testing
+** Spec and test.check guides
 
 https://clojure.org/guides/spec
 https://clojure.org/guides/test_check_beginner
@@ -1050,7 +1061,7 @@ Hint: Rather first test functions with property tests and see where those simply
 
 See the following for generators
 https://github.com/clojure/test.check/blob/master/doc/generator-examples.md
-*** Difference between gen/fmap & gen/bind
+** Difference between gen/fmap & gen/bind
 
 
 gen/fmap. 
@@ -1118,7 +1129,7 @@ Note also how gen/let works
 [-17 -6 1 -14 0 -25 17 -21 -26 -6 -2 -13 -5 27 -7 19]
 
 #+end_src
-*** s/gen gotcha overriding map values
+** s/gen gotcha overriding map values
 
 #+begin_src clojure
 ;; In 'ns'
@@ -1130,7 +1141,7 @@ Note also how gen/let works
 [:field] #(gen/return :override2) ;; Works!
 })
 #+end_src
-*** A vector of something as a fn argument https://stackoverflow.com/questions/43230546/a-clojure-spec-that-matches-and-generates-an-ordered-vector-of-variable-length
+** A vector of something as a fn argument https://stackoverflow.com/questions/43230546/a-clojure-spec-that-matches-and-generates-an-ordered-vector-of-variable-length
 
 Example of Lack of expessivity out the box.
 
@@ -1157,8 +1168,8 @@ Then the example from comment in question, highlights further nuances
 (s/valid? ::pattern-3 ["string" ['af "5" :key]]) 
 ;; true !!! <- we are losing flatness 
 #+end_src
-*** Common problem with spec. Cryptic error messages
-**** Spec : nil TODO but why?
+** Common problem with spec. Cryptic error messages
+*** Spec : nil TODO but why?
      Check the REPL for more information
 
 #+begin_src clojure
@@ -1194,7 +1205,7 @@ You'll then see
 Execution error (ExceptionInfo) at dmg46664.etl/eval16178 (form-init16923224181612635633.clj:413).
 Unable to construct gen at: [:dmg46664.etl/date] for: :dmg46664.etl/date
 #+end_src
-**** class clojure.test.check.generators.Generator cannot be cast to class
+*** class clojure.test.check.generators.Generator cannot be cast to class
 Using (s/with-gen) with (gen/fmap) and not wrapping fmap in no-args function?
 
 #+begin_src 
@@ -1209,26 +1220,26 @@ Using (s/with-gen) with (gen/fmap) and not wrapping fmap in no-args function?
                  alpha.clj:  272  clojure.spec.alpha/gensub
                  alpha.clj:  296  clojure.spec.alpha/gen
 #+end_src
-**** Wrong number of args (1) passed to: clojure.spec.alpha/def
+*** Wrong number of args (1) passed to: clojure.spec.alpha/def
 Problem starting the REPL, 
 None of my own code in the stacktrace
 
 It turned out to be one of the standard defs. Wierd!? Why didn't it give me a line number?
 It had nothing to do with test.check.generator/gen vs spec.gen.alpha/gen
-*** Niggles
+** Niggles
 - In order to do generative testing, the generators will often need to be at the level of the
 container and not at the record level. Testing date aggregation code isn't so useful, if you
 never generate records that share the same date. 
 - This is mis-sold when learning about spec
 as if defining structures let's 
-*** Test check api issues overriding generators
+** Test check api issues overriding generators
 https://stackoverflow.com/questions/55436961/clojure-spec-override-check-generator-for-predicate
-*** Clojure spec for parsing https://juxt.pro/blog/posts/parsing-with-clojure-spec.html
+** Clojure spec for parsing https://juxt.pro/blog/posts/parsing-with-clojure-spec.html
 Doesn't scale because no tokenization.
-*** Look at plugin project to see another limitation of spec.
-*** What is rose-tree in test.check?
+** Look at plugin project to see another limitation of spec.
+** What is rose-tree in test.check?
 http://blog.guillermowinkler.com/blog/2015/04/12/verifying-state-machine-behavior-using-test-dot-check/
-*** Exercise. Write a generator that selects 2 values from a list (and then use it).
+** Exercise. Write a generator that selects 2 values from a list (and then use it).
 
 A wasteful implementation
 
@@ -1254,9 +1265,8 @@ But you can't use it in gen/let
    trade)
 #+end_src
 
-
-** Code snippets
-*** Be careful of macros
+* Code snippets
+** Be careful of macros
 #+begin_src clojure
 ;; works
 (let [f #(inc %)]
@@ -1264,11 +1274,11 @@ But you can't use it in gen/let
 ;; doesn't work
 (some-> 1 #(inc %))
 #+end_src
-*** Query and filter classpath
+** Query and filter classpath
 #+begin_src 
 (filter #(.contains % "clojure") (clojure.string/split (System/getProperty "java.class.path") #"\:"))
 #+end_src
-*** Get methods out of instance
+** Get methods out of instance
 #+begin_src clojure
 
 ; useful fucntion
@@ -1279,7 +1289,7 @@ But you can't use it in gen/let
       (map #(select-keys % [:name]))))
 
 #+end_src
-*** Get methods out of class
+** Get methods out of class
 https://clojuredocs.org/clojure.reflect/type-reflect
 #+begin_src clojure
 (use 'clojure.reflect)
@@ -1300,23 +1310,34 @@ https://clojuredocs.org/clojure.reflect/type-reflect
 ;;    [SIZE int]
 ;;    [TYPE java.lang.Class])
 #+end_src
-*** Print stacktrace
+** Print stacktrace
 (clojure.stacktrace/print-stack-trace (Exception. "foo"))
-** Tools + libs
-*** https://github.com/dgrnbrg/spyscope
-*** Scala interop lib https://t6.github.io/from-scala/
-*** https://github.com/noprompt/meander
-** Gotchas
-*** reduce or apply https://stackoverflow.com/questions/2891707/reduce-or-apply-using-logical-functions-in-clojure
-*** Autoresolution of keywords '::'  https://groups.google.com/forum/#!topic/clojure/i770QaIFiF0
-*** IllegalArgument with no help https://stackoverflow.com/questions/19590432/why-does-clojure-say-no-matching-method-for-an-illegal-argument
+* Tools + libs
+** https://github.com/dgrnbrg/spyscope
+** Scala interop lib https://t6.github.io/from-scala/
+** https://github.com/noprompt/meander
+* Gotchas
+** For actually lazy? http://blog.fogus.me/2010/01/22/de-chunkifying-Sequences-in-clojure/
+   https://stackoverflow.com/questions/10556421/is-for-not-actually-lazy-in-clojure
+** reduce or apply https://stackoverflow.com/questions/2891707/reduce-or-apply-using-logical-functions-in-clojure
+** Autoresolution of keywords '::'  https://groups.google.com/forum/#!topic/clojure/i770QaIFiF0
+** IllegalArgument with no help https://stackoverflow.com/questions/19590432/why-does-clojure-say-no-matching-method-for-an-illegal-argument
 - This could happen when passing nil to a primitive parameter in java.
 - Find this out by instrumenting the calling method in cider or equivalent.
-*** Equivalent https://clojureverse.org/t/1-2-equals-1-2/821/4
-** Don'ts (as recommended by Stuart)
-*** Threading of as-> https://stuartsierra.com/2018/07/15/clojure-donts-thread-as
-** Idiomatic clojure
-*** Depth first iteration and dispatch encapsulation hell!
+** Equivalent https://clojureverse.org/t/1-2-equals-1-2/821/4
+** Quoting and unbound function errors
+https://8thlight.com/blog/colin-jones/2012/05/22/quoting-without-confusion.html
+** Namespaced maps and destructuring
+   https://stackoverflow.com/questions/38024650/how-can-i-use-my-specs-for-their-intended-purposes-if-they-are-in-a-separate-nam
+   https://clojure.org/reference/reader#_map_namespace_syntax
+** Spec gotchas
+*** https://stackoverflow.com/questions/42530452/clojure-spec-validating-contents-of-maps
+*** https://quanttype.net/posts/2021-03-06-clojure-spec-and-untrusted-input.html
+*** https://ask.clojure.org/index.php/10356/unexpected-spec-failure-on-namespaced-keys-not-included-req?show=10356#q10356
+* Don'ts (as recommended by Stuart)
+** Threading of as-> https://stuartsierra.com/2018/07/15/clojure-donts-thread-as
+* Idiomatic clojure
+** Depth first iteration and dispatch encapsulation hell!
 If computer programs were artistic styles, then procedural programs would complete a drawing by tracing the outline, while clojure would build up a drawing from smaller shapes. Both methods would complete a drawing accurately.
 
 When building up a program from idiomatic clojure, be careful to slip back into procedural ways
@@ -1392,19 +1413,21 @@ NOTE this is only possible with Clojure's laziness model. Otherwise this pipelin
 
 Java streams can help as an equivalence but there be dragons  https://jaxenter.com/java-8-streams-lazy-136183.html
 https://4comprehension.com/java-stream-api-was-broken-before-jdk10/
-
-** Interesting reads
-*** TODO Java time https://nextjournal.com/schmudde/java-time
-*** Transient data structures https://clojure.org/reference/transients
-*** Missing elegant API for manipulating immutable data structures http://nathanmarz.com/blog/clojures-missing-piece.html
-*** Clojure workflow tips https://clojureverse.org/t/share-the-nitty-gritty-details-of-your-clojure-workflow/1208/23
-*** Reloading woes https://lambdaisland.com/blog/2018-02-09-reloading-woes
-*** Nested hash map anti pattern? (Only required in rare circumstances) https://hackernoon.com/nested-maps-considered-harmful-143add482247
-*** Nil punning https://lispcast.com/nil-punning/
-*** Interesting threading https://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/
-*** Maps vs records  http://discuss.purelyfunctional.tv/t/when-to-use-map-vs-defrecord/933
-*** Keywords vs Symbols https://blog.robphoenix.com/clojure/notes-on-clojure-keywords-symbols/
-*** gen-class
+* Interesting reads
+** Is data still a good idea? https://news.ycombinator.com/item?id=11945722
+** Funding? https://www.clojuriststogether.org/news/q3-2021-survey-results/
+** Performance tuning https://www.youtube.com/watch?v=5BKn4rUoggg
+** Java time https://nextjournal.com/schmudde/java-time
+** Transient data structures https://clojure.org/reference/transients
+** Missing elegant API for manipulating immutable data structures http://nathanmarz.com/blog/clojures-missing-piece.html
+** Clojure workflow tips https://clojureverse.org/t/share-the-nitty-gritty-details-of-your-clojure-workflow/1208/23
+** Reloading woes https://lambdaisland.com/blog/2018-02-09-reloading-woes
+** Nested hash map anti pattern? (Only required in rare circumstances) https://hackernoon.com/nested-maps-considered-harmful-143add482247
+** Nil punning https://lispcast.com/nil-punning/
+** Interesting threading https://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/
+** Maps vs records  http://discuss.purelyfunctional.tv/t/when-to-use-map-vs-defrecord/933
+** Keywords vs Symbols https://blog.robphoenix.com/clojure/notes-on-clojure-keywords-symbols/
+** gen-class
 Overview
 https://kotka.de/blog/2010/02/gen-class_how_it_works_and_how_to_use_it.html
 More on gen-class
@@ -1414,30 +1437,30 @@ Official documentation with examples!
 https://clojure.org/reference/compilation
 
 See class loading issues
-*** Class loading issues with generated classes
+** Class loading issues with generated classes
 https://medium.com/@minfuyang/about-java-classloader-dynamic-class-generation-in-apache-spark-case-43a6d492c78f
-*** Subclassing https://puredanger.github.io/tech.puredanger.com/2011/08/12/subclassing-in-clojure/
-*** Proxying abstract classes https://stackoverflow.com/questions/53090419/clojure-proxy-implementing-abstract-class-with-protected-constructor
-*** Logging https://juxt.pro/blog/posts/logging.html
-*** Clojure safety information in the following comments http://clojuredocs.org/clojure.core/read
-*** No lazy vectors in clojure https://stackoverflow.com/questions/3083535/clojure-lazy-sequences-that-are-vectors
-*** Macro expansion warning https://ask.clojure.org/index.php/9015/spec-error-on-simple-threading-in-clj-cljs
-*** Datafy & Nav http://corfield.org/blog/2018/12/03/datafy-nav
+** Subclassing https://puredanger.github.io/tech.puredanger.com/2011/08/12/subclassing-in-clojure/
+** Proxying abstract classes https://stackoverflow.com/questions/53090419/clojure-proxy-implementing-abstract-class-with-protected-constructor
+** Logging https://juxt.pro/blog/posts/logging.html
+** Clojure safety information in the following comments http://clojuredocs.org/clojure.core/read
+** No lazy vectors in clojure https://stackoverflow.com/questions/3083535/clojure-lazy-sequences-that-are-vectors
+** Macro expansion warning https://ask.clojure.org/index.php/9015/spec-error-on-simple-threading-in-clj-cljs
+** Datafy & Nav http://corfield.org/blog/2018/12/03/datafy-nav
 https://ask.clojure.org/index.php/8550/can-someone-explain-the-arguments-to-nav
-*** Clojure slow startup time http://clojure-goes-fast.com/blog/clojures-slow-start/
+** Clojure slow startup time http://clojure-goes-fast.com/blog/clojures-slow-start/
 Follow up and patch here
 https://groups.google.com/g/clojure/c/jNWf19LvszU/m/iKZSKVLBAgAJ
 https://github.com/forax/clojure
-*** Java decompilation http://clojure-goes-fast.com/blog/introspection-tools-java-decompilers/
-*** Deps & Cli limitations https://clojureverse.org/t/how-to-effectively-use-deps-cli/4787/4
+** Java decompilation http://clojure-goes-fast.com/blog/introspection-tools-java-decompilers/
+** Deps & Cli limitations https://clojureverse.org/t/how-to-effectively-use-deps-cli/4787/4
 And supplementations https://github.com/clojure/tools.deps.alpha/wiki/Tools
-*** Specter vs Transducer code sample https://gist.github.com/borkdude/5f9a4ae710217e893a9462ff90b6cac3
-*** Decompiling Clojure (3 parts)  http://blog.guillermowinkler.com/blog/2014/04/13/decompiling-clojure-i/
-*** Equivalent of node.js non-blocking? https://stackoverflow.com/questions/24980014/can-i-make-a-fully-non-blocking-backend-application-with-http-kit-and-core-async
-*** TODO Datomic vs GraphQL https://www.indiehackers.com/post/a-time-saving-alternative-for-graphql-da674d0961
+** Specter vs Transducer code sample https://gist.github.com/borkdude/5f9a4ae710217e893a9462ff90b6cac3
+** Decompiling Clojure (3 parts)  http://blog.guillermowinkler.com/blog/2014/04/13/decompiling-clojure-i/
+** Equivalent of node.js non-blocking? https://stackoverflow.com/questions/24980014/can-i-make-a-fully-non-blocking-backend-application-with-http-kit-and-core-async
+** TODO Datomic vs GraphQL https://www.indiehackers.com/post/a-time-saving-alternative-for-graphql-da674d0961
 https://maxweber.github.io/blog/2019-06-15-approaching-the-web-after-tomorrow-part-3
 https://maxweber.github.io/blog/2019-08-05-introducing-db-view-part-2
-*** Flatten, apply concat & friends http://chouser.n01se.net/apply-concat/
+** Flatten, apply concat & friends http://chouser.n01se.net/apply-concat/
 And some playing around
 #+begin_src clojure
 (def y
@@ -1449,8 +1472,9 @@ And some playing around
 (map type y) ;; => (clojure.lang.StringSeq clojure.lang.StringSeq clojure.lang.StringSeq)
 (apply concat y)
 #+end_src
-*** TODO What React alone vs Reframe https://purelyfunctional.tv/article/react-vs-re-frame/
-*** Navigating tree comparison Java and Clojure https://insideclojure.org/images/j-treevisit-pdf.pdf
+** TODO What React alone vs Reframe https://purelyfunctional.tv/article/react-vs-re-frame/
+** Navigating tree comparison Java and Clojure https://insideclojure.org/images/j-treevisit-pdf.pdf
+** Transducers for xpath / tree navigation https://www.juxt.pro/blog/xpath-in-transducers
 ** Cider
 *** cider hook http://root42.blogspot.com/2014/08/how-to-automatically-refresh-cider-when.html
 *** Making clojure lazier & streams https://clojure.org/reference/lazy
@@ -1504,7 +1528,7 @@ The naive way that a java programmer would code:
 #+end_src
 ** Scope capture https://vimeo.com/237220354
 ** Clojure for ETLs https://www.youtube.com/watch?v=oOON--g1PyU
-** Introduction to CS and Reagent https://www.youtube.com/watch?v=wq6ctyZBb0A
+** Introduction to CS and Reagent https://www.yqqqoutube.com/watch?v=wq6ctyZBb0A
 * Improvements
 ** Ensure that stacktrace window is colour coded obvious to communicate whether it's a runtime error or compile time error.
 ** Thread about how to compensate for the lack of dot https://www.reddit.com/r/Clojure/comments/6f6cq2/how_to_compensate_for_clojures_lack_of_dot/
@@ -1512,5 +1536,34 @@ The naive way that a java programmer would code:
 ** To clojurephant
 ; (in [1 2] 1) ; like .contains
 ; (expand-case) to expand out case test-contants.
+* Failed experiments
+** cond%
 
+   cond%1 just means cond% experiment 1 in the following
 
+  #+begin_src clojure
+    
+    ;; TODO should imp [cond body]* as argument
+    (defmacro cond%1 [cond outcome]
+      (let [g (gensym)
+            g_cond (clojure.walk/postwalk-replace {'% g} cond)
+            g_outcome (clojure.walk/postwalk-replace {'% g} outcome)]
+        `(fn [~g] (if ~g_cond ~g_outcome ~g)))
+      )
+    
+    (-> :a
+        ((cond%1 (= % :a) :b)))
+    ;; becomes =>
+    (-> :a
+        (#(if (= % :a) :b %)))
+    
+    ;; The following is not possible NOTE
+    (-> :a
+        (cond%1 (= % :a) :b))
+    
+    
+    
+  #+end_src
+ However, that's not a big enough improvement!
+ And given the ideal is not possible, I think it's a failure for now.
+ 

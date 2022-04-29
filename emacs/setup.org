@@ -3,6 +3,7 @@
 https://formulae.brew.sh/cask/emacs#default
 
 brew install --cask emacs
+Be mindful of https://github.com/syl20bnr/spacemacs/issues/12009
    
 Clone spacemacs
 https://www.spacemacs.org/#

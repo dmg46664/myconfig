@@ -335,6 +335,7 @@ Cmd+] and Cmd+[ navigates among split panes in order of use.
 Cmd+D Close
 Shift+Tab Grow selection one word left
 Tab Grow selection one word right
+Cmd+Option+/ open recent directories (look at session menu)
 ** Logging
    https://gitlab.com/gnachman/iterm2/-/issues/6915
    Might have had to install shell integration as per terminal notify because it did not start populating the directory immediately.
