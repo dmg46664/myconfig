@@ -41,6 +41,8 @@ https://youtu.be/ONHEDj3kWrE?t=198
 | toggle-truncate-lines | Word wrap                                                                                                                           |
 ** M-o M-o               font-lock-fontify-block or reset/refresh syntax highlighting in the current block.
 ** toggle-debug-on-error
+** TODO Unbelievable
+https://emacs.stackexchange.com/questions/28731/easiest-way-to-downgrade-a-package-installed-via-melpa
 * Spacemacs
 Helm https://tuhdo.github.io/helm-intro.html
 * Other
@@ -58,6 +60,10 @@ Helm https://tuhdo.github.io/helm-intro.html
 ** M-m f y    Copy file path                                      :spacemacs:
 ** helm-find-file, C-c X   Open a file with default application
 * Helm
+** In file selector (M-m f f): M-m (pattern mark), C-space (mark seletion, (M-D) Close multiple buffers
+https://stackoverflow.com/a/23170018/93074
+May have to go on Mac > Settings > Keyboard > Input sources, delected Select the previous input source.
+Rely on function button.
 ** C-u C-c C-k / C-c TAB  | From the helm file chooser buffer (M-m f f) this will select the full file path to the kill ring  :navigation:
 https://emacs.stackexchange.com/questions/19819/how-can-i-use-helm-file-finder-to-copy-a-file-path-to-a-buffer
 ** helm find files recursively
@@ -246,8 +252,7 @@ Remember to hover over commands to get highlighting about them.
 
 Some basics
 https://www.gnu.org/software/emacs/manual/html_node/eintr/car-cdr-_0026-cons.html
-
-* Clojure Coding
+* Cider/Clojure Coding
 ** M-;                  Add or remove comments  :coding:
 https://www.gnu.org/software/emacs/manual/html_node/emacs/Comment-Commands.html
 ** M-m s j              helm-jump-in-buffer or show functions in file.
@@ -256,6 +261,8 @@ https://clojureverse.org/t/autoformatting-clojure-code/1243
 *
 ** C-;
 ** C-u C-M-x            instrument/debug function
+** C-c C-s b            link cider session to current buffer.
+https://docs.cider.mx/cider/usage/managing_connections.html
 * Magit
 ** x  Rest current branch to selection
    https://magit.vc/manual/magit/Resetting.html
@@ -308,7 +315,14 @@ Remember to expand out the subtree to fix the problems.
 Useful reading
 https://magit.vc/manual/magit/Resolving-Conflicts.html
 * Gmail
+  Windows:
   Windows-Shift-? for help
+  On a mac:
+  Shift-?
+
+  Search dates:
+  after:2008/4/25 before:2008/4/29 
+  https://www.rightinbox.com/blog/how-to-search-gmail-by-date#:~:text=To%20locate%20emails%20received%20before,MM%2FDD%20and%20press%20Enter.
 * OSX
 ** Turn off screen
    pmset displaysleepnow
@@ -343,6 +357,9 @@ Cmd+Option+/ open recent directories (look at session menu)
    https://stackoverflow.com/questions/30016716/how-do-i-make-iterm-terminal-notify-me-when-a-job-process-is-complete
    Ensure than you go to OSX notifications and enable iterm
    Options-Command-a
+** Coding
+../src = ${PWD:h}/src
+https://unix.stackexchange.com/questions/620959/zsh-bash-expand-relative-paths-in-command-arguments-using-logical-directory-str
 * Non emacs infrastructure like tasks
 ** Making a new brew formulae
 https://github.com/Homebrew/brew/blob/master/docs/Formula-Cookbook.md

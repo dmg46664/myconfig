@@ -119,6 +119,26 @@ https://github.com/romkatv/powerlevel10k
 Some basics
 https://scriptingosx.com/2019/06/moving-to-zsh-part-3-shell-options/
 
+Tutorial
+https://www.youtube.com/watch?v=eLEo4OQ-cuQ
+brew install zsh-syntax-highlighting
+
+writing completions
+https://github.com/zsh-users/zsh-completions/blob/master/zsh-completions-howto.org
+More helpful
+https://unix.stackexchange.com/questions/239528/dynamic-zsh-autocomplete-for-custom-commands
+BB completions
+https://github.com/babashka/babashka/wiki/Shell-completion
+
+#+begin_src sh
+fpath+=(~/.zsh_completions)
+autoload bashcompinit && bashcompinit
+autoload -Uz compinit && compinit
+zstyle ':completion:*' menu select
+#+end_src
+** iterm2
+natural text editing
+https://apple.stackexchange.com/a/293988/209569
 ** More scoop installs
 https://github.com/lukesampson/scoop/issues/335
 scoop bucket add extras
@@ -177,3 +197,8 @@ Geforce Experience
 Error when installing latest drivers
  https://downloadcenter.intel.com/download/30581/Intel-Killer-Performance-Suite
 
+
+ 
+** Utilities
+   Clean up disk files https://dev.yorhel.nl/ncdu
+   VPN https://tailscale.com/

@@ -514,12 +514,20 @@ and temp solution:
 ** Localstack
    https://docs.localstack.cloud/aws/apigatewayv2/
 ** AWS
-*** Articles and how tos
+*** Uncategorised and interesting articles
     AWS CDK vs Terraform
     https://www.metosin.fi/blog/comparing-aws-cdk-and-terraform/
 
-    websockets with api gateway
-    https://tsh.io/blog/implementing-websocket-with-aws-lambda-and-api-gateway/
+    Interesting comparing api gateway options
+    https://blog.cloudcraft.co/comparing-api-gateways-on-aws/
+
+    Hard limits on AWS lambda
+    https://clojurians.slack.com/archives/C029PTWD3HR/p1635687805117000?thread_ts=1635685522.110600&cid=C029PTWD3HR
+
+    AWS Autocompletion.
+    https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html#cli-command-completion-linux
+
+    
 *** Installing and using CDK & SAM & Localstack & CDK local
     Getting started
     https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html
@@ -552,7 +560,11 @@ and temp solution:
 
     Install aws-local (wrapper around aws for localstack)
     https://github.com/localstack/awscli-local
-    pip3 install awscli-loca
+    pip3 install awscli-local
+
+    And then another long tutorial
+    https://www.youtube.com/watch?v=I_ftyDeHffE
+
     
 **** TODO Problems during brew install awscli
      https://github.com/Homebrew/homebrew-core/issues/100320
@@ -622,14 +634,294 @@ awslocal lambda invoke --function-name samsonBroker output.txt
  #+begin_src  bash
    awslocal logs describe-log-groups --endpoint-url http://localhost:4566
  #+end_src
- 
+*** CDK and apigateway
+
+    Reference
+    https://docs.aws.amazon.com/cdk/api/v1/docs/@aws-cdk_aws-apigateway.RestApi.html
+
+    To understand resources and methods, see root
+    https://docs.aws.amazon.com/cdk/api/v1/docs/@aws-cdk_aws-apigateway.IRestApi.html
+
+    Good tutorial
+    https://bobbyhadz.com/blog/aws-cdk-api-gateway-example
+
+    Converting between json and yaml
+    https://jennapederson.com/blog/2021/5/17/flip-your-cloudformation-template-from-json-to-yaml/
+    brew install cfn-flip
+    
+    See bootstrap to template as alternative.
+    https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html
+
+    What is bootstrapping
+    https://www.youtube.com/watch?v=peE3MEWa1eU
+    
+**** DONE Invalid lambda response received: Lambda returned <class 'NoneType'> instead of dict
+     CLOSED: [2022-04-30 Sat 12:49]
+     Did you follow the whole tutorial in terms of setting up the api-gateway
+     properly?
+     
+     Written answer on this issue
+     https://stackoverflow.com/questions/70686822/why-is-my-aws-lambda-function-ending-before-finishing-with-no-timeout-message
+
+     Interesting for general debugging, but not helpful in this case.
+     https://fathomtech.io/blog/http-api-error-handling-for-aws-lambda-and-api-gateway/
+
+     Same issue, but with more leads?
+     https://stackoverflow.com/questions/65676155/sam-local-start-api-go-lambda-returns-502-internal-server-error-on-linux-ubunt
+
+*** Bootstrapping CDK
+
+Once per environment, there is a need for bootstrapping
+https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html
+
+To see profile use
+#+begin_src bash
+  aws configure list
+  echo $AWS_PROFILE
+  export AWS_PROFILE=yourusername
+#+end_src
+
+
+#+begin_src bash
+  cdk synth
+  cdk bootstrap aws://<amazon-id>:eu-west-2
+#+end_src
+
+**** DONE Failed access denied.
+CLOSED: [2022-06-01 Wed 13:35]
+
+#+begin_src bash
+failed bootstrapping: AccessDenied: User: xxx
+is not authorized to perform: cloudformation:DescribeStacks on resource:
+yyy
+because no identity-based policy allows the cloudformation:DescribeStacks action
+#+end_src
+
+Question
+https://stackoverflow.com/questions/34237218/user-is-not-authorized-to-perform-cloudformationcreatestack
+Answer
+https://stackoverflow.com/a/45447236/93074
+
+#+begin_src bash
+  User: arn:aws:iam::yyy:user/dmg-access is not authorized to perform: cloudformation:DescribeStacks on resource: arn:aws:cloudformation:eu-west-2:yyy:stack/CDKToolkit/* because no identity-based policy allows the cloudformation:DescribeStacks action
+#+end_src
+
+So we go through the process of adding permissions...
+
+#+begin_src json
+  {
+            "Sid": "Stmt1449904348000",
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:CreateStack",
+                "cloudformation:CreateChangeSet",
+                "cloudformation:ListStacks",
+                "cloudformation:UpdateStack",
+                "cloudformation:DescribeChangeSet",
+                "cloudformation:ExecuteChangeSet",
+                "cloudformation:DescribeStacks",
+                "cloudformation:DescribeStackEvents",
+                "cloudformation:DeleteStack",
+                "s3:CreateBucket",
+                "s3:DeleteBucket",
+                "s3:ListAllMyBuckets",
+                "s3:GetEncryptionConfiguration",
+                "s3:PutEncryptionConfiguration",
+                "s3:PutBucketVersioning",
+                "s3:PutBucketPublicAccessBlock",
+                "s3:GetBucketPolicy",
+                "s3:PutBucketPolicy",
+                "s3:DeleteBucketPolicy",
+                "iam:GetRole",
+                "iam:CreateRole",
+                "ssm:PutParameter",
+                "ssm:GetParameter",
+                "ssm:GetParameters",
+                "iam:DeleteRole",
+                "iam:DeleteRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:AttachRolePolicy",
+                "iam:PutRolePolicy",
+                "ssm:DeleteParameter",
+                "ecr:CreateRepository",
+                "ecr:ReplicateImage",
+                "ecr:DeleteRepository",
+                "ecr:SetRepositoryPolicy",
+                "ecr:DescribeRepositories"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+#+end_src
+
+#+begin_src bash
+02:40:10 | CREATE_FAILED        | AWS::S3::Bucket       | StagingBucket
+cdk-hnb659fds-assets-245271526359-eu-west-2 already exist
+#+end_src
+https://serverfault.com/questions/899704/aws-s3-bucket-name-already-exists
+https://github.com/aws/aws-cdk/issues/986
+
+Delete cloud formation stack from AWS console.
+5 
+#+begin_src bash
+  aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE
+
+  aws cloudformation delete-stack --stack-name my-stack
+
+  aws s3api list-buckets --query "Buckets[].Name"
+#+end_src
+
+https://docs.aws.amazon.com/cli/latest/reference/s3api/list-buckets.html
+
+https://stackoverflow.com/questions/62972959/aws-cdk-error-bucket-policy-already-exists-on-bucket
+
+More issues for
+#+begin_src bash
+    15:31:44 | CREATE_FAILED        | AWS::S3::Bucket       | StagingBucket
+  API: s3:PutPublicAccessBlock Access Denied
+  Environment xxx failed bootstrapping: Error: The stack named CDKToolkit failed creation, it may need to be manually deleted from the AWS console: ROLLBACK_COMPLETE: API: s3:PutPublicAccessBlock Access Denied
+    at prepareAndExecuteChangeSet (/opt/homebrew/lib/node_modules/aws-cdk/lib/api/deploy-stack.ts:385:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at /opt/homebrew/lib/node_modules/aws-cdk/lib/cdk-toolkit.ts:575:24
+    at async Promise.all (index 0)
+    at CdkToolkit.bootstrap (/opt/homebrew/lib/node_modules/aws-cdk/lib/cdk-toolkit.ts:572:5)
+#+end_src
+
+Solution here:
+https://stackoverflow.com/questions/53346275/amazon-s3-bucket-policy-public-access-denied
+Example at bottom CLI:
+https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3control/put-public-access-block.html
+
+The following didn't work, ended up using the user interface console:
+#+begin_src bash
+  aws s3control put-public-access-block --public-access-block-configuration '{"BlockPublicAcls": true, "IgnorePublicAcls": true, "BlockPublicPolicy": true, "RestrictPublicBuckets": true}'
+#+end_src
+
+https://github.com/aws/aws-cdk/issues/17177
+https://github.com/aws/aws-cdk/issues/5028
+https://github.com/aws/aws-cdk/issues/8724
+https://github.com/aws/aws-cdk/commit/2596ef7a99c8eeba79609d60144842f5d33fdf9b
+
+Maybe delete the stack? Not the same error message.
+https://ketuma.com/blog/cdk-bootstrap-error-and-how-to-fix-it/
+However when I look on Cloudformation, there is no stack (probably rolled back).
+
+Interesting? TODO Tried understanding what was written but unfruitful so far.
+https://stackoverflow.com/questions/43033730/how-do-i-debug-an-s3createbucket-access-denied-from-cloudformation
+- Can't find Managed... in my case.
+
+Looking at stacktrace.
+https://github.com/aws/aws-cdk/blob/master/packages/aws-cdk/lib/api/deploy-stack.ts#L385
+https://github.com/aws/aws-cdk/blob/master/packages/aws-cdk/lib/cdk-toolkit.ts#L572
+
+Informative
+https://github.com/localstack/aws-cdk-local/issues/36
+
+It was incredibly helpful to run verbose
+#+begin_src
+  cdk -v ....
+#+end_src
+
+Perhaps it's the following problem?? The only confusing bit is if it was this, why when I added
+additional permissions to the one policy I am using did it progress further?
+Not obvious...
+#+begin_src
+  Using default execution policy of 'arn:aws:iam::aws:policy/AdministratorAccess'. Pass '--cloudformation-execution-policies' to customize.
+#+end_src
+Nope, this didn't work.
+
+Also in the console of the policy editor:
+#+begin_src
+  Ln 20, Col 16Invalid Action: The action s3:SetBucketEncryption does not exist. Learn more 
+  Ln 24, Col 16Invalid Action: The action s3:PutPublicAccessBlock does not exist. Learn more 
+#+end_src
+
+This might be the answer!!!!
+https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutPublicAccessBlock.html
+#+begin_src
+  To use this operation, you must have the s3:PutBucketPublicAccessBlock permission.
+#+end_src
+even though the error is `StagingBucket API: s3:PutPublicAccessBlock Access Denied`
+
+PAY ATTENTION TO THE ERROR MESSAGES IN THE POLICY EDITOR!
+
+**** DONE Problems: No credentials.
+CLOSED: [2022-05-21 Sat 17:26]
+
+Just need to set AWS_PROFILE
+
+#+begin_src
+  Environment aws://.../eu-west-2 failed bootstrapping: Error: Need to perform AWS calls for account ..., but no credentials have been configured
+    at SdkProvider.forEnvironment (/opt/homebrew/lib/node_modules/aws-cdk/lib/api/aws-auth/sdk-provider.ts:179:46)
+    at Function.lookup (/opt/homebrew/lib/node_modules/aws-cdk/lib/api/bootstrap/deploy-bootstrap.ts:31:18)
+#+end_src
+
+https://github.com/aws/aws-cdk/issues/6947
+
+... but in my case there is a generated file in there with `aws_access_key_id` and `aws_secret_access_key`.
+
+??? https://aws.amazon.com/blogs/devops/cdk-credential-plugin/
+
+*** Websockets and api-gateway & CDK
+
+    CDK setup for api-gateway. Clear example.
+    https://eventbus-cdk.workshop.aws/en/04-api-gateway-service-integrations/02-websocket-api/websocket-apis.html
+    and references video https://www.youtube.com/watch?v=9As_ZIjUGmY
+
+    
+    websockets with api gateway
+    https://tsh.io/blog/implementing-websocket-with-aws-lambda-and-api-gateway/
+
+    websocket, apigatewayv2 & CDK but NOTE v1 !!!
+    https://aws.plainenglish.io/setup-api-gateway-websocket-api-with-cdk-c1e58cf3d2be
+
+    v2 In aws-cdk, not aws-cdk-lib ... why?
+    https://docs.aws.amazon.com/cdk/api/v2/docs/aws-apigatewayv2-alpha-readme.html
+    installation instructions
+    https://www.npmjs.com/package/@aws-cdk/aws-apigatewayv2
+
+
+    Get on the right version between the two libraries.
+    #+begin_src bash
+      npm install aws-cdk-lib@"2.22.0"
+      npm i @aws-cdk/aws-apigatewayv2-alpha
+      npm i @aws-cdk/aws-apigatewayv2-integrations-alpha
+    #+end_src
+
+    Good chat app example
+    referencing https://github.com/aws-samples/multi-region-websocket-api/blob/main/cdk/lib/websockets-blog-stack.ts
+    and original blog https://aws.amazon.com/blogs/compute/building-serverless-multi-region-websocket-apis/
+
+    
+    Useful? Running v2 of api-gateway
+    https://stackoverflow.com/questions/69351133/aws-sam-local-api-call-to-return-version-2-of-the-event
+
+    Stages and websockets
+    https://docs.aws.amazon.com/apigateway/latest/developerguide/websocket-api-stages.html
+
+*** Websockets official guides & references
+    
+    Official AWS dev guidelines
+    https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api.html
+    See all subsections! About, Develop, Publish...
+
+
+    Invoke:
+    https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-how-to-call-websocket-api-wscat.html
+    How to connect and @connections
+    https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-how-to-call-websocket-api-connections.html
+
+
+    "template reference" or what's in the payload.
+    https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-mapping-template-reference.html
+    
+    
 *** Lambda comparison methods, further reading/viewing
 
 Comparison
 https://sanderknape.com/2018/02/comparing-aws-sam-with-serverless-framework/#:~:text=The%20biggest%20difference%20is%20that,creating%20a%20serverless%20HTTP%20endpoint.
 
-    
-https://github.com/aws-samples/simple-websockets-chat-app
 
 *** SAM
 
@@ -663,9 +955,44 @@ https://github.com/aws-samples/simple-websockets-chat-app
    5 use cases
    https://www.youtube.com/watch?v=K-nnzpgrzwM
     
+**** TODO Doesn't work with websockets
+     https://github.com/aws/aws-sam-cli/issues/896
+
+     Workaround:
+     https://github.com/JamesKyburz/aws-lambda-ws-server
+
+     Or:
+     https://www.serverless.com/blog/api-gateway-websockets-example
+     Or:
+     https://onexlab-io.medium.com/serverless-localstack-lambda-53fd8d46983
+     Create a doctor image for localstack https://youtu.be/BroSSrwQWKM?t=163
+
+     SERVERLESS doesn't support localstack websockets. See bottom:
+     https://github.com/localstack/serverless-localstack/issues/82
+
+
+     Run serverless
+     https://github.com/vendia/serverless-express
+     
+     
 *** Serverless Framework (Alternative to CDK and cloudformation?)
     
     NPM https://www.npmjs.com/package/serverless-offline
     Github https://github.com/dherault/serverless-offline
     Tutorial https://www.youtube.com/watch?v=ul_85jfM0oo
     Youtube https://www.youtube.com/watch?v=dMVfqCTzuwk
+** Browser automation
+<2022-05-28 Sat> https://blog.logrocket.com/playwright-vs-puppeteer/
+*** Playwright
+<2022-05-30 Mon> Remember to call .count on locators to assess number of matches.
+<2022-05-30 Mon> Pay close attention to logging while using locators.
+<2022-05-30 Mon> In clojure `defp` nbb macro should return type in question.
+** Interesting stacks/services/tools
+*** Silverblue
+<2022-05-07 Sat> https://clojurians.slack.com/archives/C0PME9N9X/p1605895058020800
+
+https://www.redhat.com/sysadmin/beginners-guide-silverblue
+*** Getstream.io
+https://getstream.io/chat/docs/react-native/querying_channels/
+** Software principles
+<2022-05-30 Mon> John Carmack QuakeCon 2012 Social interactions https://youtu.be/wt-iVFxgFWk?t=1929

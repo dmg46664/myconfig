@@ -928,14 +928,23 @@ https://stackoverflow.com/questions/3337888/clojure-named-arguments
 * Forum topics
 ** Clojure spec greedy operators https://clojurians-log.clojureverse.org/clojure-spec/2018-01-04
 * Tutorials
-Great tutorial in coverage, but a little tedious is mode and development.
-https://www.youtube.com/watch?v=ciGyHkDuPAE
+** Converting an app to docker tools.build https://www.youtube.com/watch?v=EYG4LrAa6XQ
+** Sean corefield working at REPL https://www.youtube.com/watch?v=gIoadGfm5T8
+** nbb https://www.youtube.com/watch?v=_-G9EKaAyuI
+** Coverage of what clojure is https://www.youtube.com/watch?v=ciGyHkDuPAE
 ** Protocols! Must watch https://www.youtube.com/watch?v=kQhOlWXXl2I    
 ** TODO Datomic migration  https://grishaev.me/en/pg-to-datomic/
 ** TODO Building an ANKI clone using datomic https://www.youtube.com/watch?v=QrSnTIHotZE
 ** Literate devops https://www.youtube.com/watch?v=dljNabciEGg
 ** Transducers https://lambdaisland.com/episodes/transducers
+** Training https://exercism.org/tracks/clojure
+* Babashka
+** Aws bb autocomplete https://github.com/jeroenvandijk/matryoshka
+** Docker client https://github.com/lispyclouds/contajners
+* NBB
+** Replit NBB https://replit.com/@eccentric-j/Node-Babashka-ClojureScript-Template?v=1
 * Clojurescript
+** shadow karma testing https://www.arthurbrrs.me/testing-the-dom-using-shadow-and-reagent.html
 ** Re-frame tutorial https://day8.github.io/re-frame/dominoes-live/
 ** Reagent docs https://cljdoc.org/d/reagent/reagent/1.0.0-alpha2/doc/tutorials/creating-reagent-components
 ** CLJS JS interop     https://lwhorton.github.io/2018/10/20/clojurescript-interop-with-javascript.html 
@@ -1264,7 +1273,6 @@ But you can't use it in gen/let
                          })]
    trade)
 #+end_src
-
 * Code snippets
 ** Be careful of macros
 #+begin_src clojure
@@ -1313,9 +1321,13 @@ https://clojuredocs.org/clojure.reflect/type-reflect
 ** Print stacktrace
 (clojure.stacktrace/print-stack-trace (Exception. "foo"))
 * Tools + libs
+** TODO https://github.com/cloverage/cloverage
+** TODO Paredit https://www.youtube.com/watch?v=K0Tsa3smr1w
 ** https://github.com/dgrnbrg/spyscope
 ** Scala interop lib https://t6.github.io/from-scala/
 ** https://github.com/noprompt/meander
+** Diffing code https://github.com/nextjournal/autochrome
+** Clerk functions viewer https://www.loom.com/share/e61faf144a1c4feaac44d7ad9873366c
 * Gotchas
 ** For actually lazy? http://blog.fogus.me/2010/01/22/de-chunkifying-Sequences-in-clojure/
    https://stackoverflow.com/questions/10556421/is-for-not-actually-lazy-in-clojure
@@ -1334,8 +1346,14 @@ https://8thlight.com/blog/colin-jones/2012/05/22/quoting-without-confusion.html
 *** https://stackoverflow.com/questions/42530452/clojure-spec-validating-contents-of-maps
 *** https://quanttype.net/posts/2021-03-06-clojure-spec-and-untrusted-input.html
 *** https://ask.clojure.org/index.php/10356/unexpected-spec-failure-on-namespaced-keys-not-included-req?show=10356#q10356
-* Don'ts (as recommended by Stuart)
+* Opinionated Don'ts
 ** Threading of as-> https://stuartsierra.com/2018/07/15/clojure-donts-thread-as
+** Core Async after watching promises https://www.youtube.com/watch?v=yJxFPoxqzWE
+*** Prep JS Promises, callbacks, async & await: https://www.youtube.com/watch?v=PoRJizFvM7s
+*** Rebuttal https://mauricio.szabo.link/blog/2020/06/11/clojurescript-vs-clojure-core-async/
+Discovered https://github.com/babashka/nbb/issues/26#issuecomment-1116688001
+*** See todolist for more evidence.
+*** Testing core.async https://stackoverflow.com/questions/30766215/how-do-i-unit-test-clojure-core-async-go-macros
 * Idiomatic clojure
 ** Depth first iteration and dispatch encapsulation hell!
 If computer programs were artistic styles, then procedural programs would complete a drawing by tracing the outline, while clojure would build up a drawing from smaller shapes. Both methods would complete a drawing accurately.
@@ -1414,6 +1432,8 @@ NOTE this is only possible with Clojure's laziness model. Otherwise this pipelin
 Java streams can help as an equivalence but there be dragons  https://jaxenter.com/java-8-streams-lazy-136183.html
 https://4comprehension.com/java-stream-api-was-broken-before-jdk10/
 * Interesting reads
+** TODO Speed up webapp https://www.juxt.pro/blog/clojurescript-app-performance
+** TODO Monorepo https://corfield.org/blog/2021/02/23/deps-edn-monorepo/
 ** Is data still a good idea? https://news.ycombinator.com/item?id=11945722
 ** Funding? https://www.clojuriststogether.org/news/q3-2021-survey-results/
 ** Performance tuning https://www.youtube.com/watch?v=5BKn4rUoggg
@@ -1484,7 +1504,6 @@ Easy start with: https://medium.com/@pwentz/laziness-in-clojure-3d83645bf7f3
 More concisely: https://insideclojure.org/2015/01/02/sequences/
 
 Then to pick apart the details of types: https://stackoverflow.com/questions/44095400/how-to-understand-clojures-lazy-seq/44102122
-
 * Videos
 ** TODO Task : Make a doubly nested for loop, calling on a Java API (XLS) spreadsheet, to take a data structure and save it to tables.
 https://github.com/mjul/docjure
@@ -1536,6 +1555,16 @@ The naive way that a java programmer would code:
 ** To clojurephant
 ; (in [1 2] 1) ; like .contains
 ; (expand-case) to expand out case test-contants.
+* Thoughts?
+** Side-effects and pure functions.
+Is relying on the following var in subsequent functions impure?
+#+begin_src clojure
+  (def handlers {:connection handler)
+#+end_src
+If it is, then there's an irony to that.
+Because it's just pointing at functions in the same way that all
+the language is based on.
+Why would you do it? See the daemon I'm writing...
 * Failed experiments
 ** cond%
 
