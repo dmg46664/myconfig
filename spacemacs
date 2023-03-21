@@ -34,7 +34,9 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(windows-scripts
+   '(typescript
+     nginx
+     windows-scripts
      lua
      yaml
      javascript
@@ -64,6 +66,13 @@ values."
      ;; only load scala on Mac for now (not on windows)
      ;;scala
      docker
+     ;; https://practical.li/spacemacs/install-spacemacs/clojure-lsp/
+     (lsp :variables
+          lsp-ui-doc-enable nil       ;; disable all doc popups
+          lsp-ui-sideline-enable nil  ;; disable sideline bar for less distraction
+          treemacs-space-between-root-nodes nil
+          ) ;; no spacing in treemacs views
+     treemacs
      (clojure :variables
               clojure-enable-fancify-symbols t
               ;; https://github.com/syl20bnr/spacemacs/blob/develop/layers/+lang/clojure/README.org#enabling-sayid-or-clj-refactor
@@ -81,6 +90,8 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
+                                      talonscript-mode
+                                      jet
                                       alarm-clock
                                       flycheck-clj-kondo
                                       gradle-mode
@@ -413,7 +424,24 @@ you should place your code here."
   (setq org-clock-idle-time 15)
   (setq org-log-note-clock-out t)
 
+  ;;lsp-file-watch-ignored-directories
+  (with-eval-after-load 'lsp-mode
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cache\\'")
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]cdk\\.out\\'")
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]android\\'")
+  )
+
   (setq lsp-enable-links nil)
+  ;; https://practical.li/spacemacs/install-spacemacs/clojure-lsp/
+  (setq lsp-lens-enable nil)
+  ;; https://emacs.stackexchange.com/questions/45895/changing-faces-one-at-a-time-outside-customize
+  ;; See M-x list-colors-display
+  ;;(set-face-attribute 'lsp-lens-face nil
+  ;;                    ;;:alpha 10
+  ;;                    :foreground "gray20"
+  ;;                    :background "gray0"
+  ;;                    :inherit
+  ;;                    )
 
 
   ;; ISO 8601 timestamp insertion
@@ -513,9 +541,22 @@ you should place your code here."
     (advice-add 'cider-nrepl-request:eval
                 :filter-args #'cider-tap)
 
-
+    (advice-remove 'cider-nrepl-request:eval #'cider-tap)
     )
 
+  ;; https://gist.github.com/jackrusher/e628abb653429c22bc6330752b3e49a5
+  (defun json->edn ()
+    "Convert the selected region, or entire file, from JSON to EDN."
+    (interactive)
+    (let ((b (if mark-active (region-beginning) (point-min)))
+          (e (if mark-active (region-end) (point-max)))
+          (jet (when (executable-find "jet")
+                 "jet --pretty --keywordize keyword --from json --to edn")))
+      (if jet
+          (let ((p (point)))
+            (shell-command-on-region b e jet (current-buffer) t)
+            (goto-char p))
+        (user-error "Could not find jet installed"))))
   
   ;; From https://clojurians-log.clojureverse.org/spacemacs/2017-10-19
   ;; (require 'flycheck-joker) TODO for later.
@@ -704,7 +745,7 @@ This function is called at the very end of Spacemacs initialization."
  '(menu-bar-mode t)
  '(org-agenda-files nil)
  '(package-selected-packages
-   '(tern evil-magit helm-gitignore ztree zprint-mode yapfify ws-butler winum which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree toc-org tagedit spaceline powerline smeargle slim-mode scss-mode scala-mode sbt-mode sass-mode restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode periodic-commit-minor-mode pcre2el paradox orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download org-clock-csv org-bullets open-junk-file noflet neotree move-text mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup magit macrostep lorem-ipsum logview datetime extmap log4j-mode livid-mode skewer-mode simple-httpd live-py-mode linum-relative link-hint json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc indent-guide hy-mode dash-functional hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile projectile helm-mode-manager helm-make request helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag heaven-and-hell haml-mode groovy-mode gradle-mode google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-commit with-editor transient gh-md fuzzy flycheck-pos-tip pos-tip flycheck-clj-kondo flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg emoji-cheat-sheet-plus emmet-mode elisp-slime-nav dumb-jump diminish define-word cython-mode company-web web-completion-data company-statistics company-emoji company-emacs-eclim eclim company-anaconda company command-log-mode column-enforce-mode coffee-mode clojure-snippets clj-refactor hydra inflections multiple-cursors paredit lv clean-aindent-mode cider-eval-sexp-fu eval-sexp-fu cider sesman seq spinner queue pkg-info parseedn clojure-mode parseclj a epl bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-compile packed anaconda-mode pythonic alarm-clock f dash s aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup)))
+   '(talonscript-mode evil-magit helm-gitignore ztree zprint-mode yapfify ws-butler winum which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree toc-org tagedit spaceline powerline smeargle slim-mode scss-mode scala-mode sbt-mode sass-mode restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode periodic-commit-minor-mode pcre2el paradox orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download org-clock-csv org-bullets open-junk-file noflet neotree move-text mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup magit macrostep lorem-ipsum logview datetime extmap log4j-mode livid-mode skewer-mode simple-httpd live-py-mode linum-relative link-hint json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc indent-guide hy-mode dash-functional hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile projectile helm-mode-manager helm-make request helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag heaven-and-hell haml-mode groovy-mode gradle-mode google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-commit with-editor transient gh-md fuzzy flycheck-pos-tip pos-tip flycheck-clj-kondo flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg emoji-cheat-sheet-plus emmet-mode elisp-slime-nav dumb-jump diminish define-word cython-mode company-web web-completion-data company-statistics company-emoji company-emacs-eclim eclim company-anaconda company command-log-mode column-enforce-mode coffee-mode clojure-snippets clj-refactor hydra inflections multiple-cursors paredit lv clean-aindent-mode cider-eval-sexp-fu eval-sexp-fu cider sesman seq spinner queue pkg-info parseedn clojure-mode parseclj a epl bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-compile packed anaconda-mode pythonic alarm-clock f dash s aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

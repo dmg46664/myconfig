@@ -112,6 +112,14 @@ Installing 'zulu13' (13.28.11) [64bit]
 ...
 Checking hash of zulu13.28.11-ca-jdk13.0.1-win_x64.zip ... ok.
 #+end_src
+
+Installing clojure-lsp https://clojure-lsp.io/installation/
+https://github.com/doomemacs/doomemacs/pull/6812
+
+#+begin_src
+brew install clojure-lsp/brew/clojure-lsp-native
+#+end_src
+
 ** Zsh
 
 https://github.com/romkatv/powerlevel10k

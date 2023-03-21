@@ -343,13 +343,13 @@ Adding the dependency as per comment here fixes this https://github.com/cognitec
    - despoke libs
 
   Use this as a guide instead https://github.com/thheller/reagent-react-native
-  OR EVEN BETTER
+
+Don't use expo (you are tying yourself to a cloud build environment):
   https://github.com/thheller/reagent-expo for use with expo
   Official docs :https://docs.expo.dev/get-started/create-a-new-app/
   - After expo init, choose minimal.
     (Need an expo account)
   - expo build:android
-
     https://docs.expo.dev/bare/installing-updates/
 
   
@@ -908,7 +908,10 @@ yarn android
 All functions in clj-refactor have a two-letter mnemonic shortcut. E.g. rs for cljr-rename-symbol. 
 Given the prefix choice in the example setup you'd call this function by hitting 
 https://github.com/clojure-emacs/clj-refactor.el/wiki
-* Importing libraries
+* Importing libraries / hot reload.
+Setting up hot reloading
+https://github.com/practicalli/clojure-deps-edn/#hotload-libraries-into-a-running-repl
+
 https://8thlight.com/blog/colin-jones/2010/12/05/clojure-libs-and-namespaces-require-use-import-and-ns.html
 &
 https://stackoverflow.com/questions/10358149/in-clojure-1-4-what-is-the-use-of-refer-within-require/10370672
@@ -932,31 +935,46 @@ https://stackoverflow.com/questions/3337888/clojure-named-arguments
 ** Sean corefield working at REPL https://www.youtube.com/watch?v=gIoadGfm5T8
 ** nbb https://www.youtube.com/watch?v=_-G9EKaAyuI
 ** Coverage of what clojure is https://www.youtube.com/watch?v=ciGyHkDuPAE
-** Protocols! Must watch https://www.youtube.com/watch?v=kQhOlWXXl2I    
+** Protocols in the JVM! Must watch https://www.youtube.com/watch?v=kQhOlWXXl2I
+** Protocols and deftype in clojure https://looselytyped.com/blog/2013/07/31/on-sortieing-to-clojure-land-a-brief-overview-of-protocols-records-and-reify/
 ** TODO Datomic migration  https://grishaev.me/en/pg-to-datomic/
 ** TODO Building an ANKI clone using datomic https://www.youtube.com/watch?v=QrSnTIHotZE
 ** Literate devops https://www.youtube.com/watch?v=dljNabciEGg
 ** Transducers https://lambdaisland.com/episodes/transducers
 ** Training https://exercism.org/tracks/clojure
+* Data Science
+** TODO Deep diamond https://dragan.rocks/articles/22/Recurrent-networks-hello-world-sequence-prediction-in-Clojure-with-new-Deep-Diamond
 * Babashka
 ** Aws bb autocomplete https://github.com/jeroenvandijk/matryoshka
 ** Docker client https://github.com/lispyclouds/contajners
 * NBB
 ** Replit NBB https://replit.com/@eccentric-j/Node-Babashka-ClojureScript-Template?v=1
+* Other clojure dialects
+https://github.com/dundalek/liz
 * Clojurescript
 ** shadow karma testing https://www.arthurbrrs.me/testing-the-dom-using-shadow-and-reagent.html
-** Re-frame tutorial https://day8.github.io/re-frame/dominoes-live/
-** Reagent docs https://cljdoc.org/d/reagent/reagent/1.0.0-alpha2/doc/tutorials/creating-reagent-components
+
 ** CLJS JS interop     https://lwhorton.github.io/2018/10/20/clojurescript-interop-with-javascript.html 
 ** CLJS type inference https://blog.klipse.tech/clojure/2019/05/20/type-inference-in-clojurescript.html
 ** CLJS gotchas
    https://stackoverflow.com/questions/15049413/how-do-i-get-properties-with-dashes-in-their-names-in-clojurescript
+   https://stackoverflow.com/questions/53149344/what-causes-error-no-protocol-method-xxx-yyy-defined-for-type-undefined-in-cl
 ** DEPRECATED Clojure script on react with figwheel https://medium.com/mindorks/building-mobile-apps-ios-and-android-with-clojurescript-4600235f826c
 ** DEPRECATED Clojurescript with ReactNative https://medium.com/upwork-engineering/developing-react-native-applications-in-clojurescript-9386b1cd5869
 Basically start here:
 https://cljsrn.org/
 ** CLJS Performance https://numergent.com/2015-12/ClojureScript-performance-revisited.html
+** React ---------------
+** Re-frame tutorial https://day8.github.io/re-frame/dominoes-live/
+** Reagent docs https://cljdoc.org/d/reagent/reagent/1.0.0-alpha2/doc/tutorials/creating-reagent-components
+** <2022-12-10 Sat> https://lambdaisland.com/blog/2017-02-11-re-frame-form-1-subscriptions
+** <2022-12-10 Sat> https://lambdaisland.com/episodes/re-frame-subscriptions
 * Useful clojure titbits
+** Making Java classes sequenceable
+<2022-10-26 Wed> Interestin read https://wallace.fm/blog/2016/byod-party/
+<2022-10-26 Wed> Seq vs sequable: cljs vs clj  https://lambdaisland.com/episodes/clojure-seq-seqable
+<2022-10-26 Wed> dynamic vs static? https://kotka.de/blog/2010/08/Static_vs_Dynamic.html
+<2022-10-26 Wed> Nope, not for clojure https://www.mail-archive.com/clojure@googlegroups.com/msg48522.html
 ** shadlow-cljs & tools.build? https://clojurians-log.clojureverse.org/tools-build/2021-10-05/1633472745.474100
 ** Apply vs Map https://stackoverflow.com/questions/2311528/clojure-apply-vs-map
 ** Incrementing i https://stackoverflow.com/questions/4513078/i-equivalent-in-clojure
@@ -1274,6 +1292,12 @@ But you can't use it in gen/let
    trade)
 #+end_src
 * Code snippets
+** Find out git deps https://github.com/babashka/neil
+#+begin_src  bash
+  neil dep add --latest-sha true --dry-run https://gist.github.com/adam-james-v/6b2ee824d0040b82f91dbdd1f7fd5330
+#+end_src
+** Import git dependency https://clojure.org/guides/deps_and_cli#_using_git_libraries
+** Import local source dep https://clojure.org/guides/deps_and_cli#prep_libs
 ** Be careful of macros
 #+begin_src clojure
 ;; works
@@ -1321,14 +1345,162 @@ https://clojuredocs.org/clojure.reflect/type-reflect
 ** Print stacktrace
 (clojure.stacktrace/print-stack-trace (Exception. "foo"))
 * Tools + libs
+** TODO Discussion on indenting consistency https://clojurians.slack.com/archives/C03RZGPG3/p1678921877459829
+** Refx: Reframe for UIX https://github.com/ferdinand-beyer/refx
+** Hyperfiddle UI modelling https://www.hyperfiddle.net/
+** bubble gum text ui https://github.com/lispyclouds/bblgum
+** Robot https://github.com/D00mch/robot
+** HumbleUI
+
+#+begin_src clojure
+
+(comment
+  "I didn't understand what you meant by viewport, but it's clear you mean to pass the viewport rect
+from VScroll to Column (assuming that's what's being wrapped). I didn't know before that Column had no clue about what section of it was being drawn, and so it draws all rows! Actually I'm impressed with how quickly the framework draws given it is not
+only drawing the viewport!
+
+
+The complication is that Column needs to query the state of VScroll to understand the viewport dimentions.
+
+TODO
+Rather than fundamentally change the -draw protocol to always pass the viewport, I combined VScroll and Column into VColumn.
+
+
+TODO
+I dont' understand why the clip-rect is soo long in the vertical!
+I imagine the child rect is 
+
+
+
+Vscroll is doing two jobs: Clip and Transform.
+It should only do Clip, and act on a ITransform.
+
+
+"
+
+  ;; Fix the following
+  (def ui
+    (ui/default-theme
+     {}
+     (ui/column
+      (ui/vscrollbar
+       (ui/column ;; has the ability to flatten clojure containers.
+        (take 100
+              (cycle
+               [(ui/gap 0 10)
+                (ui/label "Line xyz")]))))
+      [:stretch 1 nil]
+      (ui/label "Bottom row 1") ;; These lines are overwritten by the vscrollbar and vscroll and children.
+      (ui/label "Bottom row 2"))))
+
+  (- 2147483647 2147476631))
+  
+;; [desktop_ui_extra.VScroll _draw "NO_SOURCE_FILE" 88]
+  ;; [io.github.humbleui.core$draw invokeStatic "core.clj" 548]
+  ;; [io.github.humbleui.core$draw invoke "core.clj" 546]
+  ;; [io.github.humbleui.core$draw_child invokeStatic "core.clj" 554]
+  ;; [io.github.humbleui.core$draw_child invoke "core.clj" 550]
+  ;; [desktop_ui_extra.VScrollbar _draw "NO_SOURCE_FILE" 51]
+  ;; [io.github.humbleui.core$draw invokeStatic "core.clj" 548]
+  ;; [io.github.humbleui.core$draw invoke "core.clj" 546]
+  ;; [io.github.humbleui.core$draw_child invokeStatic "core.clj" 554]
+  ;; [io.github.humbleui.core$draw_child invoke "core.clj" 550]
+  ;; [io.github.humbleui.ui.containers.Column$fn__14000 invoke "containers.clj" 23]
+  ;; [clojure.core.protocols$fn__8249 invokeStatic "protocols.clj" 168]
+  ;; [clojure.core.protocols$fn__8249 invoke "protocols.clj" 124]
+  ;; [clojure.core.protocols$fn__8204$G__8199__8213 invoke "protocols.clj" 19]
+  ;; [clojure.core.protocols$seq_reduce invokeStatic "protocols.clj" 31]
+  ;; [clojure.core.protocols$fn__8236 invokeStatic "protocols.clj" 75]
+  ;; [clojure.core.protocols$fn__8236 invoke "protocols.clj" 75]
+  ;; [clojure.core.protocols$fn__8178$G__8173__8191 invoke "protocols.clj" 13]
+  ;; [clojure.core$reduce invokeStatic "core.clj" 6886]
+  ;; [clojure.core$reduce invoke "core.clj" 6868]
+  ;; [io.github.humbleui.ui.containers.Column _draw "containers.clj" 23]
+  ;; [io.github.humbleui.core$draw invokeStatic "core.clj" 548]
+  ;; [io.github.humbleui.core$draw invoke "core.clj" 546]
+  ;; [io.github.humbleui.core$draw_child invokeStatic "core.clj" 554]
+  ;; [io.github.humbleui.core$draw_child invoke "core.clj" 550]
+  ;; [io.github.humbleui.ui.dynamic.Contextual _draw "dynamic.clj" 12]
+  ;; [io.github.humbleui.core$draw invokeStatic "core.clj" 548]
+  ;; [io.github.humbleui.core$draw invoke "core.clj" 546]
+  ;; [io.github.humbleui.core$draw_child invokeStatic "core.clj" 554]
+  ;; [io.github.humbleui.core$draw_child invoke "core.clj" 550]
+  ;; [io.github.humbleui.ui.with_context.WithContext _draw "with_context.clj" 8]
+  ;; [io.github.humbleui.core$draw invokeStatic "core.clj" 548]
+  ;; [io.github.humbleui.core$draw invoke "core.clj" 546]
+  ;; [io.github.humbleui.core$draw_child invokeStatic "core.clj" 554]
+  ;; [io.github.humbleui.core$draw_child invoke "core.clj" 550]
+  ;; [io.github.humbleui.ui.dynamic.Contextual _draw "dynamic.clj" 12]
+  ;; [io.github.humbleui.core$draw invokeStatic "core.clj" 548]
+  ;; [io.github.humbleui.core$draw invoke "core.clj" 546]
+  ;; [io.github.humbleui.ui.window$window$paint_fn__15345 invoke "window.clj" 35]
+  ;; [io.github.humbleui.window$make$reify__13614$fn__13620 invoke "window.clj" 83]
+  ;; [io.github.humbleui.window$make$reify__13614 accept "window.clj" 81]
+  ;; [io.github.humbleui.jwm.Window accept "Window.java" 393]
+  ;; [io.github.humbleui.jwm.skija.LayerMetalSkija frame "LayerMetalSkija.java" 27]
+  ;; [io.github.humbleui.jwm.Window accept "Window.java" 387]
+  ;; [io.github.humbleui.jwm.Window accept "Window.java" 11]]
+
+#+end_src
+** profiler http://clojure-goes-fast.com/kb/profiling/clj-async-profiler/
+** deps-info
+Suggestion to decide on the version of malli:
+First install the tools [bbin](https://github.com/babashka/bbin) and [deps-info](https://github.com/rads/deps-info).
+Then run the following to get the latest tag for the latest tag:
+
+#+begin_src 
+deps-info-infer --lib borkdude/malli --latest-sha
+#:borkdude{malli #:git{:url "https://github.com/borkdude/malli", :sha "e400bbcdab09b21dc42d82f90400f60f85af6bd9"}}
+#+end_src
+
+or use neil
+#+begin_src bash
+neil dep add metosin/malli --latest-sha true
+#+end_src
+** TODO Lazy maps https://github.com/strojure/zizzmap
+** TODO Remote require https://github.com/tonsky/remote-require
+** TODO https://github.com/borkdude/grasp
 ** TODO https://github.com/cloverage/cloverage
 ** TODO Paredit https://www.youtube.com/watch?v=K0Tsa3smr1w
 ** https://github.com/dgrnbrg/spyscope
 ** Scala interop lib https://t6.github.io/from-scala/
-** https://github.com/noprompt/meander
+** Extracter similar to specter https://github.com/noprompt/meander
+  https://www.reddit.com/r/Clojure/comments/izh9o4/specter_vs_meander_vs_handcrafted_code_when/
 ** Diffing code https://github.com/nextjournal/autochrome
 ** Clerk functions viewer https://www.loom.com/share/e61faf144a1c4feaac44d7ad9873366c
+** Clojure logging
+*** https://lambdaisland.com/blog/2020-06-12-logging-in-clojure-making-sense-of-the-mess
+*** FAILED Trying to load timbre in nbb
+#+begin_src
+  ----- Error --------------------------------------
+Message:  Could not find namespace: goog.i18n.DateTimeFormat
+Could not find namespace: goog.i18n.DateTimeFormat
+error Command failed with exit code 1.
+#+end_src
+** Shadow-cljs & NBB
+NPM packages https://shadow-cljs.github.io/docs/UsersGuide.html#_using_npm_packages
+<2022-09-13 Tue> NBB & shadow modules https://github.com/babashka/nbb/issues/14
+<2022-09-13 Tue> subpaths and loading 3rd party libs https://clojurians.slack.com/archives/C6N245JGG/p1662985780223349
+<2022-09-13 Tue> ESM module introduction https://clojureverse.org/t/generating-es-modules-browser-deno/6116
+<2022-09-13 Tue> NBB :require differences https://clojurians.slack.com/archives/C029PTWD3HR/p1659628557831539
 * Gotchas
+** shadow-cljs websocket disconneted
+
+#+begin_src
+   WARN  The shadow-cljs Websocket was disconnected.
+ ERROR  shadow-cljs - remote-error {"isTrusted": false, "message": "failed to connect to /192.168.64.35 (port 9630) from /10.0.2.16 (port 41302) after 10000ms"}
+#+end_src
+
+While react native dev.
+Seems to be side stepped provided you are connected to the REPL?
+
+** when-let
+#+begin_src clojure
+  (when-let [{:keys [a]} {:b 1}]
+  (println "I wouldn't have expected this to print but it does..."))
+#+end_src
+** Can't calculate first argument to def https://stackoverflow.com/questions/50115268/why-doesnt-work-first-argument-to-defn-must-be-a-symbol
+** into {} only works for vector tuples https://stackoverflow.com/a/4329616/93074
 ** For actually lazy? http://blog.fogus.me/2010/01/22/de-chunkifying-Sequences-in-clojure/
    https://stackoverflow.com/questions/10556421/is-for-not-actually-lazy-in-clojure
 ** reduce or apply https://stackoverflow.com/questions/2891707/reduce-or-apply-using-logical-functions-in-clojure
@@ -1348,12 +1520,41 @@ https://8thlight.com/blog/colin-jones/2012/05/22/quoting-without-confusion.html
 *** https://ask.clojure.org/index.php/10356/unexpected-spec-failure-on-namespaced-keys-not-included-req?show=10356#q10356
 * Opinionated Don'ts
 ** Threading of as-> https://stuartsierra.com/2018/07/15/clojure-donts-thread-as
-** Core Async after watching promises https://www.youtube.com/watch?v=yJxFPoxqzWE
-*** Prep JS Promises, callbacks, async & await: https://www.youtube.com/watch?v=PoRJizFvM7s
+** Core Async
+*** Rich hickey talk 2013  https://www.youtube.com/watch?v=yJxFPoxqzWE
+*** Rich hickey talk 2014 https://www.youtube.com/watch?v=hMEX6lfBeRM
+*** (watch promises vid first inside) https://www.youtube.com/watch?v=yJxFPoxqzWE
+*** Async walkthrough (with hot dog machine) https://www.braveclojure.com/core-async/
+*** Javascript prep: JS Promises, callbacks, async & await: https://www.youtube.com/watch?v=PoRJizFvM7s
 *** Rebuttal https://mauricio.szabo.link/blog/2020/06/11/clojurescript-vs-clojure-core-async/
 Discovered https://github.com/babashka/nbb/issues/26#issuecomment-1116688001
 *** See todolist for more evidence.
 *** Testing core.async https://stackoverflow.com/questions/30766215/how-do-i-unit-test-clojure-core-async-go-macros
+*** Unsupported features https://github.com/clojure/core.async/wiki/Go-Block-Best-Practices#unsupported-constructs-and-other-limitations-in-go-blocks
+*** Loom as alternative https://www.youtube.com/watch?v=EO9oMiL1fFo
+https://clojurians.slack.com/archives/C03S1KBA2/p1667034807468569?thread_ts=1666780466.165799&cid=C03S1KBA2
+*** core.async Advice https://medium.com/@hlship/some-observations-about-clojure-core-async-dc0ad44b8e2f
+*** Fun example implementing oop core.async https://nvbn.github.io/2015/01/30/reinventing-oop-with-clojure/
+*** Internal implementation https://www.braveclojure.com/core-async/
+*** core.async & bindings
+https://stackoverflow.com/questions/31575866/how-does-the-binding-function-work-with-core-async
+https://github.com/twosigma/waiter/issues/204
+*** Clojurescript core.async tutorial https://www.learn-clojurescript.com/section-4/lesson-25-intro-to-core-async/
+*** Tips
+
+Will freeze and won't print anything if chan size isn't >=1.
+#+begin_src clojure
+  (defn xxx []
+  (let [c (as/chan)]
+    (as/>!! c "test")
+    (println "1.")
+    (as/<!! c)
+    (println "2.")
+    ))
+
+  ;; will freeze
+  (as/<!! (as/thread (xxx)))
+#+end_src
 * Idiomatic clojure
 ** Depth first iteration and dispatch encapsulation hell!
 If computer programs were artistic styles, then procedural programs would complete a drawing by tracing the outline, while clojure would build up a drawing from smaller shapes. Both methods would complete a drawing accurately.
@@ -1441,7 +1642,7 @@ https://4comprehension.com/java-stream-api-was-broken-before-jdk10/
 ** Transient data structures https://clojure.org/reference/transients
 ** Missing elegant API for manipulating immutable data structures http://nathanmarz.com/blog/clojures-missing-piece.html
 ** Clojure workflow tips https://clojureverse.org/t/share-the-nitty-gritty-details-of-your-clojure-workflow/1208/23
-** Reloading woes https://lambdaisland.com/blog/2018-02-09-reloading-woes
+** Reloading woes https:/mbdaisland.com/blog/2018-02-09-reloading-woes
 ** Nested hash map anti pattern? (Only required in rare circumstances) https://hackernoon.com/nested-maps-considered-harmful-143add482247
 ** Nil punning https://lispcast.com/nil-punning/
 ** Interesting threading https://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/
@@ -1504,14 +1705,17 @@ Easy start with: https://medium.com/@pwentz/laziness-in-clojure-3d83645bf7f3
 More concisely: https://insideclojure.org/2015/01/02/sequences/
 
 Then to pick apart the details of types: https://stackoverflow.com/questions/44095400/how-to-understand-clojures-lazy-seq/44102122
-* Videos
+* Videos & podcasts
+** Interceptors!!!! https://www.youtube.com/watch?v=bDN898hu_wQ
+** Software rituals (ignore last 10 min crypto bit)
+https://www.listennotes.com/podcasts/software-unscripted/software-rituals-with-david-aneDXKg0Mlp/
 ** TODO Task : Make a doubly nested for loop, calling on a Java API (XLS) spreadsheet, to take a data structure and save it to tables.
 https://github.com/mjul/docjure
 
-The naive way that a java programmer would code:
+The naive way that a java programmer would code as per the below example:
 - Assuming the need for for counters.
 - There is a need for counters. Docjure got around it by querying the underlying data!
-- Made a mistake for vs deseq
+- Made a mistake for vs doseq
 - Made a mistake or at least didn't realize that I'd reached the point to start breaking functions up. This is good!
 - At least we figured out map-indexed!
 
@@ -1548,8 +1752,38 @@ The naive way that a java programmer would code:
 ** Scope capture https://vimeo.com/237220354
 ** Clojure for ETLs https://www.youtube.com/watch?v=oOON--g1PyU
 ** Introduction to CS and Reagent https://www.yqqqoutube.com/watch?v=wq6ctyZBb0A
+** Clojure experience rewriting
+https://podcasts.apple.com/us/podcast/e82-rewrites-with-orestis-markou-part-1/id1461500416?i=1000583914077
+** Clojure at Nubank
+https://www.infoq.com/podcasts/lucas-cavalcanti-nubank-fintech-clojure/
 * Improvements
-** Ensure that stacktrace window is colour coded obvious to communicate whether it's a runtime error or compile time error.
+** TODO Write mock-fn
+#+begin_src
+(testing "with duplication test-extract-and-save-by-letter! and then check in XTDB mem-node"
+    (is (= expected-extract-and-save-data-for-PEG
+           (do
+             (dimigi.extraction/extract-and-save-by-letter! mem-test-node
+                                                            "P" ;;letter to extract
+                                                            (fn [_letter] (slurp mock-tickers-file))
+                                                            (fn [ticker] (case ticker "PEG" (slurp mock-PEG-revenue-file) nil)))
+             
+             (def-macro mock-match)
+             (fn [ticker bleh] (match [ticker bleh] ["PEG" true] (slurp  mock-file) :else nil))
+             (fn [ticker] (match [ticker] ["PEG"]) (slurp mock-file) :else nil)
+             (mock-fn [letter] :else (slurp mock-file))
+             (mock-fn [ticker] ["PEG"] (slurp mock-file) :else nil)
+             (dimigi.extraction/extract-and-save-by-letter! mem-test-node
+                                                            "P" ;;letter to extract
+                                                            (fn [_letter] (slurp mock-tickers-file))
+                                                            (fn [ticker] (case ticker "PEG" (slurp mock-PEG-revenue-file) nil)))
+             
+             ;;Query the results
+             (xt/q (xt/db mem-test-node)
+                   '{:find
+                     [(pull ?e [*])]
+                     :where [[?e :symbol #{"PEG" "QQQ" "TTT"}]]})))))    
+#+end_src
+** Ensure that Emacs stacktrace window is colour coded obvious to communicate whether it's a runtime error or compile time error.
 ** Thread about how to compensate for the lack of dot https://www.reddit.com/r/Clojure/comments/6f6cq2/how_to_compensate_for_clojures_lack_of_dot/
 ** The stacktrace window should allow one ot preview items without go
 ** To clojurephant
@@ -1566,6 +1800,50 @@ Because it's just pointing at functions in the same way that all
 the language is based on.
 Why would you do it? See the daemon I'm writing...
 * Failed experiments
+** What was this? Found in 3d print section
+
+             :transport consoleTransport,
+             :transportOptions {
+                                :colors {
+                                         :debug "magenta"
+                                         ;;:info "blueBright",
+                                         :warn "yellowBright",
+                                         :error "redBright",
+                                         },
+                                :extensionColors {
+                                                  :root "magenta",
+                                                  :home "green",
+                                                  },
+                                :mapLevels {
+                                            :debug "log",
+                                            :info "info",
+                                            :warn "warn",
+                                            :err "error",
+                                            },
+                                },
+             })
+
+(defonce rn-logger (.createLogger logger (clj->js config)))
+
+;; Example
+;; https://github.com/ptaoussanis/timbre/blob/master/src/taoensso/timbre.cljc#L37
+(defn rn-output-fn
+  "Default (fn [data]) -> string output fn.
+    Use`(partial default-output-fn <opts-map>)` to modify default opts."
+  ([     data] (rn-output-fn nil data))
+  ([opts data] ; For partials
+   (let [{:keys [no-stacktrace? stacktrace-fonts]} opts
+         {:keys [level ?err #_vargs msg_ ?ns-str ?file hostname_
+                 timestamp_ ?line]} data]
+     (str
+      (when-let [ts (force timestamp_)] (str ts " "))
+      " "
+      (str/upper-case (name level))  " "
+      "[" (or ?ns-str ?file "?") ":" (or ?line "?") "] - "
+      (force msg_)
+      (when-not no-stacktrace?
+        (when-let [err ?err]
+          (str 
 ** cond%
 
    cond%1 just means cond% experiment 1 in the following
@@ -1595,4 +1873,10 @@ Why would you do it? See the daemon I'm writing...
   #+end_src
  However, that's not a big enough improvement!
  And given the ideal is not possible, I think it's a failure for now.
- 
+* Cool projects
+<2022-10-28 Fri> Racing game in react https://github.com/ertugrulcetin/racing-game-cljs
+<2022-11-11 Fri> https://max-datom.com/ or the XTDB Space Opera https://nextjournal.com/xtdb-tutorial/start
+* Conversations
+<2022-12-08 Thu> Reveal https://clojurians.slack.com/archives/C02BJCKN0R4/p1669556096151029
+* Intend to fund
+<2022-12-01 Thu> https://github.com/lambdaisland/kaocha/issues/183
