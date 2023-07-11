@@ -10,9 +10,10 @@
    ??
 ** Javascript
 <2022-09-10 Sat> ESM require https://stackoverflow.com/questions/69081410/error-err-require-esm-require-of-es-module-not-supported
-<2022-09-13 Tue> Modules https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/
+<2022-09-13 Tue> Modules deep dive cartoon https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/
 <2022-09-13 Tue> Default exports https://bignerdranch.com/blog/default-exports-or-named-exports-why-not-both/
 <2022-10-20 Thu> How promise exceptions can work https://codeburst.io/improving-your-stack-trace-when-a-promise-fails-b2a5fe9c899a
+<2023-05-16 Tue> What Babel do and how https://www.youtube.com/watch?v=C2PDAGCrk_g
 ** ReactNative
 <2023-02-15 Wed> Arm yourself: https://www.obytes.com/blog/what-you-need-to-know-about-native-developement-as-react-native-developer-part1
 <2023-02-16 Thu> Android Install with debug options https://stackoverflow.com/questions/42596358/how-to-enable-stacktrace-react-native-run-android-command
@@ -51,6 +52,36 @@ https://stackoverflow.com/questions/73564919/react-native-flipper-react-devtools
 <2022-12-01 Thu> CSS Great alignment answer https://stackoverflow.com/questions/32030050/how-can-you-float-right-in-react-native
 <2022-12-01 Thu> CSS flex-start https://csslayout.news/whats-the-difference-between-the-alignment-values-of-start-flex-start-and-self-start/
 <2023-02-17 Fri> React components to string https://www.emmanuelgautier.com/blog/react-element-render-to-string
+<2023-05-11 Thu> XCode quirks https://stackoverflow.com/questions/58008775/xcode-11-simulatortrampoline-xpc-wants-to-access-files-managed-by-icloud-dri
+<2023-05-11 Thu> Extra brackets https://stackoverflow.com/questions/49441758/why-do-i-need-an-extra-set-of-parentheses-for-react-setstate
+<2023-06-14 Wed> Be careful about capturing state values in dependent callbacks, but not including these values in the dependencies list.
+*** NOTE The problem with Metro and tests
+<2023-07-06 Thu> Testing react-dom/client error https://stackoverflow.com/questions/71713405/cannot-find-module-react-dom-client-from-node-modules-testing-library-react
+<2023-07-10 Mon> Test renderer https://medium.com/@pshrmn/testing-react-native-components-in-node-with-react-test-renderer-cb2985402dce
+<2023-07-10 Mon> react native test deps complication (metro) https://clojurians.slack.com/archives/C6N245JGG/p1612559155455800
+<2023-07-10 Mon> React native without metro? https://sandeepqaops.medium.com/building-react-native-apks-without-metro-bundler-dependency-for-saucelabs-lambdatest-etc-2eb582a60fb
+<2023-07-10 Mon> React native without metro? https://github.com/react-native-community/cli/issues/1191
+
+The problem runnings tests on node without the simulator, is that when shadow generates your clojure code,
+it relies on metro to see the require stubs generated and include in stuff like react native.
+Without metro many of the dependencies aren't there.
+You can resolve them to nil and get tests to run, but the results will likely not be correct
+if rn/View and similar items are not available in your own components.
+
+NOTE!!! That the :require of the test code must happen in your application file! Not only your
+test file! If you want to use it. Otherwise Metro won't pick it up!
+
+
+You need to be able to serialize the JS DOM (which you can do with dev libs), but that doesn't get you all the way.
+
+https://github.com/dmg46664/problems/tree/main/0008_shadow_react_server
+
+<2023-07-10 Mon> https://www.freecodecamp.org/news/testing-react-hooks/
+- description of mounting.
+
+<2023-07-11 Tue> Testing RN cljs  https://www.youtube.com/watch?v=6IYm34nDL64&t=543s
+<2023-07-11 Tue> Enzyme https://github.com/enzymejs/enzyme/blob/master/docs/guides/react-native.md
+<2023-07-11 Tue> https://www.youtube.com/watch?v=6kM1Z5dDF-Q
 *** Transparent buttons, menu items:
 <2022-12-01 Thu> Unforutnatley no code https://react-native-web-uikit.storybook.trucknet.io/?path=/story/buttons-transparent-button--transparent-button
 <2022-12-01 Thu> Ghost buttons https://docs.nativebase.io/button
@@ -63,6 +94,24 @@ NOTE the following might be modal!!
 <2022-12-01 Thu> Bottom drawer https://stackoverflow.com/questions/41265568/bottom-up-drawer-in-react-native
 <2022-12-01 Thu> https://github.com/ammarahm-ed/react-native-actions-sheet
 <2022-12-01 Thu> https://blog.logrocket.com/build-custom-react-native-action-sheet/
+*** Reanimated
+<2023-05-08 Mon> https://stackoverflow.com/questions/58577366/react-native-fontsize-animation-jaggy
+<2023-05-08 Mon> Example https://www.youtube.com/watch?v=ffMQ_R2Q9pk
+<2023-05-11 Thu> CLJS worklet https://github.com/roman01la/cljs-worklet
+<2023-05-12 Fri> Make sure that if you use Animated.View that you aren't reverting to ReactNative.View somewhere embedded in stack.
+<2023-05-25 Thu> Good example with useEffect https://www.youtube.com/watch?v=yz9E10Dq8Bg
+ - Note that useEffect is simply setting a shared value ONCE given [] deps.
+   This means withTimings is passed to the worklet in which it is able to be used.
+<2023-06-04 Sun> Flatlist reanimated https://www.youtube.com/watch?v=3ox0R5jPb04
+<2023-06-19 Mon> Gesture handler and Scrollview https://medium.com/@taitasciore/handling-pan-and-scroll-gestures-simultaneously-and-gracefully-with-gesture-handler-2-reanimated-63f0d8f72d3c
+**** Working with memoised components
+<2023-05-28 Sun> https://github.com/software-mansion/react-native-reanimated/issues/3224
+Need to make sure that
+- Confirmed that get-object-id (via weak hash technique) for useSharedValue doesn't change.
+- Worklet gets the changed value with j/assoc! method of changing :value.
+*** Skia ReactNative
+<2023-06-21 Wed> Best practices (memoise) https://github.com/Shopify/react-native-skia/discussions/1233
+<2023-06-22 Thu> Flaw with Reanimated and Skia https://github.com/Shopify/react-native-skia/discussions/1615#discussioncomment-6247439
 *** Frameworks:
 https://reactnative.dev/docs/button
 https://docs.swmansion.com/react-native-gesture-handler/docs/
@@ -70,6 +119,9 @@ https://wix.github.io/react-native-ui-lib/docs/getting-started/setup
 https://reactnativeelements.com/docs/next/components/header
 https://wix.github.io/react-native-navigation/docs/before-you-start
 https://reactnavigation.org/docs/getting-started
+
+https://spin.atomicobject.com/2019/02/04/react-native-local-file-cache/
+https://www.atomlab.dev/tutorials/react-native-fs
 **** react-native-ui-libs tips
 Notice how outlineColor is NOT in the style section but is its own style.
 https://github.com/wix/react-native-ui-lib/blob/master/demo/src/screens/componentScreens/ButtonsScreen.tsx#L120
@@ -77,6 +129,22 @@ Note theme manager
 https://wix.github.io/react-native-ui-lib/docs/foundation/theme-manager
 *** Testing
 <2023-03-19 Sun> Integration testing https://www.youtube.com/watch?v=PIxaFbMBez0
+*** iOS
+    https://zameermfm.medium.com/solve-mac-ruby-issues-in-react-native-installations-355fb5800ee0
+    https://stackoverflow.com/questions/68078996/pod-files-are-missing
+*** FlatList
+<2023-05-31 Wed> https://betterprogramming.pub/overcoming-list-performance-problems-in-react-native-fad40d87b14f
+<2023-05-31 Wed> https://stackoverflow.com/questions/49823933/react-native-flatlist-getitemlayout-with-dynamic-item-height
+<2023-06-04 Sun> FlashList https://www.youtube.com/watch?v=ZnF_4xqwQBA
+<2023-06-07 Wed> re-rendering flatlist https://stackoverflow.com/questions/43397803/how-to-re-render-flatlist
+<2023-06-07 Wed> extraData! flatlist https://reactnative.dev/docs/flatlist#example
+<2023-06-13 Tue> Second click (not that useful)  https://stackoverflow.com/questions/60353128/flatlist-not-update-immediately-after-button-clicked-react-native
+<2023-06-13 Tue> List refresh (but list itself changed) https://www.youtube.com/watch?v=T15zdDPX3Do
+*** Shadow / cljs
+<2023-06-08 Thu> Bug in socket disconnected https://stackoverflow.com/questions/59416137/often-seeing-repl-command-timed-out-in-cider-with-shadow-cljs-and-react-native
+** HTMX
+<2022-11-30 Wed> Around the time I found HTMX... https://www.youtube.com/watch?v=3GObi93tjZI
+<2023-05-06 Sat> https://www.youtube.com/watch?v=CWSmP3LSILo&t=228s
 ** CSS
 <2022-11-26 Sat> https://jessicalyschik.com/til-how-to-monospace-numbers-in-fonts/
 ** Fn vs java
@@ -96,8 +164,8 @@ https://wix.github.io/react-native-ui-lib/docs/foundation/theme-manager
                 .flatMap(Collection::stream)
 
                 .map(errorItem -> Tuple.tuple(file, errorItem));
-
-
+** Parsing
+<2023-04-12 Wed> https://khanlou.com/2019/12/regex-vs-combinatorial-parsing/
 ** Jooq and dynamic sql
    https://www.jooq.org/doc/3.9/manual-single-page/#dynamic-sql
    https://blog.jooq.org/2017/01/16/a-functional-programming-approach-to-dynamic-sql-with-jooq/
@@ -317,6 +385,14 @@ https://dev.to/neshaz/when-to-use-git-reset-git-revert--git-checkout-18je#:~:tex
 https://superuser.com/questions/397149/can-you-gpg-sign-old-commits
 
 https://gpgtools.org/
+*** Replacing messages
+
+git filter-repo --replace-message ../expressions.txt
+
+I.e.
+#32==>#BB_32
+Note that the patterns run until no more, so be wary of doule replacement.
+
 *** Changing emails in history
 https://stackoverflow.com/questions/71951553/how-can-i-change-the-email-of-the-author-for-all-of-my-commits-in-my-repository
 
@@ -332,8 +408,21 @@ Example https://www.youtube.com/watch?v=HV8hfmwDlPY
 
 Inside the root of the git repo:
 #+begin_src bash
-  echo "<dmg46664@noreply.github.com> <commit@email.com>" > ../temp.mailmap
-  git filter-repo --mailmap ../temp.mailmap
+      echo "New Name <dmg46664@noreply.github.com> <commit@email.com>" > ../temp.mailmap
+      git filter-repo --mailmap ../temp.mailmap
+
+
+      ;; On failure reinstalling worked.
+      Fatal Python error: init_fs_encoding: failed to get the Python codec of the filesystem encoding
+  Python runtime state: core initialized
+  ModuleNotFoundError: No module named 'encodings'
+
+      python3 --version                                                                                                             master ⇡4  1 ✘  13:49:12
+    Python 3.11.2
+     ~/projects/samson-backup  brew remove git-filter-repo                                                                                                     master ⇡4  ✔  13:49:38
+    Uninstalling /opt/homebrew/Cellar/git-filter-repo/2.38.0... (8 files, 281.5KB)
+
+    brew install git-filter-repo
   #+end_src
 
 https://lukasmestan.com/using-mailmap-in-git-repository/
@@ -684,9 +773,8 @@ work for me.
 Turns out the install size is large!
 See
 https://aws.amazon.com/blogs/developer/how-we-halved-the-publish-size-of-modular-aws-sdk-for-javascript-clients/
-
-
-
+*** DynamoDB performance and tips
+<2023-04-20 Thu> https://stackoverflow.com/questions/34552625/how-to-get-sub-10ms-response-times-from-aws-dynamodb
 *** Uncategorised and interesting articles
     AWS CDK vs Terraform
     https://www.metosin.fi/blog/comparing-aws-cdk-and-terraform/
@@ -807,6 +895,10 @@ awslocal lambda invoke --function-name samsonBroker output.txt
  #+begin_src  bash
    awslocal logs describe-log-groups --endpoint-url http://localhost:4566
  #+end_src
+*** Lambda usage & costs
+<2023-04-19 Wed> https://stackoverflow.com/questions/56617442/lambda-function-taking-3-seconds-to-run-5-10-secs-warmup-each-time
+<2023-04-19 Wed> Lambda costs https://news.ycombinator.com/item?id=26752223
+<2023-04-19 Wed> Websocket costs https://www.reddit.com/r/aws/comments/p42wjw/cost_comparison_between_ec2_and_websocket_api/
 *** Cloudformation
 <2023-02-27 Mon> Great starter on cloud formation from the current timestamp https://youtu.be/GP-wknHzPpI?t=1495
 
@@ -1237,6 +1329,7 @@ Faking JS sdk https://dev.to/goodidea/how-to-fake-aws-locally-with-localstack-27
 https://www.redhat.com/sysadmin/beginners-guide-silverblue
 *** Getstream.io
 https://getstream.io/chat/docs/react-native/querying_channels/
+*** <2023-05-05 Fri> https://bitrise.io/
 ** Software principles / Ideas / Use cases
 <2022-05-30 Mon> John Carmack QuakeCon 2012 Social interactions https://youtu.be/wt-iVFxgFWk?t=1929
 <2022-10-30 Sun> Deterministic simulation https://www.youtube.com/watch?v=4fFDFbi3toc

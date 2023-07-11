@@ -1345,6 +1345,41 @@ https://clojuredocs.org/clojure.reflect/type-reflect
 ** Print stacktrace
 (clojure.stacktrace/print-stack-trace (Exception. "foo"))
 * Tools + libs
+** Babashka + HTMX https://github.com/keychera/panas.example
+** Portfolio storybook equivalent https://github.com/cjohansen/portfolio https://www.youtube.com/watch?v=25JDQRFoQ_U
+** Overtone /sound
+*** TODO Piratidal https://www.youtube.com/watch?v=7qNSjhMf_HU
+*** TODO SuperCollider: No matching method sleep
+
+https://github.com/overtone/overtone/issues/497
+
+#+begin_src
+  --> Booting internal SuperCollider server...
+Exception in thread "Thread-22" java.lang.NullPointerException: Cannot invoke "clojure.lang.IFn.invoke()"
+	at clj_native.structs$byref.invokeStatic(structs.clj:178)
+	at clj_native.structs$byref.invoke(structs.clj:174)
+	at overtone.sc.machinery.server.native$scsynth.invokeStatic(native.clj:237)
+	at overtone.sc.machinery.server.native$scsynth.invoke(native.clj:230)
+	at overtone.sc.machinery.server.connection$internal_booter.invokeStatic(connection.clj:205)
+	at overtone.sc.machinery.server.connection$internal_booter.invoke(connection.clj:200)
+	at overtone.sc.machinery.server.connection$boot_internal_server$fn__20597.invoke(connection.clj:225)
+	at clojure.lang.AFn.run(AFn.java:22)
+	at java.base/java.lang.Thread.run(Thread.java:1589)
+Syntax error (IllegalArgumentException) compiling at (overtone/live.clj:7:1).
+No matching method sleep found taking 1 args
+#+end_src
+*** DONE FileNotFoundException in badigeno
+CLOSED: [2023-04-02 Sun 17:54]
+#+begin_src
+  --> Loading Overtone...
+Syntax error (FileNotFoundException) compiling at (badigeon/bundle.clj:1:1).
+Could not locate clojure/tools/deps/alpha/reader__init.class, clojure/tools/deps/alpha/reader.clj or clojure/tools/deps/alpha/reader.cljc on classpath.
+#+end_src
+
+This was overcome by
+neil dep add overtone/overtone --latest-sha true
+
+** XTDB alternative https://github.com/juji-io/datalevin
 ** TODO Discussion on indenting consistency https://clojurians.slack.com/archives/C03RZGPG3/p1678921877459829
 ** Refx: Reframe for UIX https://github.com/ferdinand-beyer/refx
 ** Hyperfiddle UI modelling https://www.hyperfiddle.net/
@@ -1455,8 +1490,11 @@ deps-info-infer --lib borkdude/malli --latest-sha
 
 or use neil
 #+begin_src bash
-neil dep add metosin/malli --latest-sha true
+neil dep add metosin/malli --latest-sha
 #+end_src
+
+Also --dry-run
+
 ** TODO Lazy maps https://github.com/strojure/zizzmap
 ** TODO Remote require https://github.com/tonsky/remote-require
 ** TODO https://github.com/borkdude/grasp
@@ -1484,6 +1522,41 @@ NPM packages https://shadow-cljs.github.io/docs/UsersGuide.html#_using_npm_packa
 <2022-09-13 Tue> ESM module introduction https://clojureverse.org/t/generating-es-modules-browser-deno/6116
 <2022-09-13 Tue> NBB :require differences https://clojurians.slack.com/archives/C029PTWD3HR/p1659628557831539
 * Gotchas
+** nested doseq seems to not sleep correctly
+
+Turns out it was a problem with the midi controller,
+restart solved the problem.
+
+#+begin_src clojure
+
+([:on 100 [:C :E :G]]
+ [:wait 500]
+ [:off 100 [:C :E :G]]
+ [:on 100 [:A :C :E]]
+ [:wait 500]
+ [:off 100 [:A :C :E]])
+  
+  (defn play! [tune]
+  (println "Play!!!!!")
+  (doseq [[inst vel notes] tune]
+    (let [notes-keys (when notes
+                       (walk/postwalk-replace notes-map notes))]
+      (println "notes" notes-keys)
+      (case inst
+        :on (doseq [note-key notes-keys]
+              (println "note on")
+              (Thread/sleep 50) ;; slight delay in playing each note of the chord.
+              (.noteOn chan1 note-key vel))
+
+        :wait (do
+                (println "wait " vel)
+                (Thread/sleep vel))
+        :off (doseq [note-key notes-keys]
+               (.noteOff chan1 note-key))))))
+#+end_src
+
+https://ask.clojure.org/index.php/3772/nested-doseqs-leak-with-sequence-of-huge-lazy-seqs
+
 ** shadow-cljs websocket disconneted
 
 #+begin_src
@@ -1633,6 +1706,7 @@ NOTE this is only possible with Clojure's laziness model. Otherwise this pipelin
 Java streams can help as an equivalence but there be dragons  https://jaxenter.com/java-8-streams-lazy-136183.html
 https://4comprehension.com/java-stream-api-was-broken-before-jdk10/
 * Interesting reads
+** TODO Meander matching parens https://github.com/noprompt/meander/discussions/216
 ** TODO Speed up webapp https://www.juxt.pro/blog/clojurescript-app-performance
 ** TODO Monorepo https://corfield.org/blog/2021/02/23/deps-edn-monorepo/
 ** Is data still a good idea? https://news.ycombinator.com/item?id=11945722
@@ -1878,5 +1952,6 @@ Why would you do it? See the daemon I'm writing...
 <2022-11-11 Fri> https://max-datom.com/ or the XTDB Space Opera https://nextjournal.com/xtdb-tutorial/start
 * Conversations
 <2022-12-08 Thu> Reveal https://clojurians.slack.com/archives/C02BJCKN0R4/p1669556096151029
+<2023-05-02 Tue> Slurp, chunk, spit (funny clojure names).
 * Intend to fund
 <2022-12-01 Thu> https://github.com/lambdaisland/kaocha/issues/183
