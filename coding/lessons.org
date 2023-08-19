@@ -55,6 +55,7 @@ https://stackoverflow.com/questions/73564919/react-native-flipper-react-devtools
 <2023-05-11 Thu> XCode quirks https://stackoverflow.com/questions/58008775/xcode-11-simulatortrampoline-xpc-wants-to-access-files-managed-by-icloud-dri
 <2023-05-11 Thu> Extra brackets https://stackoverflow.com/questions/49441758/why-do-i-need-an-extra-set-of-parentheses-for-react-setstate
 <2023-06-14 Wed> Be careful about capturing state values in dependent callbacks, but not including these values in the dependencies list.
+<2023-08-04 Fri> If there ISN'T a dependency list (like useSkiaTouchHandler) then need to use a useRef to avoid stale values.
 *** NOTE The problem with Metro and tests
 <2023-07-06 Thu> Testing react-dom/client error https://stackoverflow.com/questions/71713405/cannot-find-module-react-dom-client-from-node-modules-testing-library-react
 <2023-07-10 Mon> Test renderer https://medium.com/@pshrmn/testing-react-native-components-in-node-with-react-test-renderer-cb2985402dce
@@ -81,7 +82,9 @@ https://github.com/dmg46664/problems/tree/main/0008_shadow_react_server
 
 <2023-07-11 Tue> Testing RN cljs  https://www.youtube.com/watch?v=6IYm34nDL64&t=543s
 <2023-07-11 Tue> Enzyme https://github.com/enzymejs/enzyme/blob/master/docs/guides/react-native.md
-<2023-07-11 Tue> https://www.youtube.com/watch?v=6kM1Z5dDF-Q
+<2023-07-11 Tue> Simple demonstration of RN tests in JS https://www.youtube.com/watch?v=6kM1Z5dDF-Q
+
+<2023-07-12 Wed> React native testing library https://github.com/callstack/react-native-testing-library
 *** Transparent buttons, menu items:
 <2022-12-01 Thu> Unforutnatley no code https://react-native-web-uikit.storybook.trucknet.io/?path=/story/buttons-transparent-button--transparent-button
 <2022-12-01 Thu> Ghost buttons https://docs.nativebase.io/button
@@ -132,6 +135,7 @@ https://wix.github.io/react-native-ui-lib/docs/foundation/theme-manager
 *** iOS
     https://zameermfm.medium.com/solve-mac-ruby-issues-in-react-native-installations-355fb5800ee0
     https://stackoverflow.com/questions/68078996/pod-files-are-missing
+<2023-08-16 Wed> iOS status bar isn't showing https://www.youtube.com/watch?v=n80T0s9AkRY
 *** FlatList
 <2023-05-31 Wed> https://betterprogramming.pub/overcoming-list-performance-problems-in-react-native-fad40d87b14f
 <2023-05-31 Wed> https://stackoverflow.com/questions/49823933/react-native-flatlist-getitemlayout-with-dynamic-item-height
@@ -166,6 +170,16 @@ https://wix.github.io/react-native-ui-lib/docs/foundation/theme-manager
                 .map(errorItem -> Tuple.tuple(file, errorItem));
 ** Parsing
 <2023-04-12 Wed> https://khanlou.com/2019/12/regex-vs-combinatorial-parsing/
+** Machine learning
+*** Huggingface
+<2023-08-07 Mon> https://huggingface.co/docs/transformers/installation
+<2023-08-07 Mon> 15m Huggingface transformers vid https://www.youtube.com/watch?v=QEaBAZQCtwE
+<2023-08-07 Mon> https://stackoverflow.com/questions/64337550/neither-pytorch-nor-tensorflow-2-0-have-been-found-models-wont-be-available
+<2023-08-07 Mon> Longer introduction to training https://www.youtube.com/watch?v=DQc2Mi7BcuI
+*** OCR 
+<2023-08-07 Mon> https://arxiv.org/abs/2109.10282
+<2023-08-07 Mon> Writing a new solver with extended functions. Minghao Li https://www.youtube.com/watch?v=hKwyCWgZoQU
+<2023-08-07 Mon> Hugging Face LayoutLMv2 Model True Inference https://www.youtube.com/watch?v=i6w9l9BI1NE
 ** Jooq and dynamic sql
    https://www.jooq.org/doc/3.9/manual-single-page/#dynamic-sql
    https://blog.jooq.org/2017/01/16/a-functional-programming-approach-to-dynamic-sql-with-jooq/

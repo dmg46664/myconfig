@@ -970,6 +970,11 @@ https://cljsrn.org/
 ** <2022-12-10 Sat> https://lambdaisland.com/blog/2017-02-11-re-frame-form-1-subscriptions
 ** <2022-12-10 Sat> https://lambdaisland.com/episodes/re-frame-subscriptions
 * Useful clojure titbits
+** Malli examples
+Vector of keywords:
+
+
+
 ** Making Java classes sequenceable
 <2022-10-26 Wed> Interestin read https://wallace.fm/blog/2016/byod-party/
 <2022-10-26 Wed> Seq vs sequable: cljs vs clj  https://lambdaisland.com/episodes/clojure-seq-seqable
@@ -1345,6 +1350,34 @@ https://clojuredocs.org/clojure.reflect/type-reflect
 ** Print stacktrace
 (clojure.stacktrace/print-stack-trace (Exception. "foo"))
 * Tools + libs
+** Libpython
+<2023-08-07 Mon> https://github.com/gigasquid/libpython-clj-examples/blob/master/src/gigasquid/gpt2.clj
+
+<2023-08-07 Mon> https://github.com/clj-python/libpython-clj/blob/master/topics/Usage.md
+
+<2023-08-14 Mon> Chris Nuernberg demo  https://youtu.be/ajDiGS73i2o?t=964 (I had watched this months earlier)
+#+begin_src clojure
+  ;; from ... import ...
+  (py/from-import)
+
+  ;; os.environ['USE_TORCH'] = '1'
+  (py/set-attr! os/environ "USE_TORCH" "1")
+
+  (py/get-attr os/environ "USE_TORCH") ;; => "1"
+  (System/getenv "USE_TORCH") ;; => nil     interesting!
+
+  ;; len(x)
+  (count x)
+
+  ;; inspect obj
+  (py/dir x)
+  ;; https://github.com/clj-python/libpython-clj/issues/215
+  (libpython-clj2.metadata/vars x)
+  (libpython-clj2.metadata/type x)
+
+
+
+#+end_src
 ** Babashka + HTMX https://github.com/keychera/panas.example
 ** Portfolio storybook equivalent https://github.com/cjohansen/portfolio https://www.youtube.com/watch?v=25JDQRFoQ_U
 ** Overtone /sound
@@ -1706,6 +1739,7 @@ NOTE this is only possible with Clojure's laziness model. Otherwise this pipelin
 Java streams can help as an equivalence but there be dragons  https://jaxenter.com/java-8-streams-lazy-136183.html
 https://4comprehension.com/java-stream-api-was-broken-before-jdk10/
 * Interesting reads
+** patch testing https://ianthehenry.com/posts/my-kind-of-repl/
 ** TODO Meander matching parens https://github.com/noprompt/meander/discussions/216
 ** TODO Speed up webapp https://www.juxt.pro/blog/clojurescript-app-performance
 ** TODO Monorepo https://corfield.org/blog/2021/02/23/deps-edn-monorepo/

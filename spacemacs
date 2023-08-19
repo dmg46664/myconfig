@@ -71,9 +71,9 @@ values."
      (lsp :variables
           lsp-ui-doc-enable nil       ;; disable all doc popups
           lsp-ui-sideline-enable nil  ;; disable sideline bar for less distraction
-          treemacs-space-between-root-nodes nil
+          ;;treemacs-space-between-root-nodes nil
           ) ;; no spacing in treemacs views
-     treemacs
+     ;;treemacs
      (clojure :variables
               clojure-enable-fancify-symbols t
               ;; https://github.com/syl20bnr/spacemacs/blob/develop/layers/+lang/clojure/README.org#enabling-sayid-or-clj-refactor
@@ -477,14 +477,16 @@ you should place your code here."
 
   ;; Use mdfind on osx for helm locate
   ;; https://github.com/syl20bnr/spacemacs/issues/3280
-  (setq helm-locate-command
-        (case system-type
-          ('gnu/linux "locate -i -r %s")
-          ('berkeley-unix "locate -i %s")
-          ('windows-nt "es %s")
-          ('darwin "mdfind -name %s %s")
-          (t "locate %s")))
-  (if (eq system-type 'darwin) (setq helm-locate-fuzzy-match nil))
+  ;; SEEMS CLOSED
+
+  ;; (setq helm-locate-command
+  ;;       (case system-type
+  ;;         ('gnu/linux "locate -i -r %s")
+  ;;         ('berkeley-unix "locate -i %s")
+  ;;         ('windows-nt "es %s")
+  ;;         ('darwin "mdfind -name %s %s")
+  ;;         (t "locate %s")))
+  ;; (if (eq system-type 'darwin) (setq helm-locate-fuzzy-match nil))
 
 
 
@@ -539,11 +541,17 @@ you should place your code here."
                     "] (tap> {:clay-tap? true :form (quote " (caar r) ") :value __value}) __value)")
             (cdar r)))
 
+    ;; Run the following to re-enable (C-x C-e)
     (advice-add 'cider-nrepl-request:eval
                 :filter-args #'cider-tap)
 
     (advice-remove 'cider-nrepl-request:eval #'cider-tap)
     )
+
+  ;;(setq cider-print-fn nil)
+
+  ;; https://github.com/emacs-lsp/lsp-mode/issues/4054
+  (add-to-list 'image-types 'svg)
 
   ;; https://gist.github.com/jackrusher/e628abb653429c22bc6330752b3e49a5
   (defun json->edn ()
